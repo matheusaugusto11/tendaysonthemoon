@@ -386,11 +386,21 @@ usada no desenvolvimento.
 
 ### Decisões em aberto
 
-- [ ] Lua ou Marte (ou outra interpretação de "posto")?
-- [ ] Formato: sobrevivência por turnos, narrativa de decisões ou painel de controle?
+Decididas em 14/11/2026:
+
+- [x] Local: polo sul da Lua, seguindo o plano "Dez Dias na Lua".
+- [x] Formato: sobrevivência por turnos, um turno por dia, com uma mini tarefa por dia.
+- [x] Duração: 10 dias.
+- [x] Dados: erupções reais do DONKI embutidas como dado arquivado; modo ao vivo opcional,
+      só se sobrar tempo.
+- [x] Atraso de comunicação: evento de apagão de rádio (a criança decide um dia sem a dica
+      do controle da missão) e cartão comparando Lua (1,3 s) e Marte (até 20 min).
+      **A conferir:** falta fonte da NASA que ligue erupção solar a perda de contato
+      Terra–Lua. Sem a fonte, o evento não pode ser atribuído à erupção.
+
+Ainda em aberto:
+
 - [ ] Quais dois ou três recursos ficam no centro?
-- [ ] Duração de uma partida e unidade de tempo (dias, sols, turnos)?
-- [ ] Dados embutidos, ao vivo ou os dois?
 - [ ] Idioma do jogo.
 - [ ] Evento local ou Universal Event, e quem está na equipe.
 
