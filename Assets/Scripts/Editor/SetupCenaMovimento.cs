@@ -27,7 +27,7 @@ public static class SetupCenaMovimento
             }
             if (CriarEstacoes()) mudou = true;
             if (ConfigurarMobile()) mudou = true;
-            if (ConfigurarPortas()) mudou = true;
+            // (portas da estufa antiga desativadas: a base nova usa o componente Porta)
             if (!mudou) return;
             EditorSceneManager.SaveScene(cena, "Assets/Scenes/Game.unity");
             Debug.Log("[SetupCenaMovimento] Cena Game atualizada e salva (Player/GameManager).");
