@@ -1,0 +1,1119 @@
+{
+ "observacao": "Frente do personagem = -Y no Blender (+Z no Unity). Escala em metros, pivô na base dos pés. Pose de repouso em A (nao T). Clipes: quadro 1..N+1, 24 fps; o ultimo quadro repete o primeiro (se o loop engasgar, recortar o ultimo quadro).",
+ "personagens": [
+  {
+   "nome": "Astronauta_Engenharia",
+   "arquivo": "Astronauta_Engenharia.fbx",
+   "tipo": "Astronauta",
+   "altura_m": 1.915,
+   "triangulos": 1628,
+   "ossos": [
+    {
+     "osso": "Hips",
+     "pai": null,
+     "humanoid": "Hips"
+    },
+    {
+     "osso": "Spine",
+     "pai": "Hips",
+     "humanoid": "Spine"
+    },
+    {
+     "osso": "Chest",
+     "pai": "Spine",
+     "humanoid": "Chest"
+    },
+    {
+     "osso": "Neck",
+     "pai": "Chest",
+     "humanoid": "Neck"
+    },
+    {
+     "osso": "Head",
+     "pai": "Neck",
+     "humanoid": "Head"
+    },
+    {
+     "osso": "Shoulder_L",
+     "pai": "Chest",
+     "humanoid": "LeftShoulder"
+    },
+    {
+     "osso": "UpperArm_L",
+     "pai": "Shoulder_L",
+     "humanoid": "LeftUpperArm"
+    },
+    {
+     "osso": "LowerArm_L",
+     "pai": "UpperArm_L",
+     "humanoid": "LeftLowerArm"
+    },
+    {
+     "osso": "Hand_L",
+     "pai": "LowerArm_L",
+     "humanoid": "LeftHand"
+    },
+    {
+     "osso": "Shoulder_R",
+     "pai": "Chest",
+     "humanoid": "RightShoulder"
+    },
+    {
+     "osso": "UpperArm_R",
+     "pai": "Shoulder_R",
+     "humanoid": "RightUpperArm"
+    },
+    {
+     "osso": "LowerArm_R",
+     "pai": "UpperArm_R",
+     "humanoid": "RightLowerArm"
+    },
+    {
+     "osso": "Hand_R",
+     "pai": "LowerArm_R",
+     "humanoid": "RightHand"
+    },
+    {
+     "osso": "UpperLeg_L",
+     "pai": "Hips",
+     "humanoid": "LeftUpperLeg"
+    },
+    {
+     "osso": "LowerLeg_L",
+     "pai": "UpperLeg_L",
+     "humanoid": "LeftLowerLeg"
+    },
+    {
+     "osso": "Foot_L",
+     "pai": "LowerLeg_L",
+     "humanoid": "LeftFoot"
+    },
+    {
+     "osso": "Toes_L",
+     "pai": "Foot_L",
+     "humanoid": "LeftToes"
+    },
+    {
+     "osso": "UpperLeg_R",
+     "pai": "Hips",
+     "humanoid": "RightUpperLeg"
+    },
+    {
+     "osso": "LowerLeg_R",
+     "pai": "UpperLeg_R",
+     "humanoid": "RightLowerLeg"
+    },
+    {
+     "osso": "Foot_R",
+     "pai": "LowerLeg_R",
+     "humanoid": "RightFoot"
+    },
+    {
+     "osso": "Toes_R",
+     "pai": "Foot_R",
+     "humanoid": "RightToes"
+    }
+   ],
+   "clipes": [
+    {
+     "nome": "Idle",
+     "quadros": 48,
+     "fps": 24,
+     "duracao_s": 2.0,
+     "loop": true
+    },
+    {
+     "nome": "Caminhar",
+     "quadros": 24,
+     "fps": 24,
+     "duracao_s": 1.0,
+     "loop": true
+    },
+    {
+     "nome": "Correr",
+     "quadros": 16,
+     "fps": 24,
+     "duracao_s": 0.667,
+     "loop": true
+    }
+   ],
+   "materiais": [
+    {
+     "nome": "Traje branco",
+     "cor_base": [
+      0.8,
+      0.8,
+      0.82
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.75,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Traje cinza",
+     "cor_base": [
+      0.2,
+      0.23,
+      0.28
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.7,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Acento ciano",
+     "cor_base": [
+      0.15,
+      0.75,
+      0.85
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.55,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Luva",
+     "cor_base": [
+      0.13,
+      0.14,
+      0.17
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.8,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Traje cinza claro",
+     "cor_base": [
+      0.55,
+      0.57,
+      0.6
+     ],
+     "metalico": 0.2,
+     "rugosidade": 0.6,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Visor dourado",
+     "cor_base": [
+      0.8,
+      0.55,
+      0.12
+     ],
+     "metalico": 0.6,
+     "rugosidade": 0.3,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Glifo branco",
+     "cor_base": [
+      0.95,
+      0.95,
+      0.95
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.6,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Couro",
+     "cor_base": [
+      0.42,
+      0.27,
+      0.13
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.85,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    }
+   ]
+  },
+  {
+   "nome": "Astronauta_Botanica",
+   "arquivo": "Astronauta_Botanica.fbx",
+   "tipo": "Astronauta",
+   "altura_m": 1.915,
+   "triangulos": 1356,
+   "ossos": [
+    {
+     "osso": "Hips",
+     "pai": null,
+     "humanoid": "Hips"
+    },
+    {
+     "osso": "Spine",
+     "pai": "Hips",
+     "humanoid": "Spine"
+    },
+    {
+     "osso": "Chest",
+     "pai": "Spine",
+     "humanoid": "Chest"
+    },
+    {
+     "osso": "Neck",
+     "pai": "Chest",
+     "humanoid": "Neck"
+    },
+    {
+     "osso": "Head",
+     "pai": "Neck",
+     "humanoid": "Head"
+    },
+    {
+     "osso": "Shoulder_L",
+     "pai": "Chest",
+     "humanoid": "LeftShoulder"
+    },
+    {
+     "osso": "UpperArm_L",
+     "pai": "Shoulder_L",
+     "humanoid": "LeftUpperArm"
+    },
+    {
+     "osso": "LowerArm_L",
+     "pai": "UpperArm_L",
+     "humanoid": "LeftLowerArm"
+    },
+    {
+     "osso": "Hand_L",
+     "pai": "LowerArm_L",
+     "humanoid": "LeftHand"
+    },
+    {
+     "osso": "Shoulder_R",
+     "pai": "Chest",
+     "humanoid": "RightShoulder"
+    },
+    {
+     "osso": "UpperArm_R",
+     "pai": "Shoulder_R",
+     "humanoid": "RightUpperArm"
+    },
+    {
+     "osso": "LowerArm_R",
+     "pai": "UpperArm_R",
+     "humanoid": "RightLowerArm"
+    },
+    {
+     "osso": "Hand_R",
+     "pai": "LowerArm_R",
+     "humanoid": "RightHand"
+    },
+    {
+     "osso": "UpperLeg_L",
+     "pai": "Hips",
+     "humanoid": "LeftUpperLeg"
+    },
+    {
+     "osso": "LowerLeg_L",
+     "pai": "UpperLeg_L",
+     "humanoid": "LeftLowerLeg"
+    },
+    {
+     "osso": "Foot_L",
+     "pai": "LowerLeg_L",
+     "humanoid": "LeftFoot"
+    },
+    {
+     "osso": "Toes_L",
+     "pai": "Foot_L",
+     "humanoid": "LeftToes"
+    },
+    {
+     "osso": "UpperLeg_R",
+     "pai": "Hips",
+     "humanoid": "RightUpperLeg"
+    },
+    {
+     "osso": "LowerLeg_R",
+     "pai": "UpperLeg_R",
+     "humanoid": "RightLowerLeg"
+    },
+    {
+     "osso": "Foot_R",
+     "pai": "LowerLeg_R",
+     "humanoid": "RightFoot"
+    },
+    {
+     "osso": "Toes_R",
+     "pai": "Foot_R",
+     "humanoid": "RightToes"
+    }
+   ],
+   "clipes": [
+    {
+     "nome": "Idle",
+     "quadros": 48,
+     "fps": 24,
+     "duracao_s": 2.0,
+     "loop": true
+    },
+    {
+     "nome": "Caminhar",
+     "quadros": 24,
+     "fps": 24,
+     "duracao_s": 1.0,
+     "loop": true
+    },
+    {
+     "nome": "Correr",
+     "quadros": 16,
+     "fps": 24,
+     "duracao_s": 0.667,
+     "loop": true
+    }
+   ],
+   "materiais": [
+    {
+     "nome": "Traje branco",
+     "cor_base": [
+      0.8,
+      0.8,
+      0.82
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.75,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Traje cinza",
+     "cor_base": [
+      0.2,
+      0.23,
+      0.28
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.7,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Acento verde",
+     "cor_base": [
+      0.35,
+      0.78,
+      0.18
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.55,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Luva",
+     "cor_base": [
+      0.13,
+      0.14,
+      0.17
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.8,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Traje cinza claro",
+     "cor_base": [
+      0.55,
+      0.57,
+      0.6
+     ],
+     "metalico": 0.2,
+     "rugosidade": 0.6,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Visor dourado",
+     "cor_base": [
+      0.8,
+      0.55,
+      0.12
+     ],
+     "metalico": 0.6,
+     "rugosidade": 0.3,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Glifo branco",
+     "cor_base": [
+      0.95,
+      0.95,
+      0.95
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.6,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Vidro pote",
+     "cor_base": [
+      0.7,
+      0.9,
+      0.85
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.1,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Planta",
+     "cor_base": [
+      0.3,
+      0.7,
+      0.25
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.8,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    }
+   ]
+  },
+  {
+   "nome": "Astronauta_Medicina",
+   "arquivo": "Astronauta_Medicina.fbx",
+   "tipo": "Astronauta",
+   "altura_m": 1.915,
+   "triangulos": 1280,
+   "ossos": [
+    {
+     "osso": "Hips",
+     "pai": null,
+     "humanoid": "Hips"
+    },
+    {
+     "osso": "Spine",
+     "pai": "Hips",
+     "humanoid": "Spine"
+    },
+    {
+     "osso": "Chest",
+     "pai": "Spine",
+     "humanoid": "Chest"
+    },
+    {
+     "osso": "Neck",
+     "pai": "Chest",
+     "humanoid": "Neck"
+    },
+    {
+     "osso": "Head",
+     "pai": "Neck",
+     "humanoid": "Head"
+    },
+    {
+     "osso": "Shoulder_L",
+     "pai": "Chest",
+     "humanoid": "LeftShoulder"
+    },
+    {
+     "osso": "UpperArm_L",
+     "pai": "Shoulder_L",
+     "humanoid": "LeftUpperArm"
+    },
+    {
+     "osso": "LowerArm_L",
+     "pai": "UpperArm_L",
+     "humanoid": "LeftLowerArm"
+    },
+    {
+     "osso": "Hand_L",
+     "pai": "LowerArm_L",
+     "humanoid": "LeftHand"
+    },
+    {
+     "osso": "Shoulder_R",
+     "pai": "Chest",
+     "humanoid": "RightShoulder"
+    },
+    {
+     "osso": "UpperArm_R",
+     "pai": "Shoulder_R",
+     "humanoid": "RightUpperArm"
+    },
+    {
+     "osso": "LowerArm_R",
+     "pai": "UpperArm_R",
+     "humanoid": "RightLowerArm"
+    },
+    {
+     "osso": "Hand_R",
+     "pai": "LowerArm_R",
+     "humanoid": "RightHand"
+    },
+    {
+     "osso": "UpperLeg_L",
+     "pai": "Hips",
+     "humanoid": "LeftUpperLeg"
+    },
+    {
+     "osso": "LowerLeg_L",
+     "pai": "UpperLeg_L",
+     "humanoid": "LeftLowerLeg"
+    },
+    {
+     "osso": "Foot_L",
+     "pai": "LowerLeg_L",
+     "humanoid": "LeftFoot"
+    },
+    {
+     "osso": "Toes_L",
+     "pai": "Foot_L",
+     "humanoid": "LeftToes"
+    },
+    {
+     "osso": "UpperLeg_R",
+     "pai": "Hips",
+     "humanoid": "RightUpperLeg"
+    },
+    {
+     "osso": "LowerLeg_R",
+     "pai": "UpperLeg_R",
+     "humanoid": "RightLowerLeg"
+    },
+    {
+     "osso": "Foot_R",
+     "pai": "LowerLeg_R",
+     "humanoid": "RightFoot"
+    },
+    {
+     "osso": "Toes_R",
+     "pai": "Foot_R",
+     "humanoid": "RightToes"
+    }
+   ],
+   "clipes": [
+    {
+     "nome": "Idle",
+     "quadros": 48,
+     "fps": 24,
+     "duracao_s": 2.0,
+     "loop": true
+    },
+    {
+     "nome": "Caminhar",
+     "quadros": 24,
+     "fps": 24,
+     "duracao_s": 1.0,
+     "loop": true
+    },
+    {
+     "nome": "Correr",
+     "quadros": 16,
+     "fps": 24,
+     "duracao_s": 0.667,
+     "loop": true
+    }
+   ],
+   "materiais": [
+    {
+     "nome": "Traje branco",
+     "cor_base": [
+      0.8,
+      0.8,
+      0.82
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.75,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Traje cinza",
+     "cor_base": [
+      0.2,
+      0.23,
+      0.28
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.7,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Acento roxo",
+     "cor_base": [
+      0.62,
+      0.38,
+      0.92
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.55,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Luva",
+     "cor_base": [
+      0.13,
+      0.14,
+      0.17
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.8,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Traje cinza claro",
+     "cor_base": [
+      0.55,
+      0.57,
+      0.6
+     ],
+     "metalico": 0.2,
+     "rugosidade": 0.6,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Visor dourado",
+     "cor_base": [
+      0.8,
+      0.55,
+      0.12
+     ],
+     "metalico": 0.6,
+     "rugosidade": 0.3,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Glifo branco",
+     "cor_base": [
+      0.95,
+      0.95,
+      0.95
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.6,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    }
+   ]
+  },
+  {
+   "nome": "Astronauta_Ciencia",
+   "arquivo": "Astronauta_Ciencia.fbx",
+   "tipo": "Astronauta",
+   "altura_m": 1.915,
+   "triangulos": 1360,
+   "ossos": [
+    {
+     "osso": "Hips",
+     "pai": null,
+     "humanoid": "Hips"
+    },
+    {
+     "osso": "Spine",
+     "pai": "Hips",
+     "humanoid": "Spine"
+    },
+    {
+     "osso": "Chest",
+     "pai": "Spine",
+     "humanoid": "Chest"
+    },
+    {
+     "osso": "Neck",
+     "pai": "Chest",
+     "humanoid": "Neck"
+    },
+    {
+     "osso": "Head",
+     "pai": "Neck",
+     "humanoid": "Head"
+    },
+    {
+     "osso": "Shoulder_L",
+     "pai": "Chest",
+     "humanoid": "LeftShoulder"
+    },
+    {
+     "osso": "UpperArm_L",
+     "pai": "Shoulder_L",
+     "humanoid": "LeftUpperArm"
+    },
+    {
+     "osso": "LowerArm_L",
+     "pai": "UpperArm_L",
+     "humanoid": "LeftLowerArm"
+    },
+    {
+     "osso": "Hand_L",
+     "pai": "LowerArm_L",
+     "humanoid": "LeftHand"
+    },
+    {
+     "osso": "Shoulder_R",
+     "pai": "Chest",
+     "humanoid": "RightShoulder"
+    },
+    {
+     "osso": "UpperArm_R",
+     "pai": "Shoulder_R",
+     "humanoid": "RightUpperArm"
+    },
+    {
+     "osso": "LowerArm_R",
+     "pai": "UpperArm_R",
+     "humanoid": "RightLowerArm"
+    },
+    {
+     "osso": "Hand_R",
+     "pai": "LowerArm_R",
+     "humanoid": "RightHand"
+    },
+    {
+     "osso": "UpperLeg_L",
+     "pai": "Hips",
+     "humanoid": "LeftUpperLeg"
+    },
+    {
+     "osso": "LowerLeg_L",
+     "pai": "UpperLeg_L",
+     "humanoid": "LeftLowerLeg"
+    },
+    {
+     "osso": "Foot_L",
+     "pai": "LowerLeg_L",
+     "humanoid": "LeftFoot"
+    },
+    {
+     "osso": "Toes_L",
+     "pai": "Foot_L",
+     "humanoid": "LeftToes"
+    },
+    {
+     "osso": "UpperLeg_R",
+     "pai": "Hips",
+     "humanoid": "RightUpperLeg"
+    },
+    {
+     "osso": "LowerLeg_R",
+     "pai": "UpperLeg_R",
+     "humanoid": "RightLowerLeg"
+    },
+    {
+     "osso": "Foot_R",
+     "pai": "LowerLeg_R",
+     "humanoid": "RightFoot"
+    },
+    {
+     "osso": "Toes_R",
+     "pai": "Foot_R",
+     "humanoid": "RightToes"
+    }
+   ],
+   "clipes": [
+    {
+     "nome": "Idle",
+     "quadros": 48,
+     "fps": 24,
+     "duracao_s": 2.0,
+     "loop": true
+    },
+    {
+     "nome": "Caminhar",
+     "quadros": 24,
+     "fps": 24,
+     "duracao_s": 1.0,
+     "loop": true
+    },
+    {
+     "nome": "Correr",
+     "quadros": 16,
+     "fps": 24,
+     "duracao_s": 0.667,
+     "loop": true
+    }
+   ],
+   "materiais": [
+    {
+     "nome": "Traje branco",
+     "cor_base": [
+      0.8,
+      0.8,
+      0.82
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.75,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Traje cinza",
+     "cor_base": [
+      0.2,
+      0.23,
+      0.28
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.7,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Acento laranja",
+     "cor_base": [
+      0.95,
+      0.52,
+      0.1
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.55,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Luva",
+     "cor_base": [
+      0.13,
+      0.14,
+      0.17
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.8,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Traje cinza claro",
+     "cor_base": [
+      0.55,
+      0.57,
+      0.6
+     ],
+     "metalico": 0.2,
+     "rugosidade": 0.6,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Visor dourado",
+     "cor_base": [
+      0.8,
+      0.55,
+      0.12
+     ],
+     "metalico": 0.6,
+     "rugosidade": 0.3,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Glifo branco",
+     "cor_base": [
+      0.95,
+      0.95,
+      0.95
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.6,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Tela verde",
+     "cor_base": [
+      0.3,
+      1.0,
+      0.4
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.4,
+     "emissao_cor": [
+      0.3,
+      1.0,
+      0.4
+     ],
+     "emissao_intensidade": 2.0
+    }
+   ]
+  },
+  {
+   "nome": "Robo_Assistente",
+   "arquivo": "Robo_Assistente.fbx",
+   "tipo": "Robo",
+   "altura_m": 1.367,
+   "triangulos": 1592,
+   "ossos": [
+    {
+     "osso": "Root",
+     "pai": null,
+     "humanoid": null
+    },
+    {
+     "osso": "Body",
+     "pai": "Root",
+     "humanoid": null
+    },
+    {
+     "osso": "Head",
+     "pai": "Body",
+     "humanoid": null
+    },
+    {
+     "osso": "Antenna",
+     "pai": "Head",
+     "humanoid": null
+    },
+    {
+     "osso": "UpperArm_L",
+     "pai": "Body",
+     "humanoid": null
+    },
+    {
+     "osso": "LowerArm_L",
+     "pai": "UpperArm_L",
+     "humanoid": null
+    },
+    {
+     "osso": "Hand_L",
+     "pai": "LowerArm_L",
+     "humanoid": null
+    },
+    {
+     "osso": "UpperArm_R",
+     "pai": "Body",
+     "humanoid": null
+    },
+    {
+     "osso": "LowerArm_R",
+     "pai": "UpperArm_R",
+     "humanoid": null
+    },
+    {
+     "osso": "Hand_R",
+     "pai": "LowerArm_R",
+     "humanoid": null
+    },
+    {
+     "osso": "Tread_L",
+     "pai": "Root",
+     "humanoid": null
+    },
+    {
+     "osso": "Tread_R",
+     "pai": "Root",
+     "humanoid": null
+    }
+   ],
+   "clipes": [
+    {
+     "nome": "Idle",
+     "quadros": 48,
+     "fps": 24,
+     "duracao_s": 2.0,
+     "loop": true
+    },
+    {
+     "nome": "Rodar",
+     "quadros": 24,
+     "fps": 24,
+     "duracao_s": 1.0,
+     "loop": true
+    },
+    {
+     "nome": "Acelerar",
+     "quadros": 16,
+     "fps": 24,
+     "duracao_s": 0.667,
+     "loop": true
+    }
+   ],
+   "materiais": [
+    {
+     "nome": "Robo esteira",
+     "cor_base": [
+      0.07,
+      0.07,
+      0.08
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.9,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Robo metal",
+     "cor_base": [
+      0.45,
+      0.47,
+      0.52
+     ],
+     "metalico": 0.5,
+     "rugosidade": 0.5,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Robo corpo",
+     "cor_base": [
+      0.78,
+      0.8,
+      0.86
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.6,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Robo faixa",
+     "cor_base": [
+      0.45,
+      0.52,
+      0.95
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.55,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Robo escuro",
+     "cor_base": [
+      0.1,
+      0.11,
+      0.14
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.6,
+     "emissao_cor": null,
+     "emissao_intensidade": 0.0
+    },
+    {
+     "nome": "Robo olho",
+     "cor_base": [
+      0.2,
+      0.95,
+      1.0
+     ],
+     "metalico": 0.0,
+     "rugosidade": 0.3,
+     "emissao_cor": [
+      0.2,
+      0.95,
+      1.0
+     ],
+     "emissao_intensidade": 6.0
+    }
+   ]
+  }
+ ]
+}
