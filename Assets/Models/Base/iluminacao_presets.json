@@ -1,0 +1,96 @@
+{
+ "descricao": "energia_final = e0 * multiplicador do grupo (sol/terra: valor absoluto). Cor/intensidade do sol e emissivos por cenario abaixo.",
+ "cenarios": {
+  "dia": {
+   "multiplicadores": {
+    "sol": 4.2,
+    "terra": 0.08,
+    "int": 0.8,
+    "ext": 0.0,
+    "emerg": 0.0
+   },
+   "sol_cor": [
+    1,
+    0.96,
+    0.88
+   ],
+   "sol_rotacao_graus": [
+    68,
+    0,
+    38
+   ],
+   "sol_angulo_graus": 0.6,
+   "cor_do_mundo": [
+    0,
+    0,
+    0.003
+   ],
+   "emissivo_lampadas": {
+    "cor": "padrao",
+    "intensidade": 3.0
+   }
+  },
+  "erupcao": {
+   "multiplicadores": {
+    "sol": 5.5,
+    "terra": 0.0,
+    "int": 0.18,
+    "ext": 0.6,
+    "emerg": 1.0
+   },
+   "sol_cor": [
+    1,
+    0.42,
+    0.15
+   ],
+   "sol_rotacao_graus": [
+    84,
+    0,
+    38
+   ],
+   "sol_angulo_graus": 3.0,
+   "cor_do_mundo": [
+    0.3,
+    0.03,
+    0.14
+   ],
+   "emissivo_lampadas": {
+    "cor": [
+     1,
+     0.15,
+     0.08
+    ],
+    "intensidade": 4.0
+   }
+  },
+  "noite": {
+   "multiplicadores": {
+    "sol": 0.0,
+    "terra": 1.0,
+    "int": 1.0,
+    "ext": 1.0,
+    "emerg": 0.0
+   },
+   "sol_cor": [
+    1,
+    0.96,
+    0.88
+   ],
+   "sol_rotacao_graus": [
+    68,
+    0,
+    38
+   ],
+   "sol_angulo_graus": 0.6,
+   "cor_do_mundo": [
+    0,
+    0.008,
+    0.03
+   ],
+   "emissivo_lampadas": {
+    "cor": "padrao",
+    "intensidade": 10.0
+   }
+  }
+ }
+}

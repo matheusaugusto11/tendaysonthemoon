@@ -1,0 +1,537 @@
+{
+ "observacao": "o pivo do objeto no FBX ja e a dobradica. Eixo Z do Blender = eixo Y (vertical) no Unity. Sinal do angulo: positivo = anti-horario visto de cima no Blender.",
+ "portas": [
+  {
+   "objeto": "Porta_Agua_Entrada_D",
+   "porta": "Agua_Entrada",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    -13.3991,
+    8.7921,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 60.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Agua_Entrada_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Agua_Entrada_E",
+   "porta": "Agua_Entrada",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    -14.3137,
+    7.2079,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 60.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Agua_Entrada_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Dormitorio_Entrada_D",
+   "porta": "Dormitorio_Entrada",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    -14.3137,
+    -7.2079,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 120.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Dormitorio_Entrada_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Dormitorio_Entrada_E",
+   "porta": "Dormitorio_Entrada",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    -13.3991,
+    -8.7921,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 120.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Dormitorio_Entrada_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Eclusa_Entrada_D",
+   "porta": "Eclusa_Entrada",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    -0.9146,
+    -16.0,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 180.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Eclusa_Entrada_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Eclusa_Entrada_E",
+   "porta": "Eclusa_Entrada",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    0.9146,
+    -16.0,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 180.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Eclusa_Entrada_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Eclusa_Saida_D",
+   "porta": "Eclusa_Saida",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    -0.9146,
+    -28.3,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 180.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Eclusa_Saida_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Eclusa_Saida_E",
+   "porta": "Eclusa_Saida",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    0.9146,
+    -28.3,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 180.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Eclusa_Saida_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Energia_Entrada_D",
+   "porta": "Energia_Entrada",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    13.3991,
+    -8.7921,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": -120.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Energia_Entrada_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Energia_Entrada_E",
+   "porta": "Energia_Entrada",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    14.3137,
+    -7.2079,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": -120.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Energia_Entrada_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Estufa_Entrada_D",
+   "porta": "Estufa_Entrada",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    0.9146,
+    15.95,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 0.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Estufa_Entrada_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Estufa_Entrada_E",
+   "porta": "Estufa_Entrada",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    -0.9146,
+    15.95,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 0.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Estufa_Entrada_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Estufa_Fundo_D",
+   "porta": "Estufa_Fundo",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    0.9146,
+    38.25,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 0.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Estufa_Fundo_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Estufa_Fundo_E",
+   "porta": "Estufa_Fundo",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    -0.9146,
+    38.25,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 0.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Estufa_Fundo_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Hub_Agua_D",
+   "porta": "Hub_Agua",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    -5.2095,
+    4.0639,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 60.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Hub_Agua_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Hub_Agua_E",
+   "porta": "Hub_Agua",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    -6.1242,
+    2.4797,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 60.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Hub_Agua_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Hub_Dormitorio_D",
+   "porta": "Hub_Dormitorio",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    -6.1242,
+    -2.4797,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 120.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Hub_Dormitorio_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Hub_Dormitorio_E",
+   "porta": "Hub_Dormitorio",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    -5.2095,
+    -4.0639,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 120.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Hub_Dormitorio_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Hub_Eclusa_D",
+   "porta": "Hub_Eclusa",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    -0.9146,
+    -6.5435,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 180.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Hub_Eclusa_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Hub_Eclusa_E",
+   "porta": "Hub_Eclusa",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    0.9146,
+    -6.5435,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 180.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Hub_Eclusa_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Hub_Energia_D",
+   "porta": "Hub_Energia",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    5.2095,
+    -4.0639,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": -120.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Hub_Energia_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Hub_Energia_E",
+   "porta": "Hub_Energia",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    6.1242,
+    -2.4797,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": -120.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Hub_Energia_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Hub_Estufa_D",
+   "porta": "Hub_Estufa",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    0.9146,
+    6.5435,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 0.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Hub_Estufa_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Hub_Estufa_E",
+   "porta": "Hub_Estufa",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    -0.9146,
+    6.5435,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": 0.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Hub_Estufa_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Hub_Laboratorio_D",
+   "porta": "Hub_Laboratorio",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    6.1242,
+    2.4797,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": -60.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Hub_Laboratorio_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Hub_Laboratorio_E",
+   "porta": "Hub_Laboratorio",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    5.2095,
+    4.0639,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": -60.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Hub_Laboratorio_E_Abrir"
+  },
+  {
+   "objeto": "Porta_Laboratorio_Entrada_D",
+   "porta": "Laboratorio_Entrada",
+   "folha": "D",
+   "pivo_dobradica_blender": [
+    14.3137,
+    7.2079,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": -60.0,
+   "angulo_abertura_graus": -105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Laboratorio_Entrada_D_Abrir"
+  },
+  {
+   "objeto": "Porta_Laboratorio_Entrada_E",
+   "porta": "Laboratorio_Entrada",
+   "folha": "E",
+   "pivo_dobradica_blender": [
+    13.3991,
+    8.7921,
+    1.5
+   ],
+   "rotacao_z_inicial_graus": -60.0,
+   "angulo_abertura_graus": 105.0,
+   "eixo_de_giro_blender": "Z",
+   "quadros": [
+    1,
+    40
+   ],
+   "fps": 24,
+   "clipe_fbx": "Porta_Laboratorio_Entrada_E_Abrir"
+  }
+ ]
+}

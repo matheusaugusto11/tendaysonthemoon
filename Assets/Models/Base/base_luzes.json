@@ -1,0 +1,1663 @@
+{
+ "observacao": "As luzes tambem estao dentro de base_cenario.fbx com os MESMOS nomes. Grupos: sol, terra, int, ext, emerg. Energia final = energia_blender_W * multiplicador do grupo (ver iluminacao_presets.json). Watts do Blender NAO equivalem a unidades do Unity: recalibrar.",
+ "luzes": [
+  {
+   "nome": "Agua emergencia",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 90.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    -19.356,
+    11.175,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.25
+  },
+  {
+   "nome": "Agua luz 0",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    0.6,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    -16.325,
+    9.425,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Agua luz 1",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    0.6,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    -19.356,
+    11.175,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Agua luz 2",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    0.6,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    -22.387,
+    12.925,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Agua porta",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 25.0,
+   "cor_rgb": [
+    0.6,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    -14.506,
+    8.375,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.1
+  },
+  {
+   "nome": "Dormitorio emergencia",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 90.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    -19.356,
+    -11.175,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.25
+  },
+  {
+   "nome": "Dormitorio luz 0",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    0.8,
+    0.6,
+    1.0
+   ],
+   "posicao_blender": [
+    -16.325,
+    -9.425,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Dormitorio luz 1",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    0.8,
+    0.6,
+    1.0
+   ],
+   "posicao_blender": [
+    -19.356,
+    -11.175,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Dormitorio luz 2",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    0.8,
+    0.6,
+    1.0
+   ],
+   "posicao_blender": [
+    -22.387,
+    -12.925,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Dormitorio porta",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 25.0,
+   "cor_rgb": [
+    0.8,
+    0.6,
+    1.0
+   ],
+   "posicao_blender": [
+    -14.506,
+    -8.375,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.1
+  },
+  {
+   "nome": "Eclusa emergencia",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 90.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    -0.0,
+    -22.35,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.25
+  },
+  {
+   "nome": "Eclusa luz 0",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "posicao_blender": [
+    -0.0,
+    -18.85,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Eclusa luz 1",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "posicao_blender": [
+    -0.0,
+    -22.35,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Eclusa luz 2",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "posicao_blender": [
+    -0.0,
+    -25.85,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Eclusa porta",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 25.0,
+   "cor_rgb": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "posicao_blender": [
+    -0.0,
+    -16.75,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.1
+  },
+  {
+   "nome": "Eclusa saida",
+   "tipo": "POINT",
+   "grupo": "ext",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.85,
+    0.6
+   ],
+   "posicao_blender": [
+    -0.0,
+    -28.75,
+    2.9
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Energia emergencia",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 90.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    19.356,
+    -11.175,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.25
+  },
+  {
+   "nome": "Energia luz 0",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    1.0,
+    0.9,
+    0.5
+   ],
+   "posicao_blender": [
+    16.325,
+    -9.425,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Energia luz 1",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    1.0,
+    0.9,
+    0.5
+   ],
+   "posicao_blender": [
+    19.356,
+    -11.175,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Energia luz 2",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    1.0,
+    0.9,
+    0.5
+   ],
+   "posicao_blender": [
+    22.387,
+    -12.925,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Energia porta",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 25.0,
+   "cor_rgb": [
+    1.0,
+    0.9,
+    0.5
+   ],
+   "posicao_blender": [
+    14.506,
+    -8.375,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.1
+  },
+  {
+   "nome": "Estufa emergencia",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 120.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    0.0,
+    27.1,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Estufa luz 0d",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 160.0,
+   "cor_rgb": [
+    0.55,
+    1.0,
+    0.5
+   ],
+   "posicao_blender": [
+    2.4,
+    19.6,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Estufa luz 0e",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 160.0,
+   "cor_rgb": [
+    0.55,
+    1.0,
+    0.5
+   ],
+   "posicao_blender": [
+    -2.4,
+    19.6,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Estufa luz 1d",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 160.0,
+   "cor_rgb": [
+    0.55,
+    1.0,
+    0.5
+   ],
+   "posicao_blender": [
+    2.4,
+    24.6,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Estufa luz 1e",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 160.0,
+   "cor_rgb": [
+    0.55,
+    1.0,
+    0.5
+   ],
+   "posicao_blender": [
+    -2.4,
+    24.6,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Estufa luz 2d",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 160.0,
+   "cor_rgb": [
+    0.55,
+    1.0,
+    0.5
+   ],
+   "posicao_blender": [
+    2.4,
+    29.6,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Estufa luz 2e",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 160.0,
+   "cor_rgb": [
+    0.55,
+    1.0,
+    0.5
+   ],
+   "posicao_blender": [
+    -2.4,
+    29.6,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Estufa luz 3d",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 160.0,
+   "cor_rgb": [
+    0.55,
+    1.0,
+    0.5
+   ],
+   "posicao_blender": [
+    2.4,
+    34.6,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Estufa luz 3e",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 160.0,
+   "cor_rgb": [
+    0.55,
+    1.0,
+    0.5
+   ],
+   "posicao_blender": [
+    -2.4,
+    34.6,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Farol containers",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 600.0,
+   "cor_rgb": [
+    1.0,
+    0.93,
+    0.8
+   ],
+   "posicao_blender": [
+    40.23,
+    21.36,
+    3.2
+   ],
+   "sombra": true,
+   "raio_m": 0.15,
+   "cone_graus": 75.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Farol eclusa a-1",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 700.0,
+   "cor_rgb": [
+    1.0,
+    0.93,
+    0.8
+   ],
+   "posicao_blender": [
+    1.787,
+    -28.985,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.15,
+   "cone_graus": 75.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Farol eclusa a1",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 700.0,
+   "cor_rgb": [
+    1.0,
+    0.93,
+    0.8
+   ],
+   "posicao_blender": [
+    -1.787,
+    -28.985,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.15,
+   "cone_graus": 75.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Farol eclusa b-1",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 700.0,
+   "cor_rgb": [
+    1.0,
+    0.93,
+    0.8
+   ],
+   "posicao_blender": [
+    1.67,
+    -33.037,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.15,
+   "cone_graus": 75.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Farol eclusa b1",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 700.0,
+   "cor_rgb": [
+    1.0,
+    0.93,
+    0.8
+   ],
+   "posicao_blender": [
+    -1.67,
+    -33.037,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.15,
+   "cone_graus": 75.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Farol hub E",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 900.0,
+   "cor_rgb": [
+    1.0,
+    0.93,
+    0.8
+   ],
+   "posicao_blender": [
+    3.25,
+    0.0,
+    8.35
+   ],
+   "sombra": true,
+   "raio_m": 0.15,
+   "cone_graus": 75.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Farol hub W",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 900.0,
+   "cor_rgb": [
+    1.0,
+    0.93,
+    0.8
+   ],
+   "posicao_blender": [
+    -3.25,
+    0.0,
+    8.35
+   ],
+   "sombra": true,
+   "raio_m": 0.15,
+   "cone_graus": 75.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Farol pouso 1",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 1100.0,
+   "cor_rgb": [
+    1.0,
+    0.93,
+    0.8
+   ],
+   "posicao_blender": [
+    23.831,
+    -35.695,
+    4.2
+   ],
+   "sombra": true,
+   "raio_m": 0.15,
+   "cone_graus": 75.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Farol pouso 2",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 1100.0,
+   "cor_rgb": [
+    1.0,
+    0.93,
+    0.8
+   ],
+   "posicao_blender": [
+    36.169,
+    -24.305,
+    4.2
+   ],
+   "sombra": true,
+   "raio_m": 0.15,
+   "cone_graus": 75.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Farol solar 1",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 900.0,
+   "cor_rgb": [
+    1.0,
+    0.93,
+    0.8
+   ],
+   "posicao_blender": [
+    -42.223,
+    -17.609,
+    3.7
+   ],
+   "sombra": true,
+   "raio_m": 0.15,
+   "cone_graus": 75.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Farol solar 2",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 900.0,
+   "cor_rgb": [
+    1.0,
+    0.93,
+    0.8
+   ],
+   "posicao_blender": [
+    -42.223,
+    17.609,
+    3.7
+   ],
+   "sombra": true,
+   "raio_m": 0.15,
+   "cone_graus": 75.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Hub console",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 90.0,
+   "cor_rgb": [
+    0.5,
+    1.0,
+    1.0
+   ],
+   "posicao_blender": [
+    0.0,
+    0.0,
+    1.9
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Hub cupula",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 120.0,
+   "cor_rgb": [
+    1.0,
+    0.97,
+    0.9
+   ],
+   "posicao_blender": [
+    0.0,
+    0.0,
+    5.2
+   ],
+   "sombra": true,
+   "raio_m": 0.4
+  },
+  {
+   "nome": "Hub emergencia 0",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    5.8,
+    0.0,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.25
+  },
+  {
+   "nome": "Hub emergencia 1",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    2.9,
+    5.023,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.25
+  },
+  {
+   "nome": "Hub emergencia 2",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    -2.9,
+    5.023,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.25
+  },
+  {
+   "nome": "Hub emergencia 3",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    -5.8,
+    0.0,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.25
+  },
+  {
+   "nome": "Hub emergencia 4",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    -2.9,
+    -5.023,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.25
+  },
+  {
+   "nome": "Hub emergencia 5",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    2.9,
+    -5.023,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.25
+  },
+  {
+   "nome": "Hub luz 0",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.97,
+    0.92
+   ],
+   "posicao_blender": [
+    3.984,
+    2.3,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Hub luz 1",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.97,
+    0.92
+   ],
+   "posicao_blender": [
+    0.0,
+    4.6,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Hub luz 2",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.97,
+    0.92
+   ],
+   "posicao_blender": [
+    -3.984,
+    2.3,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Hub luz 3",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.97,
+    0.92
+   ],
+   "posicao_blender": [
+    -3.984,
+    -2.3,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Hub luz 4",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.97,
+    0.92
+   ],
+   "posicao_blender": [
+    -0.0,
+    -4.6,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Hub luz 5",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 110.0,
+   "cor_rgb": [
+    1.0,
+    0.97,
+    0.92
+   ],
+   "posicao_blender": [
+    3.984,
+    -2.3,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Laboratorio emergencia",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 90.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    19.356,
+    11.175,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.25
+  },
+  {
+   "nome": "Laboratorio luz 0",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    1.0,
+    0.75,
+    0.45
+   ],
+   "posicao_blender": [
+    16.325,
+    9.425,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Laboratorio luz 1",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    1.0,
+    0.75,
+    0.45
+   ],
+   "posicao_blender": [
+    19.356,
+    11.175,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Laboratorio luz 2",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 150.0,
+   "cor_rgb": [
+    1.0,
+    0.75,
+    0.45
+   ],
+   "posicao_blender": [
+    22.387,
+    12.925,
+    3.1
+   ],
+   "sombra": true,
+   "raio_m": 0.3
+  },
+  {
+   "nome": "Laboratorio porta",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 25.0,
+   "cor_rgb": [
+    1.0,
+    0.75,
+    0.45
+   ],
+   "posicao_blender": [
+    14.506,
+    8.375,
+    2.6
+   ],
+   "sombra": true,
+   "raio_m": 0.1
+  },
+  {
+   "nome": "Luz da Terra",
+   "tipo": "SUN",
+   "grupo": "terra",
+   "energia_blender_W": 0.35,
+   "cor_rgb": [
+    0.55,
+    0.7,
+    1.0
+   ],
+   "posicao_blender": [
+    0.0,
+    0.0,
+    50.0
+   ],
+   "sombra": false,
+   "rotacao_blender_graus": [
+    62.0,
+    0.0,
+    -130.0
+   ]
+  },
+  {
+   "nome": "Rover farol -0.6",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 500.0,
+   "cor_rgb": [
+    1.0,
+    0.96,
+    0.85
+   ],
+   "posicao_blender": [
+    6.43,
+    -36.481,
+    0.75
+   ],
+   "sombra": true,
+   "raio_m": 0.08,
+   "cone_graus": 45.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Rover farol 0.6",
+   "tipo": "SPOT",
+   "grupo": "ext",
+   "energia_blender_W": 500.0,
+   "cor_rgb": [
+    1.0,
+    0.96,
+    0.85
+   ],
+   "posicao_blender": [
+    7.47,
+    -35.881,
+    0.75
+   ],
+   "sombra": true,
+   "raio_m": 0.08,
+   "cone_graus": 45.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Rover lanterna -1.0",
+   "tipo": "SPOT",
+   "grupo": "emerg",
+   "energia_blender_W": 60.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    8.184,
+    -40.319,
+    0.8
+   ],
+   "sombra": true,
+   "raio_m": 0.06,
+   "cone_graus": 60.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Rover lanterna 1.0",
+   "tipo": "SPOT",
+   "grupo": "emerg",
+   "energia_blender_W": 60.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    9.916,
+    -39.319,
+    0.8
+   ],
+   "sombra": true,
+   "raio_m": 0.06,
+   "cone_graus": 60.0,
+   "suavizacao_cone": 0.5
+  },
+  {
+   "nome": "Sol",
+   "tipo": "SUN",
+   "grupo": "sol",
+   "energia_blender_W": 4.2,
+   "cor_rgb": [
+    1.0,
+    0.96,
+    0.88
+   ],
+   "posicao_blender": [
+    0.0,
+    0.0,
+    50.0
+   ],
+   "sombra": true,
+   "rotacao_blender_graus": [
+    68.0,
+    0.0,
+    38.0
+   ]
+  },
+  {
+   "nome": "Tunel Agua 11.2",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    -9.699,
+    5.6,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Agua 13.6",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    -11.778,
+    6.8,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Agua 8.8",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    -7.621,
+    4.4,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Dormitorio 11.2",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    -9.699,
+    -5.6,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Dormitorio 13.6",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    -11.778,
+    -6.8,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Dormitorio 8.8",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    -7.621,
+    -4.4,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Eclusa 11.2",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    0.0,
+    -11.2,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Eclusa 13.6",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    0.0,
+    -13.6,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Eclusa 8.8",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    0.0,
+    -8.8,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Energia 11.2",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    9.699,
+    -5.6,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Energia 13.6",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    11.778,
+    -6.8,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Energia 8.8",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    7.621,
+    -4.4,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Estufa 11.2",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    0.0,
+    11.2,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Estufa 13.6",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    0.0,
+    13.6,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Estufa 8.8",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    0.0,
+    8.8,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Laboratorio 11.2",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    9.699,
+    5.6,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Laboratorio 13.6",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    11.778,
+    6.8,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel Laboratorio 8.8",
+   "tipo": "POINT",
+   "grupo": "int",
+   "energia_blender_W": 55.0,
+   "cor_rgb": [
+    0.8,
+    0.95,
+    1.0
+   ],
+   "posicao_blender": [
+    7.621,
+    4.4,
+    3.0
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel emergencia Agua",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 40.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    -9.699,
+    5.6,
+    2.9
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel emergencia Dormitorio",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 40.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    -9.699,
+    -5.6,
+    2.9
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel emergencia Eclusa",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 40.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    0.0,
+    -11.2,
+    2.9
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel emergencia Energia",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 40.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    9.699,
+    -5.6,
+    2.9
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel emergencia Estufa",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 40.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    0.0,
+    11.2,
+    2.9
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  },
+  {
+   "nome": "Tunel emergencia Laboratorio",
+   "tipo": "POINT",
+   "grupo": "emerg",
+   "energia_blender_W": 40.0,
+   "cor_rgb": [
+    1.0,
+    0.1,
+    0.05
+   ],
+   "posicao_blender": [
+    9.699,
+    5.6,
+    2.9
+   ],
+   "sombra": true,
+   "raio_m": 0.2
+  }
+ ]
+}
