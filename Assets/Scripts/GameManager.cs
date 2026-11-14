@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     /// <summary>Estação ao alcance do jogador (mostra botão AÇÃO).</summary>
     public Estacao Proxima { get; private set; }
     public bool TudoFeito { get; private set; }
+    public bool AlvoUrgente { get; private set; }
 
     /// <summary>Painéis solares cobertos de poeira: bateria menor até limpar (começa no Dia 4).</summary>
     public bool PainelSujo { get; private set; }
@@ -101,10 +102,13 @@ public class GameManager : MonoBehaviour
         if (Pausado) return;
         if (Estado != EstadoJogo.Acao) return;
         TempoRestante -= Time.deltaTime;
-        if (TempoRestante <= 0f) { TempoRestante = 0f; TerminarDia(); }
+        if (TempoRestante <= 0f) { TempoRestante = 0f; TerminarDia(); return; }
+        AtualizarEventos();
+        if (Estado != EstadoJogo.Acao) return;
         AtualizarEstacoes();
         _ui.AtualizarHud();
         _ui.AtualizarGuia(Alvo, Proxima);
+        _ui.AtualizarAlerta(_evento, _eventoRestante);
         if (Proxima != null && Entrada.ConfirmarDown) Interagir();
     }
 
@@ -115,7 +119,64 @@ public class GameManager : MonoBehaviour
     /// <summary>ids das tarefas do dia (fixas + sorteadas + painel se sujo).</summary>
     public IReadOnlyList<string> TarefasHoje => _tarefasHoje;
 
-    bool EstacaoDoDia(Estacao e) => e.id == "cama" || _tarefasHoje.Contains(e.id);
+    // Evento do dia em andamento (alarme/vazamento)
+    EventoDia _evento;
+    float _eventoRestante;
+    bool[] _disparados = new bool[0];
+    public EventoDia EventoAtivo => _evento;
+    public float EventoRestante => _eventoRestante;
+    public bool BackupFeito { get; private set; }
+
+    bool EstacaoDoDia(Estacao e)
+    {
+        if (e.id == "cama") return true;
+        if (_evento != null && _evento.estacao == e.id) return true;
+        if (e.id == "airlock") return _tarefasHoje.Contains(e.id) && _concluidas.Contains("backup");
+        return _tarefasHoje.Contains(e.id);
+    }
+
+    void RefrescarEstacoes()
+    {
+        foreach (var e in _estacoes) e.Definir(EstacaoDoDia(e), _concluidas.Contains(e.id));
+    }
+
+    void AtualizarEventos()
+    {
+        var eventos = DadosDoDia.eventos;
+        if (_evento == null && eventos != null)
+        {
+            float decorrido = Mathf.Max(DadosDoDia.duracaoSegundos, 1f) - TempoRestante;
+            for (int i = 0; i < eventos.Length; i++)
+            {
+                if (_disparados[i] || decorrido < eventos[i].segundo || !ExisteEstacao(eventos[i].estacao)) continue;
+                _disparados[i] = true;
+                _evento = eventos[i];
+                _eventoRestante = _evento.limite;
+                RefrescarEstacoes();
+                _ui.Alerta(_evento.titulo, _evento.texto);
+                break;
+            }
+        }
+        if (_evento == null) return;
+
+        if (_evento.drenoOxigenioPorSeg > 0f)
+        {
+            AplicarRecursos(0, -_evento.drenoOxigenioPorSeg * Time.deltaTime, 0);
+            if (Estado != EstadoJogo.Acao) return; // game over durante o dreno
+        }
+        if (_evento.limite > 0f)
+        {
+            _eventoRestante -= Time.deltaTime;
+            if (_eventoRestante <= 0f)
+            {
+                var ev = _evento;
+                _evento = null;
+                AplicarRecursos(-ev.penalEnergia, -ev.penalOxigenio, 0);
+                RefrescarEstacoes();
+                _ui.Aviso("Você demorou demais! A base sofreu danos.");
+            }
+        }
+    }
 
     public string NomeDe(string id)
     {
@@ -170,6 +231,11 @@ public class GameManager : MonoBehaviour
             float d = e.DistanciaAte(p);
             if (d < melhorAlvo) { melhorAlvo = d; Alvo = e; }
         }
+        // Evento urgente tem prioridade na seta
+        AlvoUrgente = false;
+        if (_evento != null)
+            foreach (var e in _estacoes)
+                if (e.id == _evento.estacao && !e.Concluida) { Alvo = e; AlvoUrgente = true; TudoFeito = false; }
         if (Alvo == null) Alvo = cama; // tudo feito → vá dormir
         foreach (var e in _estacoes)
         {
@@ -219,12 +285,23 @@ public class GameManager : MonoBehaviour
     {
         _concluidas.Add(e.id);
         if (e.id == "painel") PainelSujo = false;
-        e.Definir(true, true);
+        if (e.id == "backup") BackupFeito = true;
+        bool eraEvento = _evento != null && _evento.estacao == e.id;
+        if (eraEvento) _evento = null;
         TempoRestante = Mathf.Max(0f, TempoRestante - e.custoTempo);
-        AplicarRecursos(-e.custoEnergia, 0, 0);
-        bool tudo = true;
+        var (cEnergia, cOxigenio, _) = Estacao.Custos(e.id);
+        AplicarRecursos(-cEnergia, -cOxigenio, 0);
+        if (Estado == EstadoJogo.GameOver) return;
+        RefrescarEstacoes();
+
+        // Última tarefa do jogo: a comporta fecha e o dia 10 termina.
+        if (e.id == "airlock") { TerminarDia(); return; }
+
+        bool tudo = _evento == null;
         foreach (var id in _tarefasHoje) if (!_concluidas.Contains(id)) tudo = false;
-        _ui.Aviso(tudo ? "Tudo pronto! Volte para a cama para dormir." : $"{e.nome} concluída!");
+        string aviso = eraEvento ? "Crise resolvida!" : $"{e.nome} concluída!";
+        if (tudo) aviso = "Tudo pronto! Volte para a cama para dormir.";
+        _ui.Aviso(aviso);
         _ui.AtualizarTarefas();
     }
 
@@ -238,6 +315,7 @@ public class GameManager : MonoBehaviour
     {
         DiaAtual = 1;
         PainelSujo = false;
+        BackupFeito = false;
         Recursos = new Recursos { comida = ComidaInicial };
         IniciarBriefing();
     }
@@ -246,6 +324,8 @@ public class GameManager : MonoBehaviour
     {
         if (DiaAtual >= 4 && !_painelAvisado) { PainelSujo = true; _painelAvisado = true; }
         SortearTarefas();
+        _evento = null;
+        _disparados = new bool[DadosDoDia.eventos != null ? DadosDoDia.eventos.Length : 0];
         Recursos.energia = PainelSujo ? Mathf.Min(EnergiaPainelSujo, DadosDoDia.energiaInicial) : DadosDoDia.energiaInicial;
         RecursosMudaram?.Invoke();
         MudarEstado(EstadoJogo.Briefing);
@@ -256,6 +336,8 @@ public class GameManager : MonoBehaviour
         TempoRestante = Mathf.Max(DadosDoDia.duracaoSegundos, 1f);
         PrepararEstacoes();
         MudarEstado(EstadoJogo.Acao);
+        var nasa = DonkiDados.Do(DiaAtual);
+        if (nasa != null) _ui.Aviso("Evento NASA hoje: " + nasa.nome);
     }
 
     /// <summary>Chamado pela cama (Task 3), pelo botão temporário "Dormir" ou quando o tempo zera.</summary>
@@ -263,6 +345,7 @@ public class GameManager : MonoBehaviour
     {
         if (Estado != EstadoJogo.Acao && Estado != EstadoJogo.Minigame) return;
 
+        _evento = null;
         // Consumo e consequências da noite
         float o2Antes = Recursos.oxigenio, comidaAntes = Recursos.comida;
         ResumoLinhas.Clear();
@@ -313,6 +396,7 @@ public class GameManager : MonoBehaviour
     public string TextoPontuacao()
     {
         float o2 = Recursos.oxigenio, comida = Recursos.comida;
+        if (!BackupFeito) return "Você sobreviveu, mas deixou a pesquisa para trás. Muita ciência foi sacrificada.";
         if (o2 >= 70f && comida >= 5f) return "Missão Perfeita! Você entendeu o peso das suas escolhas!";
         if (o2 >= 30f) return "Você sobreviveu, mas sacrificou muita ciência.";
         return "Resgate no limite. A base quase não aguentou.";

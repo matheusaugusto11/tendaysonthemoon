@@ -18,7 +18,11 @@ public class UIJogo
     Text _btnAcaoTexto, _avisoTexto;
     RectTransform _seta;
     Text _setaTexto;
-    float _avisoAte;
+    float _avisoAte, _flashAte;
+    Image _alertaFundo, _flash;
+    Text _alertaTexto, _nasaTag;
+    Image _nasaFundo;
+    Image[] _setaPartes;
     Text _miniTitulo, _miniInstrucao;
     RectTransform _miniArea, _miniBarra;
     Text _miniTempo, _miniMsg;
@@ -62,15 +66,16 @@ public class UIJogo
 
         // Briefing (pop-up)
         _briefing = Painel("Briefing", new Color(0, 0, 0, 0.7f));
-        var caixa = Caixa(_briefing.transform, new Vector2(1300, 760));
+        var caixa = Caixa(_briefing.transform, new Vector2(1600, 940));
         _fundoBriefing = caixa.GetComponent<Image>();
-        _briefingTexto = Texto(caixa, "", 42, new Vector2(0.5f, 0.58f), new Vector2(1200, 560));
+        _briefingTexto = Texto(caixa, "", 33, new Vector2(0.5f, 0.57f), new Vector2(1500, 740));
         _btnIniciarDia = Botao(caixa, "COMEÇAR O DIA", new Vector2(0.5f, 0.12f), new Vector2(480, 120), _gm.ComecarAcao);
 
         // HUD
         _hud = new GameObject("HUD", typeof(RectTransform));
         _hud.transform.SetParent(_raiz, false);
         Esticar((RectTransform)_hud.transform);
+        _hud.AddComponent<SafeArea>(); // HUD respeita o entalhe do celular
         _hudDia = Texto(_hud.transform, "", 40, new Vector2(0.5f, 0.96f), new Vector2(600, 60));
         _hudTempo = Texto(_hud.transform, "", 40, new Vector2(0.5f, 0.915f), new Vector2(600, 60));
         // Tarefas do dia (sempre visíveis durante a ação)
@@ -98,6 +103,26 @@ public class UIJogo
         _avisoTexto = Texto(_hud.transform, "", 56, new Vector2(0.5f, 0.28f), new Vector2(1200, 100));
         _avisoTexto.color = new Color(0.5f, 1f, 0.5f);
 
+        // Banner de alerta (evento em andamento) + flash vermelho de tela
+        _alertaFundo = Retangulo(_hud.transform, Vector2.zero, new Vector2(1500, 170), new Color(0.6f, 0.05f, 0.05f, 0.9f));
+        var rta = _alertaFundo.rectTransform;
+        rta.anchorMin = rta.anchorMax = new Vector2(0.5f, 0.66f);
+        rta.anchoredPosition = Vector2.zero;
+        _alertaTexto = Texto(_alertaFundo.transform, "", 38, new Vector2(0.5f, 0.5f), new Vector2(1460, 160));
+        _alertaFundo.gameObject.SetActive(false);
+        _flash = Retangulo(_raiz, Vector2.zero, Vector2.zero, new Color(1f, 0f, 0f, 0f));
+        Esticar(_flash.rectTransform);
+        _flash.transform.SetSiblingIndex(_hud.transform.GetSiblingIndex() + 1);
+
+        // Etiqueta do evento NASA do dia (sempre visível durante a ação)
+        _nasaFundo = Retangulo(_hud.transform, Vector2.zero, new Vector2(760, 110), new Color(0.05f, 0.15f, 0.35f, 0.8f));
+        var rtn = _nasaFundo.rectTransform;
+        rtn.anchorMin = rtn.anchorMax = new Vector2(0f, 0.72f);
+        rtn.pivot = new Vector2(0f, 0.5f);
+        rtn.anchoredPosition = new Vector2(40, 0);
+        _nasaTag = Texto(_nasaFundo.transform, "", 28, new Vector2(0.5f, 0.5f), new Vector2(740, 100));
+        _nasaTag.alignment = TextAnchor.MiddleLeft;
+
         // Seta guia
         var seta = new GameObject("Seta", typeof(RectTransform));
         seta.transform.SetParent(_hud.transform, false);
@@ -112,7 +137,8 @@ public class UIJogo
         var rpn = (RectTransform)ponta.transform;
         rpn.sizeDelta = new Vector2(38, 38); rpn.anchoredPosition = new Vector2(24, 0);
         rpn.localRotation = Quaternion.Euler(0, 0, 45);
-        foreach (var im in new[] { haste.GetComponent<Image>(), ponta.GetComponent<Image>() })
+        _setaPartes = new[] { haste.GetComponent<Image>(), ponta.GetComponent<Image>() };
+        foreach (var im in _setaPartes)
         { im.color = new Color(1f, 0.9f, 0.2f, 0.95f); im.raycastTarget = false; }
         _setaTexto = Texto(_hud.transform, "", 34, new Vector2(0.5f, 0.5f), new Vector2(400, 50));
         _setaTexto.color = new Color(1f, 0.9f, 0.2f);
@@ -192,6 +218,7 @@ public class UIJogo
 
         _pausa.SetActive(false);
         _painelMinigame.SetActive(e == EstadoJogo.Minigame);
+        if (e != EstadoJogo.Acao && e != EstadoJogo.Minigame) { _alertaFundo.gameObject.SetActive(false); _flash.color = new Color(1, 0, 0, 0); }
         if (e != EstadoJogo.Acao) { _btnAcao.gameObject.SetActive(false); _seta.gameObject.SetActive(false); _setaTexto.gameObject.SetActive(false); }
         Button primeiro = null;
         switch (e)
@@ -208,10 +235,11 @@ public class UIJogo
         if (e == EstadoJogo.Briefing) PreencherBriefing();
         if (e == EstadoJogo.Resumo) PreencherResumo();
         if (e == EstadoJogo.Pontuacao) _pontuacaoTexto.text = "FIM DOS 10 DIAS\n\n" + _gm.TextoPontuacao() +
-            $"\n\nOxigênio {_gm.Recursos.oxigenio:0}%   Comida {_gm.Recursos.comida:0}%";
+            $"\n\nOxigênio {_gm.Recursos.oxigenio:0}%   Comida {_gm.Recursos.comida:0}%\n\n{DonkiDados.Creditos}";
         if (e == EstadoJogo.Acao)
         {
             AtualizarTarefas();
+            AtualizarNasa();
             AtualizarHud();
         }
     }
@@ -272,7 +300,8 @@ public class UIJogo
     {
         var d = _gm.DadosDoDia;
         _fundoBriefing.color = d.alertaVermelho ? new Color(0.45f, 0.05f, 0.05f, 0.97f) : new Color(0.08f, 0.12f, 0.2f, 0.97f);
-        string nasa = string.IsNullOrEmpty(d.alertaNasa) ? "" : $"\n\nALERTA NASA: {d.alertaNasa}";
+        string nasa = DonkiDados.Do(d.numero) is EventoNasa en ? "\n\n" + en.Card
+            : (string.IsNullOrEmpty(d.alertaNasa) ? "" : $"\n\nALERTA NASA: {d.alertaNasa}");
         var nomes = new System.Collections.Generic.List<string>();
         foreach (var id in _gm.TarefasHoje) nomes.Add(_gm.NomeDe(id));
         var r = _gm.Recursos;
@@ -305,6 +334,16 @@ public class UIJogo
         Preencher(_barraComida, _txtComida, "Comida", r.comida);
     }
 
+    /// <summary>Etiqueta "NASA DONKI: qual evento está acontecendo hoje".</summary>
+    public void AtualizarNasa()
+    {
+        var en = DonkiDados.Do(_gm.DiaAtual);
+        _nasaFundo.gameObject.SetActive(en != null);
+        if (en == null) return;
+        _nasaFundo.color = en.perigo == "EXTREMO" ? new Color(0.5f, 0.05f, 0.05f, 0.85f) : new Color(0.05f, 0.15f, 0.35f, 0.8f);
+        _nasaTag.text = $"NASA DONKI · {en.data}\n{en.nome}\n{en.Linha}";
+    }
+
     public void AtualizarTarefas()
     {
         var d = _gm.DadosDoDia;
@@ -320,6 +359,27 @@ public class UIJogo
         _avisoAte = Time.time + 2f;
     }
 
+    public void Alerta(string titulo, string texto)
+    {
+        _flashAte = Time.time + 1.6f;
+        Aviso(titulo);
+    }
+
+    public void AtualizarAlerta(EventoDia ev, float restante)
+    {
+        // Flash vermelho pulsante logo após o alarme
+        float a = Time.time < _flashAte ? Mathf.PingPong(Time.time * 4f, 1f) * 0.35f : 0f;
+        _flash.color = new Color(1f, 0f, 0f, a);
+
+        _alertaFundo.gameObject.SetActive(ev != null);
+        if (ev == null) return;
+        string tempo = ev.limite > 0f ? $"   ({Mathf.CeilToInt(Mathf.Max(0f, restante))} s)" : "";
+        var en = DonkiDados.Do(_gm.DiaAtual);
+        string real = en != null ? $"\nEvento real NASA: {en.nome} ({en.Linha})" : "";
+        _alertaTexto.text = $"{ev.titulo}{tempo}\n{ev.texto}{real}";
+        _alertaFundo.color = new Color(0.6f, 0.05f, 0.05f, 0.75f + Mathf.PingPong(Time.time * 2f, 0.2f));
+    }
+
     /// <summary>Atualiza seta guia, botão AÇÃO e aviso a cada frame.</summary>
     public void AtualizarGuia(Estacao alvo, Estacao proxima)
     {
@@ -327,7 +387,11 @@ public class UIJogo
 
         _btnAcao.gameObject.SetActive(proxima != null);
         if (proxima != null)
-            _btnAcaoTexto.text = proxima.id == "cama" ? "DORMIR (A / E)" : $"{proxima.nome.ToUpper()}\nINICIAR (A / E)";
+        {
+            string extra = Estacao.Custos(proxima.id).aviso;
+            _btnAcaoTexto.text = proxima.id == "cama" ? "DORMIR (A / E)"
+                : $"{proxima.nome.ToUpper()}\nINICIAR (A / E)" + (extra != "" ? "\n" + extra : "");
+        }
 
         var cam = Camera.main;
         bool mostrar = alvo != null && proxima == null && cam != null && _gm.jogador != null;
@@ -348,6 +412,9 @@ public class UIJogo
         _seta.position = pos;
         _seta.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
         _setaTexto.transform.position = pos + Vector2.down * 70f;
+        var corSeta = _gm.AlvoUrgente ? new Color(1f, 0.25f, 0.2f, 1f) : new Color(1f, 0.9f, 0.2f, 0.95f);
+        foreach (var im in _setaPartes) im.color = corSeta;
+        _setaTexto.color = corSeta;
         _setaTexto.text = $"{alvo.nome}  {alvo.DistanciaAte(_gm.jogador.transform.position):0} m";
     }
 

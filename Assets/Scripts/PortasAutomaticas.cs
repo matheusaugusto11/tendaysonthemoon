@@ -12,6 +12,8 @@ public class PortasAutomaticas : MonoBehaviour
     public float raioAbrir = 4.5f;
     public float raioFechar = 6f;
     [Tooltip("Segundos para abrir/fechar")] public float tempoAbrir = 0.8f;
+    [Tooltip("Som tocado quando as portas começam a abrir (preenchido automaticamente com Assets/Audios/doorOpening)")] public AudioClip somAbrir;
+    [Range(0f, 1f)] public float volumeSom = 1f;
     [Tooltip("Fração da largura da porta que ela desliza (1 = largura inteira)")] public float fracaoAbertura = 1f;
 
     class Porta
@@ -116,7 +118,12 @@ public class PortasAutomaticas : MonoBehaviour
             if (lado.portas.Count == 0) continue;
             Vector3 delta = lado.centro - _jogador.position; delta.y = 0;
             float d = delta.magnitude;
-            if (!lado.aberto && d < raioAbrir) lado.aberto = true;
+            if (!lado.aberto && d < raioAbrir)
+            {
+                lado.aberto = true;
+                // Som 3D na posição das portas, só quando elas começam a abrir.
+                if (somAbrir != null) AudioSource.PlayClipAtPoint(somAbrir, lado.centro, volumeSom);
+            }
             else if (lado.aberto && d > raioFechar) lado.aberto = false;
 
             float alvo = lado.aberto ? 1f : 0f;

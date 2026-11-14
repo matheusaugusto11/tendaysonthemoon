@@ -136,6 +136,20 @@ public class Estacao : MonoBehaviour
         }
     }
 
+    /// <summary>Custo (energia, oxigênio) ao concluir a estação, e um aviso curto para o botão.</summary>
+    public static (float energia, float oxigenio, string aviso) Custos(string id)
+    {
+        switch (id)
+        {
+            case "painel": return (15f, 40f, "Fora da base: -40% O2");
+            case "antena": return (60f, 0f, "Gasta muita energia");
+            case "disjuntores": return (20f, 0f, "");
+            case "vazamento": return (5f, 0f, "");
+            case "airlock": return (0f, 0f, "");
+            default: return (10f, 0f, "");
+        }
+    }
+
     public float DistanciaAte(Vector3 p)
     {
         Vector3 d = transform.position - p; d.y = 0;

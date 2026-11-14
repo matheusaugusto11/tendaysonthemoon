@@ -25,7 +25,8 @@ public static class SetupCenaMovimento
                 Undo.RegisterCreatedObjectUndo(gm, "Criar GameManager");
                 mudou = true;
             }
-            if (Object.FindObjectsOfType<Estacao>().Length == 0) { CriarEstacoes(); mudou = true; }
+            if (CriarEstacoes()) mudou = true;
+            if (ConfigurarMobile()) mudou = true;
             if (ConfigurarPortas()) mudou = true;
             if (!mudou) return;
             EditorSceneManager.SaveScene(cena, "Assets/Scenes/Game.unity");
@@ -45,15 +46,21 @@ public static class SetupCenaMovimento
         ("vazamento", "Vazamento", new Color(1f, 0.2f, 0.2f)),
         ("antena", "Antena", new Color(0.8f, 0.4f, 1f)),
         ("backup", "Backup de Dados", new Color(0.2f, 1f, 0.9f)),
+        ("airlock", "Airlock", new Color(0.9f, 0.3f, 0.3f)),
         ("cama", "Cama", new Color(0.9f, 0.9f, 1f)),
     };
 
-    static void CriarEstacoes()
+    // Cria só as estações que ainda não existem (mantém as que você moveu).
+    static bool CriarEstacoes()
     {
-        var pai = new GameObject("Estacoes");
-        Undo.RegisterCreatedObjectUndo(pai, "Criar estações");
+        var existentes = new System.Collections.Generic.HashSet<string>();
+        foreach (var e in Object.FindObjectsOfType<Estacao>()) existentes.Add(e.id);
+        var pai = GameObject.Find("Estacoes");
+        bool criou = false;
         for (int i = 0; i < Estacoes.Length; i++)
         {
+            if (existentes.Contains(Estacoes[i].id)) continue;
+            if (pai == null) { pai = new GameObject("Estacoes"); Undo.RegisterCreatedObjectUndo(pai, "Criar estações"); }
             float ang = i * Mathf.PI * 2f / Estacoes.Length;
             var go = new GameObject("Estacao_" + Estacoes[i].id);
             go.transform.SetParent(pai.transform, false);
@@ -63,7 +70,25 @@ public static class SetupCenaMovimento
             e.nome = Estacoes[i].nome;
             e.cor = Estacoes[i].cor;
             e.Montar();
+            criou = true;
         }
+        return criou;
+    }
+
+    // Tela em paisagem (celular/tablet). Roda uma vez; só mexe se estiver diferente.
+    static bool ConfigurarMobile()
+    {
+        if (PlayerSettings.defaultInterfaceOrientation == UIOrientation.AutoRotation
+            && !PlayerSettings.allowedAutorotateToPortrait && !PlayerSettings.allowedAutorotateToPortraitUpsideDown
+            && PlayerSettings.allowedAutorotateToLandscapeLeft && PlayerSettings.allowedAutorotateToLandscapeRight)
+            return false;
+        PlayerSettings.defaultInterfaceOrientation = UIOrientation.AutoRotation;
+        PlayerSettings.allowedAutorotateToPortrait = false;
+        PlayerSettings.allowedAutorotateToPortraitUpsideDown = false;
+        PlayerSettings.allowedAutorotateToLandscapeLeft = true;
+        PlayerSettings.allowedAutorotateToLandscapeRight = true;
+        Debug.Log("[SetupCenaMovimento] Orientação fixada em paisagem (Landscape).");
+        return true;
     }
 
     // Põe PortasAutomaticas nas estufas (instâncias do FBX) e liga os clips *_Abrir do modelo.
@@ -80,10 +105,43 @@ public static class SetupCenaMovimento
             string caminho = AssetDatabase.GetAssetPath(fonte);
             if (!caminho.ToLower().EndsWith(".fbx")) continue;
 
+            if (MoverEstacaoParaDentro(go)) mudou = true;
             var portas = go.GetComponent<PortasAutomaticas>();
             if (portas == null) { portas = Undo.AddComponent<PortasAutomaticas>(go); mudou = true; }
+            if (portas.somAbrir == null)
+            {
+                var som = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audios/doorOpening.mp3");
+                if (som != null)
+                {
+                    portas.somAbrir = som;
+                    EditorUtility.SetDirty(portas);
+                    Debug.Log("[SetupCenaMovimento] Som de porta (doorOpening) ligado à estufa.");
+                    mudou = true;
+                }
+            }
         }
         return mudou;
+    }
+
+    // Põe a estação "estufa" dentro do modelo da estufa (só se ela ainda estiver fora).
+    static bool MoverEstacaoParaDentro(GameObject modelo)
+    {
+        var rs = modelo.GetComponentsInChildren<Renderer>();
+        if (rs.Length == 0) return false;
+        var b = rs[0].bounds;
+        for (int i = 1; i < rs.Length; i++) b.Encapsulate(rs[i].bounds);
+        foreach (var e in Object.FindObjectsOfType<Estacao>())
+        {
+            if (e.id != "estufa") continue;
+            Vector3 p = e.transform.position;
+            bool dentro = p.x >= b.min.x && p.x <= b.max.x && p.z >= b.min.z && p.z <= b.max.z;
+            if (dentro) return false;
+            Undo.RecordObject(e.transform, "Mover estação estufa");
+            e.transform.position = new Vector3(b.center.x, b.min.y, b.center.z);
+            Debug.Log("[SetupCenaMovimento] Estação Estufa movida para dentro do modelo da estufa.");
+            return true;
+        }
+        return false;
     }
 
     // Remove objetos raiz duplicados (mesmo nome e posição) e personagens extras com Movimento.

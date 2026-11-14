@@ -9,12 +9,12 @@ public static class DiasPadrao
         new string[0],                 // Dia 2: 2 sorteadas
         new[] { "esteira" },           // Dia 3: esteira + 1 sorteada
         new[] { "painel", "estufa", "lixo" },
-        new[] { "disjuntores" },
+        new string[0],                 // Dia 5: 1 sorteada + evento da tempestade
         new string[0],                 // Dia 6: 3 sorteadas (consequências)
-        new[] { "vazamento" },
-        new[] { "antena", "disjuntores" },
+        new string[0],                 // Dia 7: 2 sorteadas + evento do vazamento
+        new[] { "antena" },
         new[] { "painel" },            // Dia 9: painel + 2 sorteadas
-        new[] { "backup" },
+        new[] { "backup", "airlock" },
     };
 
     public static DayData[] Criar()
@@ -23,8 +23,28 @@ public static class DiasPadrao
         for (int i = 0; i < dias.Length; i++) dias[i].estacoes = Estacoes[i];
         dias[1].tarefasAleatorias = 2;
         dias[2].tarefasAleatorias = 1;
+        dias[4].tarefasAleatorias = 1;
         dias[5].tarefasAleatorias = 3;
+        dias[6].tarefasAleatorias = 2;
         dias[8].tarefasAleatorias = 2;
+        dias[4].eventos = new[]
+        {
+            new EventoDia
+            {
+                segundo = 120f, estacao = "disjuntores", titulo = "ALARME! TEMPESTADE SOLAR",
+                texto = "Corra ao Quadro de Disjuntores e ative o ESCUDO!",
+                limite = 60f, penalEnergia = 30f, penalOxigenio = 10f,
+            }
+        };
+        dias[6].eventos = new[]
+        {
+            new EventoDia
+            {
+                segundo = 100f, estacao = "vazamento", titulo = "VAZAMENTO!",
+                texto = "Tssshhh! O oxigênio está caindo. Ache o vazamento e conserte!",
+                limite = 0f, drenoOxigenioPorSeg = 1.5f,
+            }
+        };
         return dias;
     }
 
