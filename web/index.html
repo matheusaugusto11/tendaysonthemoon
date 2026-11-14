@@ -1,0 +1,1522 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#04050c">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Dez Dias na Lua · Ten Days on the Moon</title>
+<style>
+:root{--en:#ffd23f;--o2:#4dd0e1;--rad:#c77dff;--green:#6bd425;--orange:#ff9f43;--red:#ff5d5d;
+  --panel:#0e1326;--panel2:#171d38;--line:#3a4578;--text:#fff;--muted:#cfd5f5}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:radial-gradient(1200px 600px at 50% -10%,#141a35,#04050c 70%) fixed #04050c;color:var(--text);
+  font-family:'Segoe UI','Nunito',system-ui,sans-serif;font-size:16px;line-height:1.35}
+#app{max-width:1000px;margin:0 auto;padding:12px 12px 56px}
+button{font:inherit;color:inherit;cursor:pointer;border:0}
+button:disabled{opacity:.4;cursor:not-allowed}
+button:focus-visible,input:focus-visible,a:focus-visible,g:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.panel{background:rgba(14,19,38,.96);border:2.5px solid var(--line);border-radius:20px;padding:16px 18px}
+#screen>*{animation:rise .35s ease-out both}
+#screen.still>*{animation:none}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+.hud{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:10px 14px;margin-bottom:10px}
+.daypill{background:var(--orange);color:#2a1500;font-weight:800;border-radius:999px;padding:8px 18px;white-space:nowrap}
+.meter{display:flex;align-items:center;gap:8px;min-width:150px;flex:1;position:relative}
+.ic{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;color:#0e1326;flex:none}
+.meter .lab{font-size:13px;font-weight:700;color:#dfe4ff;display:flex;justify-content:space-between}
+.bar{height:14px;border-radius:7px;background:#252c4d;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:7px;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.meter.warn .bar{box-shadow:0 0 0 2px var(--red);animation:blink 1s ease-in-out infinite}
+@keyframes blink{50%{box-shadow:0 0 0 2px transparent}}
+.float{position:absolute;right:0;top:-6px;font-weight:800;font-size:18px;pointer-events:none;animation:floatup 1.6s ease-out both;text-shadow:0 2px 6px #000}
+@keyframes floatup{0%{opacity:0;transform:translateY(10px) scale(.6)}20%{opacity:1;transform:translateY(0) scale(1.2)}100%{opacity:0;transform:translateY(-26px) scale(1)}}
+.pop{animation:pop .5s ease-out}
+@keyframes pop{40%{transform:scale(1.25)}}
+.chips{display:flex;gap:8px;align-items:center}
+.chip{background:var(--panel2);border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px;white-space:nowrap;display:inline-block}
+.langbtn{background:var(--panel2);border:2px solid var(--line);border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px}
+#stage{border-radius:20px;overflow:hidden;border:2.5px solid var(--line);margin-bottom:10px;background:#04050c;aspect-ratio:10/3;position:relative}
+#stage svg{display:block;width:100%;height:100%;animation:fadein .6s ease-out both}
+@keyframes fadein{from{opacity:0}}
+#stage .place{position:absolute;left:12px;bottom:10px;background:rgba(0,0,0,.6);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700}
+h1{font-size:34px;margin:0 0 6px}h2{font-size:26px;margin:0 0 6px}h3{font-size:19px;margin:0 0 6px}
+p{margin:6px 0;color:var(--muted)}
+.btn{background:var(--green);color:#10300a;font-weight:800;font-size:19px;border-radius:999px;padding:13px 30px;min-height:52px;transition:transform .12s}
+.btn:not(:disabled):hover{transform:translateY(-2px)}.btn:not(:disabled):active{transform:scale(.97)}
+.btn.alt{background:#39405a;color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.right{margin-left:auto}
+.grid{display:grid;gap:10px}
+.mods{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.mod{background:rgba(14,19,38,.96);border:2.5px solid var(--c);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;text-align:center;transition:box-shadow .3s}
+.mod.lit{box-shadow:0 0 22px -4px var(--c)}
+.mod .head{background:var(--c);color:#0e1326;font-weight:800;font-size:18px;padding:8px}
+.mod .art{height:64px;display:grid;place-items:center;font-size:38px;filter:grayscale(1) brightness(.6);transition:filter .3s,transform .3s}
+.mod.lit .art{filter:none;transform:scale(1.12)}
+.mod .slots{display:flex;justify-content:center;gap:6px;min-height:44px;flex-wrap:wrap;padding:0 6px}
+.cellic{width:26px;height:36px;border-radius:7px;display:inline-grid;place-items:center;font-size:17px}
+.cellic.on{background:var(--en);border:2px solid #fff3c4;color:#3a2a00}
+.cellic.off{border:2px dashed #6b7399}
+.cellic.new{animation:cellin .3s ease-out}
+@keyframes cellin{from{transform:translateY(-16px) scale(.5);opacity:0}}
+.mod .pm{display:flex;justify-content:center;gap:10px;padding:8px}
+.pm button{width:48px;height:44px;border-radius:14px;background:#39405a;font-size:24px;font-weight:800;line-height:1}
+.pm button.plus{background:var(--en);color:#3a2a00}
+.mod .hint{font-size:13px;color:#dfe4ff;padding:0 8px 10px;min-height:44px}
+.tray{display:flex;gap:8px;flex-wrap:wrap;align-items:center;min-height:36px}
+.choices{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.choice{background:var(--panel2);border:2.5px solid var(--c,var(--line));border-radius:18px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:6px;min-height:120px;transition:transform .12s,box-shadow .2s}
+.choice:not(:disabled):hover{transform:translateY(-3px);box-shadow:0 8px 22px -8px var(--c,#000)}
+.choice b{font-size:19px}.choice span{color:var(--muted);font-size:15px}
+.choice .cost{font-weight:800;color:#fff}
+.alert{background:var(--red);border-radius:16px;padding:12px 16px;font-weight:800;font-size:19px;margin:10px 0;animation:shake .5s ease-in-out 2}
+.alert.low{background:#b8742a}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.note{background:var(--panel2);border-left:8px solid var(--c,var(--line));border-radius:14px;padding:10px 14px;margin:8px 0}
+.note b{color:#fff}
+.lines .note{animation:rise .4s ease-out both}
+.real{border:2.5px solid var(--en);border-radius:18px;overflow:hidden;margin:10px 0;background:var(--panel)}
+.real .head{background:var(--en);color:#2a1f00;font-weight:800;padding:8px 14px}
+.real .body{padding:10px 14px}
+.src{font-size:12.5px;color:#aab2dd}
+a{color:#9fd8ff}
+.delta{display:grid;grid-template-columns:auto 1fr auto;gap:6px 12px;align-items:center;background:var(--panel2);border-radius:16px;padding:10px 14px;margin:8px 0}
+.delta .tag{border-radius:999px;padding:5px 14px;font-weight:800;color:#0e1326;white-space:nowrap}
+.stars{font-size:48px;letter-spacing:6px}
+.stars span{display:inline-block;animation:starin .5s cubic-bezier(.3,1.6,.5,1) both}
+.stars .off{opacity:.25}
+@keyframes starin{from{transform:scale(0) rotate(-90deg);opacity:0}}
+svg.task{width:100%;max-width:560px;height:auto;display:block;margin:6px auto;border-radius:16px;background:#04050c}
+.spot{cursor:pointer}
+input[type=range]{width:100%;accent-color:var(--orange);height:36px}
+.daystrip{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.dm{width:92px;border-radius:16px;background:var(--panel2);border:2px solid var(--c);padding:8px 4px;text-align:center}
+.dm .e{font-size:30px;filter:grayscale(1) brightness(.5)}
+.dm.lit .e{filter:none;animation:pop .6s ease-out both}
+.dm .c{min-height:22px}
+.dm .c span{display:inline-block;animation:drop .45s ease-in both}
+@keyframes drop{from{transform:translateY(-46px);opacity:0}}
+.cap{font-size:20px;font-weight:800;color:#fff;text-align:center;min-height:56px}
+.foot{position:fixed;left:0;right:0;bottom:0;z-index:2;background:rgba(0,0,0,.78);font-size:12.5px;text-align:center;padding:6px 10px;color:#fff}
+ul{margin:6px 0;padding-left:22px;color:var(--muted)}li{margin:4px 0}
+/* animações do cenário */
+.bob{animation:bob 6s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-5px)}}
+.walk{animation:walk 9s ease-in-out infinite alternate}@keyframes walk{to{transform:translateX(60px)}}
+.walk2{animation:walk 12s ease-in-out infinite alternate-reverse}
+.hop{animation:hop 1.1s ease-in-out infinite}@keyframes hop{50%{transform:translateY(-4px)}}
+.sway{animation:sway 3s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 100%}@keyframes sway{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+.pulse{animation:pulse 4s ease-in-out infinite}@keyframes pulse{50%{opacity:.7}}
+.blinkl{animation:pulse 1.4s ease-in-out infinite}
+.puff{animation:puff 1.6s ease-out infinite}@keyframes puff{0%{opacity:.75;transform:translateY(0)}100%{opacity:0;transform:translateY(-34px)}}
+.ring{fill:none;stroke:#ff5d5d;stroke-width:5;opacity:0;transform-box:fill-box;transform-origin:center;animation:ring 1.5s ease-out 1.5s 2}
+@keyframes ring{0%{opacity:.95;transform:scale(.15)}100%{opacity:0;transform:scale(1)}}
+.flash{opacity:0;animation:flash .45s ease-in-out 1.5s 4 alternate}@keyframes flash{to{opacity:.35}}
+.shield{opacity:0;animation:shieldin .5s ease-out 1.2s both}@keyframes shieldin{to{opacity:.85}}
+.sunmove{animation:sunmove 3.4s linear both}@keyframes sunmove{from{transform:translateX(-45px)}to{transform:translateX(45px)}}
+.sparkle{opacity:0;animation:sparkle 1.4s ease-out 1.8s both}@keyframes sparkle{0%{opacity:0;transform:translateY(10px)}30%{opacity:1}100%{opacity:0;transform:translateY(-40px)}}
+svg.task.wide{max-width:100%}
+#mg{touch-action:none;user-select:none}
+#mgHop.moving{animation:hop .32s ease-in-out infinite}
+#stage.big{aspect-ratio:2/1}
+#map{cursor:pointer;touch-action:none;user-select:none}
+.goalring{animation:goal 1s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes goal{50%{transform:scale(1.25);opacity:.5}}
+#heroHop.moving{animation:hop .32s ease-in-out infinite}
+.dpad{display:grid;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(2,48px);gap:6px;touch-action:none}
+.dpad button{background:#39405a;border-radius:14px;font-size:22px;font-weight:800;user-select:none;touch-action:none}
+.dpad button:active,.dpad button.on{background:var(--orange);color:#2a1500}
+.dpad .u{grid-column:2;grid-row:1}.dpad .l{grid-column:1;grid-row:2}.dpad .d{grid-column:2;grid-row:2}.dpad .r{grid-column:3;grid-row:2}
+@media (max-width:560px){h1{font-size:27px}h2{font-size:22px}.btn{width:100%}.right{margin-left:0;width:100%}#stage{aspect-ratio:10/4}#stage.big{aspect-ratio:10/7}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.puff{opacity:.7}.shield{opacity:.85}}
+/* ---- tela inteira ---- */
+html,body{height:100%;overflow:hidden}
+#app{position:fixed;inset:0;max-width:none;margin:0;padding:8px 10px 36px;display:flex;flex-direction:column;gap:8px}
+#hud{flex:none}.hud{margin-bottom:0}
+#stage,#stage.big{flex:1 1 0;min-height:22vh;aspect-ratio:auto;margin:0;border-radius:16px}
+#stage.big{min-height:42vh}
+#screen{flex:0 1 auto;max-height:62vh;overflow-y:auto;width:100%;max-width:1200px;margin:0 auto;overscroll-behavior:contain;padding-right:2px}
+#screen.play{flex:1 1 auto;max-height:none}
+#screen.play svg.task{width:100%;max-width:none;height:min(52vh,520px)}
+.coach{display:flex;gap:10px;align-items:flex-start;background:#1d2a4d;border:2.5px solid #9fd8ff;border-radius:16px;padding:10px 14px;margin-bottom:8px;color:#fff}
+.coach .who{font-size:30px;line-height:1}
+.slide{text-align:center}.slide .big{font-size:64px;line-height:1.1}
+.dots{display:flex;gap:8px;justify-content:center;margin:10px 0}.dots span{width:12px;height:12px;border-radius:50%;background:#39405a}.dots span.on{background:var(--orange)}
+@media (max-width:560px){#app{padding-bottom:50px}#stage,#stage.big{aspect-ratio:auto}}
+/* ---- cenário em tela cheia + tablet do astronauta ---- */
+#app{pointer-events:none;gap:8px}
+#hud{pointer-events:auto;position:relative;z-index:2}
+#stage,#stage.big{position:fixed;inset:0;z-index:0;flex:none;min-height:0;border:0;border-radius:0;pointer-events:auto}
+#stage .place{display:none}
+#tablet{pointer-events:auto;position:relative;z-index:2;display:flex;flex-direction:column;min-height:0;width:min(920px,100%);margin:auto;
+  background:#0a0e1c;border:9px solid #23283b;border-radius:30px;box-shadow:0 0 0 2px #454c66,0 24px 60px rgba(0,0,0,.65);overflow:hidden}
+#tabTop{flex:none;display:flex;gap:10px;justify-content:space-between;align-items:center;padding:6px 14px;background:#131a33;font-size:13px;font-weight:700;color:#aab2dd}
+#tabTop .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px}
+#tabTop button{background:#252c4d;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700;color:#fff}
+#screen{flex:1 1 auto;min-height:0;max-height:none;max-width:none;margin:0;padding:8px}
+#tablet .panel{border:0;background:transparent;padding:6px 8px}
+#tablet .mod{background:#0e1326}
+#tablet.mini{width:auto;max-width:min(780px,100%);margin:0 auto auto;border-width:5px;border-radius:20px}
+#tablet.mini #tabTop{display:none}
+#tablet.mini #screen{padding:4px}
+#tablet.play{flex:1 1 auto;width:100%;max-width:none;margin:0;border-width:0;border-radius:16px;box-shadow:none;background:rgba(6,8,18,.94)}
+#tablet.play #tabTop{display:none}
+#screen.play svg.task{height:calc(100vh - 350px);min-height:200px}
+.btn.small{font-size:15px;padding:8px 16px;min-height:40px}
+#pad{position:fixed;left:14px;bottom:44px;z-index:3;opacity:.88}
+#tabOpen{position:fixed;right:14px;bottom:44px;z-index:3;background:#23283b;border:2px solid #454c66;color:#fff;border-radius:16px;padding:10px 16px;font-weight:800;font-size:16px}
+details.help{color:#cfd5f5;font-size:14px;margin:0 0 4px}details.help summary{cursor:pointer;font-weight:700}
+/* ---- celular e telas de toque ---- */
+html,body{overscroll-behavior:none;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#app{padding:max(8px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) calc(36px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+.foot{padding-bottom:max(6px,env(safe-area-inset-bottom))}
+#pad{left:max(14px,env(safe-area-inset-left));bottom:calc(44px + env(safe-area-inset-bottom))}
+#tabOpen{right:max(14px,env(safe-area-inset-right));bottom:calc(44px + env(safe-area-inset-bottom))}
+#tabTop>span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#tabTop>span:last-child{flex:none;white-space:nowrap}
+#screen.play svg.task{height:calc(100dvh - 350px)}
+.mgc .btn{flex:1 1 0;width:auto;min-width:0;padding-left:12px;padding-right:12px}
+@media (pointer:coarse){
+  .dpad{grid-template-columns:repeat(3,60px);grid-template-rows:repeat(2,56px)}
+  .pm button{width:56px;height:48px}
+}
+@media (max-width:700px),(max-height:520px){
+  body:not([data-ph=intro]):not([data-ph=credits]):not([data-ph=end]) .foot{display:none}
+  body:not([data-ph=intro]):not([data-ph=credits]):not([data-ph=end]) #app{padding-bottom:max(8px,env(safe-area-inset-bottom))}
+  .foot{font-size:11px;padding-top:4px}
+  #pad,#tabOpen{bottom:calc(14px + env(safe-area-inset-bottom))}
+  #app{gap:6px}
+  .hud{gap:6px 8px;padding:6px 8px;border-radius:14px;border-width:2px}
+  .daypill{padding:4px 10px;font-size:13px}
+  .meter{min-width:0;gap:5px;flex:1 1 26%;order:2}
+  .meter>div{min-width:0}
+  .ic{width:24px;height:24px;font-size:10px}
+  .meter .lab{font-size:11px;gap:4px}
+  .meter .lab span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar{height:10px}
+  .chips{margin-left:auto;gap:5px}
+  .chip{padding:4px 8px;font-size:12.5px}
+  .langbtn{padding:5px 9px;font-size:12px}
+  .langbtn .lbl,#tabTop .pl{display:none}
+  #hudTop{margin-bottom:0!important}
+  #tablet{border-width:4px;border-radius:18px}
+  #tablet.mini{border-width:3px;border-radius:14px}
+  #tablet.mini h3{font-size:15px}
+  #tablet.mini .src{display:none}
+  #tablet.mini .row{flex-wrap:nowrap;gap:8px}
+  #tablet.mini .row>div{min-width:0!important}
+  #tabTop{padding:5px 10px;font-size:12px}
+  #screen{padding:6px}
+  #tablet .panel{padding:4px 6px}
+  h1{font-size:25px}h2{font-size:20px}h3{font-size:17px}
+  .btn{font-size:17px;padding:10px 20px;min-height:48px}
+  .btn.small{width:auto;flex:none;white-space:nowrap;font-size:14px;padding:6px 12px}
+  .choice{min-height:0;padding:10px 12px}.choice b{font-size:17px}.choice span{font-size:14px}
+  .alert{font-size:16px;padding:9px 12px}
+  .slide .big{font-size:44px}.slide p{font-size:16px!important}
+  .stars{font-size:38px}
+  .cap{font-size:16px;min-height:0}
+  .daystrip{gap:5px;margin:6px 0}
+  .dm{width:62px;padding:4px 2px;border-radius:12px}.dm .e{font-size:22px}.dm .src{font-size:10.5px}
+  /* distribuir energia: um módulo por linha, com os botões ao lado */
+  .mods{grid-template-columns:1fr;gap:8px}
+  .mod{display:grid;grid-template-columns:1fr auto;align-items:center;text-align:left;border-radius:16px}
+  .mod .head{grid-column:1/-1;font-size:15px;padding:4px 12px}
+  .mod .art{display:none}
+  .mod .slots{justify-content:flex-start;min-height:0;padding:6px 10px}
+  .mod .pm{padding:6px 8px;gap:8px}
+  .mod .hint{grid-column:1/-1;min-height:0;font-size:12.5px;padding:0 12px 8px}
+  /* mini jogo: o desenho usa a largura toda e os controles ficam embaixo, perto dos polegares */
+  #screen.play>.mgp{min-height:100%;display:flex;flex-direction:column}
+  #screen.play svg.task{height:auto;min-height:0;max-height:calc(100dvh - 300px)}
+  .mgp>h3{font-size:16px}
+  .mgc{margin-top:auto;justify-content:space-between}
+}
+@media (max-height:520px) and (orientation:landscape){
+  .hud{flex-wrap:nowrap}
+  .meter{order:0;flex:1 1 0}
+  .chips{margin-left:0}
+  .mods{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .alloctop p{display:none}.alloctop .row{flex-wrap:nowrap}.alloctop .right{display:flex;gap:10px;align-items:center}
+  #tablet.open #tabTop{padding:2px 10px}
+  /* mini jogo deitado: desenho à esquerda, controles à direita */
+  #screen.play>.mgp{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto auto;column-gap:12px;align-content:start}
+  .mgp>h3{grid-column:1;grid-row:1;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mgp>details{grid-column:2;grid-row:1;margin:0;font-size:13px}
+  .mgp>details[open]{grid-column:1/-1;grid-row:2}
+  .mgp>svg{grid-column:1;grid-row:3}
+  #screen.play svg.task{height:calc(100dvh - 128px);max-height:none;min-height:120px;margin:2px auto}
+  .mgp>.bar{grid-column:1;grid-row:4;margin:4px 0!important}
+  .mgc{grid-column:2;grid-row:3/5;flex-direction:column;justify-content:center;margin-top:0;min-width:150px}
+  .mgc .btn{flex:none;width:100%}
+}
+</style>
+</head>
+<body>
+<div id="app"><div id="hud"></div><div id="stage" aria-hidden="true"></div><div id="tablet"><div id="tabTop"></div><main id="screen" aria-live="polite"></main></div></div>
+<div id="pad" class="dpad" role="group" aria-label="Andar / Walk" style="display:none"><button class="u" data-k="up" aria-label="Cima / Up">▲</button><button class="l" data-k="left" aria-label="Esquerda / Left">◀</button><button class="d" data-k="down" aria-label="Baixo / Down">▼</button><button class="r" data-k="right" aria-label="Direita / Right">▶</button></div>
+<button id="tabOpen" data-a="tabToggle" style="display:none">📟 Tablet</button>
+<button id="testBack" data-a="mgMenu" style="display:none;position:fixed;top:8px;left:8px;z-index:50;padding:8px 14px;border-radius:12px;border:2px solid #3a4578;background:rgba(14,19,38,.95);color:#fff;font:700 14px system-ui;cursor:pointer">← Menu</button>
+<div class="foot" id="foot"></div>
+
+<script>
+"use strict";
+/* Erupções solares reais do catálogo FLR do NASA DONKI (CCMC), dado arquivado, consultado em 13/11/2026.
+   g = intensidade de jogo: 0 fraca (classe C), 1 média (M), 2 forte (X). O mapeamento é nosso. */
+const FLARES = [
+ ["2017-09-06","X9.3",2,13010],["2024-05-11","X5.8",2,30711],["2024-05-14","X8.7",2,30849],["2024-10-03","X9.0",2,33693],["2025-11-11","X5.1",2,42610],
+ ["2017-09-04","M5.5",1,12979],["2024-05-08","M9.8",1,30603],["2024-05-10","M5.9",1,30680],["2024-05-13","M6.6",1,30803],["2024-06-08","M9.7",1,31335],
+ ["2025-02-24","M3.9",1,37523],["2025-03-17","M1.0",1,37870],["2025-05-30","M8.1",1,39182],["2025-08-10","M2.2",1,40506],["2026-06-06","M1.8",1,46688],
+ ["2017-09-12","C3.0",0,13124],["2024-01-21","C5.3",0,28668],["2025-01-04","C9.3",0,36258],["2025-06-16","C5.5",0,39559],["2026-01-10","C2.1",0,43894]
+].map(([date,cls,g,n])=>({date,cls,g,url:`https://ccmc.gsfc.nasa.gov/DONKI/view/FLR/${n}/-1`}));
+const DOSE=[1,3,5], MAX_O2=10, MAX_RAD=10, MAX_BAT=4, DAYS=10, GROW_NEED=4;
+/* Dois níveis. Todos os números abaixo são valores de jogo. */
+const MODES={
+  easy:{light:6,shade:4,o2:9,food:7,alerts:4,real:2,hiP:.8,loP:.2,s3:29,s2:16, extra:"amostra"},
+  hard:{light:6,shade:3,o2:8,food:6,alerts:6,real:3,hiP:.7,loP:.3,s3:21,s2:14,extra:"falha"}};
+const REDUCED = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+let lang=(navigator.language||"pt").toLowerCase().startsWith("pt")?"pt":"en";
+const L=(pt,en)=>lang==="pt"?pt:en;
+const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
+const $=s=>document.querySelector(s);
+const fmtDate=d=>new Date(d+"T00:00:00Z").toLocaleDateString(lang==="pt"?"pt-BR":"en-US",{timeZone:"UTC",day:"numeric",month:"long",year:"numeric"});
+let G=null, timers=[];
+
+// Sorteia as 10 tarefas da missão: rotina o tempo todo, imprevistos só nos dias 5 a 8.
+// Nunca repete em dias seguidos e usa cada tarefa no máximo 2 vezes; assim cada missão tem um conjunto diferente.
+function pickTasks(mode){
+  const routine=["amostra","estufa","agua","painel","poeira","micro","upload","filtros","exercicio","braco","rover","co2","treino"], probs=mode==="hard"?["vazamento","antena","falha"]:["vazamento","antena"];
+  const used={},out=[];
+  const take=pool=>{ const ok=shuffle(pool.slice()).filter(t=>(used[t]||0)<2&&t!==out[out.length-1]); const t=ok[0]||"amostra"; used[t]=(used[t]||0)+1; out.push(t); };
+  if(tutOn&&!window.__noAnim){ out.push("amostra"); used.amostra=1; } else take(routine);          // o tutorial do Dia 1 foi escrito para a coleta de pedras
+  for(let i=0;i<3;i++) take(routine);
+  for(const k of shuffle(mode==="hard"?["p","p","p","r"]:["p","p","r","r"])) take(k==="p"?probs:routine);
+  take(routine); take(routine);
+  return out;
+}
+function newGame(mode){
+  const M=MODES[mode], pool=[4,5,6,7,8,9]; let s1=pool[rnd(6)], s2; do{s2=pool[rnd(6)];}while(Math.abs(s2-s1)<2);
+  const days=shuffle([2,3,4,5,6,7,8,9,10]).slice(0,M.alerts);
+  const picks=shuffle(FLARES.slice()); const strong=picks.find(f=>f.g===2), others=picks.filter(f=>f!==strong).slice(0,M.real-1);
+  const reals=shuffle([strong,...others]);
+  const alerts={}; days.forEach((d,i)=>{ const flare=i<M.real?reals[i]:null; alerts[d]={flare,high:Math.random()<(flare?M.hiP:M.loP)}; });
+  const tasks=pickTasks(mode);
+  G={mode,M,day:0,o2:M.o2,rad:0,food:M.food,grow:0,bat:1,stars:0,leak:false,contact:true,panelBroken:false,shadow:[s1,s2],alerts,tasks,phase:"intro",hist:[],T:null,end:null,animStep:0,hero:{x:500,y:350,face:1,moving:false},mapGoal:"task",path:null};
+}
+const isShadow=d=>G.shadow.includes(d);
+const alertOf=d=>G.alerts[d]||null;
+
+function startDay(){
+  G.day++;
+  let task=G.tasks[G.day-1];
+  if(isShadow(G.day)&&(task==="painel"||task==="falha"||task==="poeira")) task="estufa";
+  if(task==="falha"&&G.panelBroken) task="amostra";
+  const data= task==="vazamento"?{leakAt:rnd(6)} : task==="estufa"?{t:[0,0,0,0]} : task==="falha"?{bad:shuffle([0,1,2,3,4,5,6,7,8,9]).slice(0,3),ok:[]} : {};
+  const fit=G.fit||0; G.fit=0;
+  G.T={fit,light:Math.max(1,(isShadow(G.day)?G.M.shade:G.M.light)-(G.panelBroken?1:0)+fit),bonus:0,penalty:0,task,sub:"choose",taskMsg:"",data,
+       alloc:{air:0,green:0,shelter:0,lab:0,bat:0,repair:0},res:null};
+  G.phase="bulletin";
+}
+const totalCells=()=>Math.max(0,G.T.light+G.T.bonus-G.T.penalty)+G.bat;
+const usedCells=()=>Object.values(G.T.alloc).reduce((a,b)=>a+b,0);
+function modules(){
+  const m=[
+   {k:"air",max:3,c:"var(--o2)",e:"💨",name:L("Ar e água","Air & water"),hint:L("2 células mantêm o oxigênio. 3 recuperam 1. Com menos, ele cai.","2 cells keep oxygen steady. 3 win back 1. With fewer, it drops.")},
+   {k:"green",max:2,c:"var(--green)",e:"🌱",name:L("Estufa","Greenhouse"),hint:L(`Faltam ${Math.max(0,GROW_NEED-G.grow)} células para colher comida e ar.`,`${Math.max(0,GROW_NEED-G.grow)} more cells until a harvest of food and air.`)},
+   {k:"shelter",max:2,c:"var(--rad)",e:"🛡️",name:L("Abrigo","Shelter"),hint:L("Protege da radiação se uma erupção vier.","Protects from radiation if a flare hits.")},
+   {k:"lab",max:3,c:"var(--orange)",e:"🔬",name:L("Laboratório","Lab"),hint:L("Cada célula rende 1 estrela de ciência.","Each cell earns 1 science star.")},
+   {k:"bat",max:MAX_BAT,c:"var(--en)",e:"🔋",name:L("Bateria","Battery"),hint:L("Guarda células para os dias de sombra.","Saves cells for shadow days.")}];
+  if(G.leak) m.push({k:"repair",max:2,c:"var(--red)",e:"🩹",name:L("Conserto","Repair"),hint:L("Precisa de 2 células para fechar o vazamento.","Needs 2 cells to seal the leak.")});
+  return m;
+}
+function enterAlloc(){ const a=G.T.alloc; for(const k in a)a[k]=0; a.bat=Math.min(G.bat,totalCells());
+  if(G.mode==="easy") a.air=Math.min(2,totalCells()-a.bat);   // sugestão inicial para os mais novos; pode ser mudada
+  G.phase="alloc"; }
+
+/* ---------- resolução do dia ---------- */
+function resolve(){
+  const T=G.T,a=T.alloc,before={o2:G.o2,rad:G.rad,bat:G.bat,stars:G.stars,food:G.food};
+  const lines=[]; let impact=0,moment="";
+  let dO2=a.air>=3?1:a.air===2?0:a.air===1?-1:-2;
+  lines.push({c:"var(--o2)",t:a.air>=3?L("Ar e água com força total: o oxigênio subiu 1.","Air & water at full power: oxygen rose 1.")
+    :a.air===2?L("Ar e água ligados: o oxigênio se manteve.","Air & water on: oxygen held steady.")
+    :a.air===1?L("Ar e água com pouca energia: o oxigênio caiu 1.","Air & water low on power: oxygen dropped 1.")
+    :L("Ar e água sem energia: o oxigênio caiu 2.","Air & water unpowered: oxygen dropped 2.")});
+  if(G.leak){
+    if(a.repair>=2){G.leak=false;lines.push({c:"var(--red)",t:L("Vazamento consertado! Custou 2 células.","Leak sealed! It cost 2 cells.")});}
+    else{dO2-=1;lines.push({c:"var(--red)",t:L("O vazamento continua: mais 1 de oxigênio perdido.","The leak continues: 1 more oxygen lost.")});}
+  }
+  let harvest=false; G.grow+=a.green;
+  if(G.grow>=GROW_NEED){G.grow-=GROW_NEED;G.food+=4;dO2+=1;harvest=true;
+    lines.push({c:"var(--green)",t:L("Colheita! A estufa deu comida para 4 dias e 1 de oxigênio.","Harvest! The greenhouse gave 4 days of food and 1 oxygen.")});
+    moment=L("A estufa deu comida e ar. Plantar cedo valeu a espera.","The greenhouse gave food and air. Planting early paid off.");impact=2;
+  } else if(a.green>0) lines.push({c:"var(--green)",t:L(`A estufa cresceu. Faltam ${GROW_NEED-G.grow} células para colher.`,`The greenhouse grew. ${GROW_NEED-G.grow} more cells until harvest.`)});
+  if(a.lab>0){G.stars+=a.lab;lines.push({c:"var(--orange)",t:L(`O laboratório rendeu ${a.lab} estrela(s) de ciência.`,`The lab earned ${a.lab} science star(s).`)});}
+  let flare=null,falseAlarm=false,dRad=0; const al=alertOf(G.day);
+  if(al){
+    flare=al.flare;
+    if(flare){
+      const full=DOSE[flare.g]; dRad=a.shelter>=2?0:(a.shelter===1?Math.ceil(full/2):full);
+      lines.push({c:"var(--rad)",t:dRad===0?L("A erupção veio e o abrigo protegeu quem estava dentro.","The flare hit and the shelter protected everyone inside.")
+        :a.shelter===1?L(`A erupção veio. O abrigo com meia energia barrou só parte: radiação +${dRad}.`,`The flare hit. The half-powered shelter blocked only part: radiation +${dRad}.`)
+        :L(`A erupção veio e o abrigo estava sem energia: radiação +${dRad}.`,`The flare hit and the shelter had no power: radiation +${dRad}.`)});
+      if(T.outside){dRad+=2;lines.push({c:"var(--rad)",t:L("Um astronauta tinha saído da base hoje e pegou a erupção fora do abrigo: radiação +2.","An astronaut had gone outside today and met the flare away from the shelter: radiation +2.")});}
+      if(G.drill&&dRad>0){dRad-=1;G.drill=false;lines.push({c:"var(--red)",t:L("O treino de emergência valeu: a tripulação correu para o abrigo e tomou 1 a menos de radiação.","The emergency drill paid off: the crew rushed to the shelter and took 1 less radiation.")});}
+      if(dRad>0){impact=Math.max(impact,dRad+2);moment=T.outside&&a.shelter>=2?L(`Erupção solar com um astronauta fora da base. A radiação subiu ${dRad}.`,`Solar flare with an astronaut outside. Radiation rose ${dRad}.`):L(`Erupção solar com o abrigo fraco. A radiação subiu ${dRad}.`,`Solar flare with a weak shelter. Radiation rose ${dRad}.`);}
+      else{impact=Math.max(impact,2);moment=L("Erupção solar, e o abrigo ligado protegeu todo mundo.","Solar flare, and the powered shelter protected everyone.");}
+    } else { falseAlarm=true;
+      lines.push({c:"var(--rad)",t:a.shelter>0?L(`O alerta não se confirmou. As ${a.shelter} célula(s) do abrigo não fizeram falta hoje, mas custaram.`,`The alert did not come true. The ${a.shelter} shelter cell(s) were not needed today, but they had a cost.`)
+        :L("O alerta não se confirmou. Você arriscou e deu certo desta vez.","The alert did not come true. You took the risk and it worked this time.")});
+    }
+  }
+  const lost=totalCells()-usedCells();
+  if(lost>0) lines.push({c:"var(--en)",t:L(`${lost} célula(s) ficaram sem uso e se perderam.`,`${lost} cell(s) were left unused and lost.`)});
+  G.bat=Math.min(MAX_BAT,a.bat);
+  G.o2=Math.max(0,Math.min(MAX_O2,G.o2+dO2)); G.rad=Math.min(MAX_RAD,G.rad+dRad);
+  let hungry=false; if(G.food>0)G.food--; else hungry=true;
+  if(before.o2-G.o2>=2&&impact<before.o2-G.o2+1){impact=before.o2-G.o2+1;moment=L(`O oxigênio caiu ${before.o2-G.o2} em um dia só.`,`Oxygen dropped ${before.o2-G.o2} in a single day.`);}
+  if(isShadow(G.day)&&impact<2){impact=2;moment=L("Dia de sombra: os painéis renderam pouco.","Shadow day: the panels gave little.");}
+  let end=null;
+  if(G.o2<=0)end="o2";else if(G.rad>=MAX_RAD)end="rad";else if(hungry)end="food";else if(G.day>=DAYS)end="ok";
+  T.res={before,lines,flare,falseAlarm,harvest,end,dRad};
+  G.hist.push({day:G.day,o2:G.o2,rad:G.rad,bat:G.bat,impact,moment});
+  G.end=end;
+}
+
+/* ================= CENÁRIOS (viewBox 1000x300) ================= */
+const DEFS=`<defs>
+ <linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a3a5af"/><stop offset="1" stop-color="#55575f"/></linearGradient>
+ <radialGradient id="sg"><stop offset="0" stop-color="#fff7d6" stop-opacity=".95"/><stop offset=".25" stop-color="#ffd98a" stop-opacity=".45"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
+ <linearGradient id="dm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d4d6dd"/><stop offset=".4" stop-color="#8d8f99"/><stop offset="1" stop-color="#4a4c55"/></linearGradient>
+ <linearGradient id="pn" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3f6fd0"/><stop offset="1" stop-color="#16295a"/></linearGradient></defs>`;
+const wrap=(body,vb="0 0 1000 300")=>`<svg viewBox="${vb}" preserveAspectRatio="xMidYMid meet">${DEFS}${body}</svg>`;
+const sunX=d=>70+((Math.max(1,d)-1)*95)%900;
+function earthS(x,y,r=16){ const k=r/30; return `<g class="bob"><g transform="translate(${x},${y}) scale(${k})"><circle r="36" fill="#6fb7ff" opacity=".18"/><circle r="30" fill="#2f7fd6"/>
+ <path d="M-22,-8q8,-12 20,-6q6,8 -4,14q-10,6 -16,-8zM4,6q12,-4 16,6q-2,12 -12,10q-8,-6 -4,-16z" fill="#4caf7a"/>
+ <path d="M-27,-14q14,-6 28,0M-8,16q14,6 30,-2" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".85"/>
+ <path d="M8,-29 A30,30 0 0 1 8,29 A40,40 0 0 0 8,-29z" fill="#04050c" opacity=".5"/></g></g>`; }
+const astroBody=c=>`<rect x="-20" y="-40" width="12" height="28" rx="5" fill="#9aa0ad"/><rect x="-12" y="-14" width="10" height="15" rx="4" fill="#d5d9e2"/><rect x="2" y="-14" width="10" height="15" rx="4" fill="#eef0f5"/>
+ <rect x="-14" y="-42" width="28" height="32" rx="10" fill="#f4f6fa"/><rect x="-14" y="-26" width="28" height="6" fill="${c}"/>
+ <rect x="10" y="-38" width="9" height="22" rx="4.5" fill="#eef0f5"/><circle cx="14.5" cy="-15" r="5" fill="${c}"/>
+ <circle cx="0" cy="-52" r="15" fill="#f4f6fa"/><rect x="-7" y="-60" width="20" height="15" rx="7" fill="#1d2a4d"/>
+ <path d="M-2,-56q5,-3 10,0" stroke="#9fd8ff" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+function astro(x,y,s=1,c="#ff9f43",cls="",flip=false){ return `<g class="${cls}"><g transform="translate(${x},${y}) scale(${flip?-s:s},${s})"><g class="hop">${astroBody(c)}</g></g></g>`; }
+const crater=(x,y,w)=>`<ellipse cx="${x}" cy="${y}" rx="${w}" ry="${w*.2}" fill="#3d3f48"/><ellipse cx="${x+w*.1}" cy="${y+w*.05}" rx="${w*.85}" ry="${w*.13}" fill="#23252c"/>`;
+const hills=`<path d="M0,150 L0,138 Q70,118 120,144 Q200,150 260,130 Q330,104 410,136 Q500,148 560,128 Q640,106 700,138 Q790,150 860,124 Q940,100 1000,130 L1000,150 Z" fill="#2b2d36"/>`;
+function tower(x,y,h,pw){ return `<rect x="${x-3}" y="${y-h}" width="6" height="${h}" fill="#cfd3dc"/><polygon points="${x-12},${y} ${x+12},${y} ${x+3},${y-12} ${x-3},${y-12}" fill="#8f939e"/>
+ <rect x="${x-pw/2}" y="${y-h}" width="${pw}" height="${h-24}" rx="3" fill="url(#pn)" stroke="#e3e6ee" stroke-width="2"/>
+ <rect class="pulse" x="${x-pw/2}" y="${y-h}" width="4" height="${h-24}" fill="#fff3c4" opacity=".8"/>`; }
+function domeS(x,y,w,h){ return `<path d="M${x-w/2},${y} Q${x-w/2},${y-h} ${x},${y-h} Q${x+w/2},${y-h} ${x+w/2},${y} Z" fill="url(#dm)"/>
+ <rect x="${x-26}" y="${y-34}" width="52" height="36" rx="8" fill="#e3e6ee"/><rect x="${x-26}" y="${y-34}" width="52" height="6" rx="3" fill="#ff9f43"/>
+ <rect x="${x-13}" y="${y-24}" width="26" height="26" rx="6" fill="#39405a"/><circle class="blinkl" cx="${x}" cy="${y-13}" r="6" fill="#ffd98a"/>`; }
+
+function sceneBase(day,shadow,anim){
+  const sx=sunX(day), dir=sx<500?1:-1, r=anim&&G.T&&G.T.res, a=G.T?G.T.alloc:null;
+  const sh=(x,y,w,t=14)=>`<polygon points="${x-w/2},${y} ${x+w/2},${y-2} ${x+dir*1000},${y+4} ${x+dir*1000},${y+4+t}" fill="#000" opacity=".36"/>`;
+  const sun=`<circle class="pulse" cx="${sx}" cy="150" r="150" fill="url(#sg)"/><circle cx="${sx}" cy="147" r="22" fill="#fffbe8"/>`;
+  let s=`<rect width="1000" height="300" fill="#04050c"/>${anim&&!shadow?`<g class="sunmove">${sun}</g>`:sun}${earthS(800,82)}${hills}`;
+  if(shadow) s+=`<path d="M${sx-200},150 Q${sx-90},40 ${sx},70 Q${sx+110},50 ${sx+210},150 Z" fill="#15161c"/><path d="M${sx-90},78 Q${sx-40},60 ${sx},70" stroke="#ffe9a8" stroke-width="2" fill="none" opacity=".8"/>`;
+  s+=`<rect y="150" width="1000" height="150" fill="url(#gr)"/>${crater(330,268,60)}${crater(860,230,36)}${crater(110,205,26)}`;
+  if(!shadow) s+=sh(230,190,8)+sh(292,204,8)+sh(520,214,90,30)+sh(672,205,40,18)+sh(852,196,8);
+  s+=tower(230,190,104,28)+tower(292,204,112,30);
+  s+=`<g transform="translate(852,196)"><polygon points="-10,0 10,0 3,-12 -3,-12" fill="#8f939e"/><rect x="-3" y="-40" width="6" height="30" fill="#cfd3dc"/><g transform="translate(0,-42) rotate(-30)"><path d="M-18,0 Q0,16 18,0 Z" fill="#e3e6ee" stroke="#8f939e"/><circle class="blinkl" cx="0" cy="-12" r="3" fill="#ff9f43"/></g></g>`;
+  s+=`<rect x="630" y="170" width="84" height="36" rx="10" fill="#e3e6ee"/><rect x="630" y="170" width="84" height="7" rx="3" fill="#c77dff"/><rect x="642" y="182" width="24" height="15" rx="5" fill="#39405a"/><rect x="678" y="182" width="24" height="15" rx="5" fill="#39405a"/><circle class="blinkl" cx="654" cy="189" r="4" fill="#4dd0e1"/><circle class="blinkl" cx="690" cy="189" r="4" fill="#4dd0e1"/>`;
+  s+=domeS(500,215,160,74);
+  s+=`<rect x="352" y="246" width="116" height="8" rx="3" fill="#cfd3dc"/><path d="M352,246 Q352,208 376,208 L444,208 Q468,208 468,246 Z" fill="#9dffb5" fill-opacity=".28" stroke="#e6fff0" stroke-width="2"/>
+     ${[366,388,410,432,454].map((x,i)=>`<g class="sway" style="animation-delay:${-i*.5}s"><line x1="${x}" y1="246" x2="${x}" y2="230" stroke="#3c9a2a" stroke-width="2.5"/><ellipse cx="${x-5}" cy="232" rx="6" ry="3" fill="#6bd425"/><ellipse cx="${x+5}" cy="228" rx="6" ry="3" fill="#8be04a"/></g>`).join("")}`;
+  s+=astro(560,262,.62,"#ff9f43","walk")+astro(760,244,.55,"#4dd0e1","walk2",true);
+  if(shadow) s+=`<rect width="1000" height="300" fill="#04050c" opacity=".62"/>${earthS(800,82)}
+     <circle class="blinkl" cx="500" cy="202" r="34" fill="#ffd98a" opacity=".3"/><circle cx="500" cy="202" r="6" fill="#ffe9b0"/>
+     <circle class="blinkl" cx="654" cy="189" r="18" fill="#4dd0e1" opacity=".3"/><circle class="blinkl" cx="690" cy="189" r="18" fill="#4dd0e1" opacity=".3"/>
+     <ellipse class="blinkl" cx="410" cy="230" rx="70" ry="30" fill="#ff8ad8" opacity=".25"/>`;
+  if(r){
+    if(a.shelter>0&&alertOf(G.day)) s+=`<path class="shield" d="M410,216 Q410,128 500,128 Q590,128 590,216" fill="#c77dff" fill-opacity=".18" stroke="#c77dff" stroke-width="4"/>`;
+    if(r.flare) s+=`<circle class="ring" cx="${sx}" cy="147" r="320"/><circle class="ring" style="animation-delay:1.9s" cx="${sx}" cy="147" r="520"/><rect class="flash" width="1000" height="300" fill="#ff5d5d"/>`;
+    if(r.harvest) s+=`<text class="sparkle" x="410" y="205" font-size="34" text-anchor="middle">🥕</text>`;
+    if(a.lab>0) s+=`<text class="sparkle" style="animation-delay:1s" x="672" y="165" font-size="28" text-anchor="middle">⭐</text>`;
+  }
+  return wrap(s);
+}
+function sceneInterior(){
+  const dots=[[150,240],[190,150],[260,80],[380,36],[520,24],[660,40],[760,90],[830,160],[860,250],[320,56],[720,62]];
+  return wrap(`<rect width="1000" height="300" fill="#04050c"/><rect y="270" width="1000" height="30" fill="url(#gr)"/>${earthS(950,230,14)}
+  <path d="M110,290 Q110,8 500,8 Q890,8 890,290 Z" fill="url(#dm)"/>${dots.map(d=>`<circle cx="${d[0]}" cy="${d[1]}" r="5" fill="#000" opacity=".2"/>`).join("")}
+  <path d="M176,290 Q176,62 500,62 Q824,62 824,290 Z" fill="#1c2440" stroke="#e3e6ee" stroke-width="5"/><rect x="174" y="272" width="652" height="18" fill="#cfd3dc"/>
+  <rect x="440" y="64" width="120" height="8" rx="4" fill="#fff3c4"/><polygon points="440,72 560,72 630,272 370,272" fill="#fff3c4" opacity=".07"/>
+  <rect x="236" y="186" width="64" height="86" rx="10" fill="#e3e6ee"/><circle cx="268" cy="220" r="19" fill="#17324a"/><text x="268" y="226" font-size="16" font-weight="800" fill="#4dd0e1" text-anchor="middle">O₂</text><rect class="blinkl" x="246" y="250" width="44" height="7" rx="3" fill="#4dd0e1"/>
+  <rect x="310" y="204" width="36" height="68" rx="8" fill="#12233f" stroke="#cfd3dc" stroke-width="3"/><rect class="pulse" x="313" y="232" width="30" height="37" rx="6" fill="#4db8ff"/>
+  <rect x="448" y="236" width="104" height="8" rx="3" fill="#9aa0ad"/><rect x="458" y="244" width="7" height="28" fill="#6b6d77"/><rect x="535" y="244" width="7" height="28" fill="#6b6d77"/>
+  <rect x="468" y="184" width="64" height="44" rx="7" fill="#0e1326" stroke="#e3e6ee" stroke-width="3"/>
+  <rect class="blinkl" x="478" y="204" width="10" height="18" rx="2" fill="#ffd23f"/><rect class="blinkl" style="animation-delay:.4s" x="495" y="196" width="10" height="26" rx="2" fill="#4dd0e1"/><rect class="blinkl" style="animation-delay:.8s" x="512" y="210" width="10" height="12" rx="2" fill="#c77dff"/>
+  ${[186,232].map(y=>`<rect x="640" y="${y}" width="104" height="9" rx="4" fill="#9aa0ad"/><rect x="644" y="${y-15}" width="96" height="15" rx="6" fill="#5b7bd6"/><rect x="647" y="${y-19}" width="28" height="12" rx="6" fill="#f4f6fa"/>`).join("")}
+  <rect x="637" y="166" width="6" height="106" fill="#6b6d77"/><rect x="741" y="166" width="6" height="106" fill="#6b6d77"/>
+  ${astro(400,272,.75,"#ff9f43","walk")}${astro(590,272,.75,"#4dd0e1","",true)}`);
+}
+function sceneCampo(){
+  const rock=(x,y,k,c)=>`<circle class="blinkl" cx="${x}" cy="${y-8*k}" r="${26*k}" fill="${c}" opacity=".3"/><g transform="translate(${x},${y}) scale(${k})"><polygon points="-20,0 -14,-18 2,-26 18,-14 22,0" fill="#6b6d77"/><polygon points="-14,-18 2,-26 4,-10 -8,-6" fill="#b9bbc4"/><polygon points="2,-14 10,-20 14,-8 6,-4" fill="${c}"/></g>`;
+  return wrap(`<rect width="1000" height="300" fill="#04050c"/><circle class="pulse" cx="900" cy="150" r="150" fill="url(#sg)"/><circle cx="900" cy="147" r="22" fill="#fffbe8"/>${earthS(220,84)}${hills}
+  <rect y="150" width="1000" height="150" fill="url(#gr)"/>${crater(760,196,70)}${crater(300,270,50)}
+  <path d="M50,150 Q50,128 78,128 Q106,128 106,150 Z" fill="#6f717b"/><rect x="116" y="126" width="4" height="24" fill="#9aa0ad"/><rect x="110" y="122" width="16" height="18" fill="#2f4f9a"/>
+  <path d="M120,240 Q260,220 380,236 T640,204 T800,186" stroke="#fff" stroke-width="3" fill="none" stroke-dasharray="2 10" stroke-linecap="round" opacity=".8"/>
+  ${rock(390,244,1.1,"#7de3f0")}${rock(805,188,.7,"#ffb3f0")}${astro(200,258,.8,"#ff9f43","walk")}`);
+}
+function sceneEstufa(){
+  return wrap(`<rect width="1000" height="300" fill="#0b1a16"/><path d="M30,300 L30,150 Q30,20 240,20 L760,20 Q970,20 970,150 L970,300 Z" fill="#12352a" stroke="#e6fff0" stroke-width="4"/>
+  ${[240,440,640].map(x=>`<line x1="${x}" y1="22" x2="${x}" y2="300" stroke="#e6fff0" stroke-width="2" opacity=".22"/>`).join("")}
+  <rect x="90" y="44" width="640" height="10" rx="5" fill="#ff8ad8"/><rect x="90" y="54" width="640" height="150" fill="#ff8ad8" opacity=".07"/>
+  <rect x="800" y="60" width="130" height="86" rx="18" fill="#04050c" stroke="#e6fff0" stroke-width="4"/><rect x="804" y="118" width="122" height="24" rx="6" fill="#8d8f99"/><circle cx="830" cy="118" r="10" fill="#fffbe8"/>${earthS(896,96,11)}
+  <rect x="70" y="232" width="690" height="16" rx="6" fill="#cfd3dc"/><rect x="100" y="248" width="14" height="52" fill="#8f939e"/><rect x="716" y="248" width="14" height="52" fill="#8f939e"/>
+  ${[150,290,430,570,690].map((x,i)=>{const g=.9+((i*7)%4)*.35;return `<polygon points="${x-34},192 ${x+34},192 ${x+26},232 ${x-26},232" fill="#ff9f43"/><rect x="${x-38}" y="184" width="76" height="11" rx="5" fill="#ffb86b"/>
+   <g class="sway" style="animation-delay:${-i*.6}s"><line x1="${x}" y1="186" x2="${x}" y2="${186-26*g}" stroke="#3c9a2a" stroke-width="${3+g}" stroke-linecap="round"/>
+   <ellipse cx="${x-10*g}" cy="${186-20*g}" rx="${11*g}" ry="${5.5*g}" fill="#6bd425" transform="rotate(-25 ${x-10*g} ${186-20*g})"/><ellipse cx="${x+10*g}" cy="${186-27*g}" rx="${11*g}" ry="${5.5*g}" fill="#8be04a" transform="rotate(25 ${x+10*g} ${186-27*g})"/></g>`;}).join("")}
+  ${astro(860,296,.9,"#6bd425","",true)}`);
+}
+/* ================= MAPA ANDÁVEL (2.5D, viewBox 1000x500) ================= */
+const MAPB={minX:40,maxX:960,minY:165,maxY:478};
+const SPOTS={
+  painel:{x:231,y:264,e:"☀️",pt:"Painéis solares",en:"Solar panels"}, falha:{x:231,y:264,e:"🔧",pt:"Painéis solares",en:"Solar panels"},
+  estufa:{x:305,y:444,e:"🌱",pt:"Estufa",en:"Greenhouse"}, vazamento:{x:500,y:334,e:"💨",pt:"Abrigo",en:"Shelter"},
+  antena:{x:890,y:256,e:"📡",pt:"Antena",en:"Antenna"}, amostra:{x:790,y:448,e:"🪨",pt:"Saída para o campo de pedras",en:"Way out to the rock field"},
+  agua:{x:500,y:334,e:"💧",pt:"Abrigo",en:"Shelter"}, poeira:{x:231,y:264,e:"🧹",pt:"Painéis solares",en:"Solar panels"},
+  micro:{x:740,y:292,e:"🔬",pt:"Laboratório",en:"Lab"}, upload:{x:890,y:256,e:"🛰️",pt:"Antena",en:"Antenna"}, filtros:{x:500,y:334,e:"🌀",pt:"Abrigo",en:"Shelter"},
+  exercicio:{x:500,y:334,e:"🏃",pt:"Abrigo",en:"Shelter"}, co2:{x:500,y:334,e:"🫧",pt:"Abrigo",en:"Shelter"}, treino:{x:500,y:334,e:"🚨",pt:"Abrigo",en:"Shelter"},
+  braco:{x:660,y:372,e:"🦾",pt:"Braço robótico",en:"Robotic arm"}, rover:{x:790,y:448,e:"🚙",pt:"Garagem do rover",en:"Rover garage"},
+  alloc:{x:500,y:334,e:"⚡",pt:"Mesa de controle, no abrigo",en:"Control desk, in the shelter"}};
+// áreas em que o astronauta não entra (a base de cada construção)
+const BLOCKS=[{x1:183,x2:217,y1:203,y2:220},{x1:245,x2:279,y1:223,y2:240},{x1:410,x2:590,y1:262,y2:304},{x1:686,x2:794,y1:232,y2:258},{x1:236,x2:374,y1:386,y2:413},{x1:876,x2:904,y1:204,y2:220}];
+const spotNow=()=>SPOTS[G.mapGoal==="alloc"?"alloc":G.T.task];
+function sceneMap(){
+  const d=Math.max(1,G.day),sh=isShadow(d),sx=sunX(d),sp=spotNow();
+  const obj=(y,b)=>`<g data-y="${y}">${b}</g>`, shd=(x,y,rx)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${rx*.2}" fill="#000" opacity=".3"/>`;
+  const rock=(x,y,k,c)=>`<g transform="translate(${x},${y}) scale(${k})"><ellipse cx="2" cy="1" rx="26" ry="5" fill="#000" opacity=".3"/><polygon points="-20,0 -14,-18 2,-26 18,-14 22,0" fill="#6b6d77"/><polygon points="-14,-18 2,-26 4,-10 -8,-6" fill="#b9bbc4"/><polygon points="2,-14 10,-20 14,-8 6,-4" fill="${c}"/></g>`;
+  let s=`<rect width="1000" height="500" fill="#04050c"/><circle class="pulse" cx="${sx}" cy="120" r="150" fill="url(#sg)"/><circle cx="${sx}" cy="117" r="22" fill="#fffbe8"/>${earthS(800,58)}<g transform="translate(0,-30)">${hills}</g>`;
+  if(sh) s+=`<path d="M${sx-200},120 Q${sx-90},10 ${sx},40 Q${sx+110},20 ${sx+210},120 Z" fill="#15161c"/>`;
+  s+=`<rect y="120" width="1000" height="380" fill="url(#gr)"/>${crater(140,330,40)}${crater(620,440,60)}${crater(940,340,30)}${crater(420,185,26)}${crater(660,170,18)}
+   <path d="M500,334 L305,444 M500,334 L231,264 M500,334 L740,292 L890,256 M500,334 L790,448" stroke="#fff" stroke-opacity=".22" stroke-width="6" stroke-dasharray="2 14" stroke-linecap="round" fill="none"/>
+   <ellipse class="goalring" cx="${sp.x}" cy="${sp.y}" rx="40" ry="14" fill="#ffd23f" fill-opacity=".18" stroke="#ffd23f" stroke-width="4"/>
+   <g id="sortLayer">
+   ${obj(215,shd(200,215,22)+tower(200,215,110,28))}${obj(235,shd(262,235,24)+tower(262,235,118,30))}
+   ${obj(216,shd(890,215,18)+`<g transform="translate(890,215)"><polygon points="-10,0 10,0 3,-12 -3,-12" fill="#8f939e"/><rect x="-3" y="-44" width="6" height="34" fill="#cfd3dc"/><g transform="translate(0,-46) rotate(-30)"><path d="M-20,0 Q0,18 20,0 Z" fill="#e3e6ee" stroke="#8f939e"/><circle class="blinkl" cx="0" cy="-13" r="3.5" fill="#ff9f43"/></g></g>`)}
+   ${obj(256,shd(740,255,62)+`<rect x="690" y="212" width="100" height="44" rx="12" fill="#e3e6ee"/><rect x="690" y="212" width="100" height="9" rx="4" fill="#c77dff"/><rect x="704" y="227" width="30" height="19" rx="6" fill="#39405a"/><rect x="746" y="227" width="30" height="19" rx="6" fill="#39405a"/><circle class="blinkl" cx="719" cy="236" r="5" fill="#4dd0e1"/><circle class="blinkl" cx="761" cy="236" r="5" fill="#4dd0e1"/>`)}
+   ${obj(302,shd(500,300,112)+domeS(500,300,190,92))}
+   ${obj(411,shd(305,410,76)+`<rect x="238" y="402" width="134" height="9" rx="4" fill="#cfd3dc"/><path d="M238,402 Q238,356 266,356 L344,356 Q372,356 372,402 Z" fill="#9dffb5" fill-opacity=".28" stroke="#e6fff0" stroke-width="2.5"/>
+     ${[256,280,305,330,354].map((x,i)=>`<g class="sway" style="animation-delay:${-i*.5}s"><line x1="${x}" y1="402" x2="${x}" y2="382" stroke="#3c9a2a" stroke-width="3"/><ellipse cx="${x-6}" cy="385" rx="7" ry="3.5" fill="#6bd425"/><ellipse cx="${x+6}" cy="380" rx="7" ry="3.5" fill="#8be04a"/></g>`).join("")}`)}
+   ${obj(412,rock(905,412,.8,"#ffb3f0"))}${obj(458,rock(862,458,1,"#7de3f0"))}${obj(300,rock(70,300,.7,"#b9bbc4"))}
+   <g id="hero"><ellipse cx="3" cy="1" rx="24" ry="5" fill="#000" opacity=".35"/><g id="heroHop">${astroBody("#ff9f43")}</g></g>
+   </g>
+   <g class="bob" pointer-events="none"><g transform="translate(${sp.x},${sp.y-(G.mapGoal!=="alloc"&&["painel","falha","antena","poeira","upload","micro"].includes(G.T.task)?150:96)})"><circle r="21" fill="#ffd23f" stroke="#fff" stroke-width="3"/><polygon points="-7,19 7,19 0,31" fill="#ffd23f"/><text y="7" font-size="20" text-anchor="middle">${sp.e}</text></g></g>`;
+  if(sh) s+=`<g pointer-events="none"><rect width="1000" height="500" fill="#04050c" opacity=".55"/><circle id="lamp" r="80" fill="#fff3c4" opacity=".16"/>
+     <circle class="blinkl" cx="500" cy="287" r="40" fill="#ffd98a" opacity=".3"/><circle class="blinkl" cx="740" cy="236" r="34" fill="#4dd0e1" opacity=".25"/><ellipse class="blinkl" cx="305" cy="385" rx="80" ry="34" fill="#ff8ad8" opacity=".22"/></g>`;
+  s+=`<g id="goalArrow" pointer-events="none" style="display:none"><g id="goalArrowDir"><polygon points="17,-11 34,0 17,11" fill="#ffd23f" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></g><circle r="19" fill="#ffd23f" stroke="#fff" stroke-width="3"/><text y="7" font-size="19" text-anchor="middle">${sp.e}</text></g>`;
+  return `<svg id="map" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${L("Mapa da base","Map of the base")}">${DEFS}${s}</svg>`;
+}
+const keys={up:false,down:false,left:false,right:false};
+let raf=0,lastT=0,sortObjs=[],sortIdx=-2;
+const blocked=(x,y)=>x<MAPB.minX||x>MAPB.maxX||y<MAPB.minY||y>MAPB.maxY||BLOCKS.some(b=>x>b.x1&&x<b.x2&&y>b.y1&&y<b.y2);
+// caminho livre entre dois pontos? (amostra o segmento a cada 5 unidades)
+function clearSeg(a,b){ const d=Math.hypot(b.x-a.x,b.y-a.y),n=Math.ceil(d/5); for(let i=1;i<n;i++){const t=i/n; if(blocked(a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t)) return false;} return true; }
+// rota que contorna as construções, passando pelos cantos delas
+function route(a,b){
+  if(clearSeg(a,b)) return [b];
+  const N=[{x:a.x,y:a.y},b];
+  for(const r of BLOCKS) for(const [x,y] of [[r.x1-10,r.y1-10],[r.x2+10,r.y1-10],[r.x1-10,r.y2+10],[r.x2+10,r.y2+10]]) if(!blocked(x,y)) N.push({x,y});
+  const dist=N.map(()=>Infinity),prev=N.map(()=>-1),done=N.map(()=>false); dist[0]=0;
+  for(;;){ let u=-1; for(let i=0;i<N.length;i++) if(!done[i]&&dist[i]<Infinity&&(u<0||dist[i]<dist[u])) u=i;
+    if(u<0||u===1) break; done[u]=true;
+    for(let v=1;v<N.length;v++) if(!done[v]&&clearSeg(N[u],N[v])){ const d=dist[u]+Math.hypot(N[u].x-N[v].x,N[u].y-N[v].y); if(d<dist[v]){dist[v]=d;prev[v]=u;} } }
+  if(prev[1]<0) return [b];
+  const path=[]; for(let i=1;i>0;i=prev[i]) path.unshift(N[i]); return path;
+}
+function stepHero(dt){
+  const h=G.hero; let dx=(keys.right?1:0)-(keys.left?1:0), dy=(keys.down?1:0)-(keys.up?1:0);
+  const v=235*dt;
+  if(dx||dy) G.path=null;
+  else if(G.path&&G.path.length){ const w=G.path[0],mx=w.x-h.x,my=w.y-h.y,dist=Math.hypot(mx,my);
+    if(dist<=Math.max(v,3)){ h.x=w.x; h.y=w.y; G.path.shift(); h.moving=G.path.length>0; return; }
+    dx=mx/dist; dy=my/dist; }
+  const moving=!!(dx||dy); h.moving=moving; if(!moving) return;
+  const n=Math.hypot(dx,dy), sx=dx/n*v, sy=dy/n*v;
+  if(Math.abs(dx)>.15) h.face=dx>0?1:-1;
+  if(!blocked(h.x+sx,h.y+sy)){h.x+=sx;h.y+=sy;return;}
+  if(sx&&!blocked(h.x+sx,h.y)){h.x+=sx;return;}      // desliza na parede
+  if(sy&&!blocked(h.x,h.y+sy)){h.y+=sy;return;}
+  if(G.path) G.path=null;
+}
+function drawHero(){
+  const h=G.hero,el=$("#hero"); if(!el) return;
+  const k=.5+(h.y-MAPB.minY)/(MAPB.maxY-MAPB.minY)*.42;
+  el.setAttribute("transform",`translate(${h.x.toFixed(1)},${h.y.toFixed(1)}) scale(${(k*h.face).toFixed(3)},${k.toFixed(3)})`);
+  $("#heroHop").classList.toggle("moving",!!h.moving);
+  const i=sortObjs.findIndex(o=>o.y>h.y); if(i!==sortIdx){ sortIdx=i; const layer=$("#sortLayer"); if(i<0) layer.appendChild(el); else layer.insertBefore(el,sortObjs[i].el); }
+  const lamp=$("#lamp"); if(lamp){lamp.setAttribute("cx",h.x);lamp.setAttribute("cy",h.y-30);}
+  mapCam();
+}
+function arrive(){ raf=0; G.path=null; G.hero.moving=false; for(const k in keys)keys[k]=false; if(G.mapGoal==="alloc") enterAlloc(); else G.phase="task"; render(); $("#screen").scrollTop=0; }
+function mapLoop(t){
+  if(G.phase!=="map"||!$("#map")){raf=0;return;}
+  const dt=Math.min(.05,Math.max(0,(t-lastT)/1000)); lastT=t;
+  stepHero(dt); drawHero();
+  const sp=spotNow(); if(Math.hypot(G.hero.x-sp.x,G.hero.y-sp.y)<30){arrive();return;}
+  raf=requestAnimationFrame(mapLoop);
+}
+function initMap(){
+  sortObjs=[...document.querySelectorAll("#sortLayer>g[data-y]")].map(el=>({y:+el.dataset.y,el})).sort((a,b)=>a.y-b.y); sortIdx=-2;
+  drawHero(); if(!raf){ lastT=performance.now(); raf=requestAnimationFrame(mapLoop); }
+}
+function goMap(goal){
+  G.mapGoal=goal; G.path=null; const sp=spotNow();
+  if(window.__noAnim||Math.hypot(G.hero.x-sp.x,G.hero.y-sp.y)<30){ G.hero.x=sp.x; G.hero.y=sp.y; if(goal==="alloc") enterAlloc(); else G.phase="task"; return; }
+  G.phase="map";
+}
+function vMap(){
+  const sp=spotNow();
+  return `<div class="panel"><div class="row"><div style="flex:1;min-width:220px"><h3 style="margin:0">🧑‍🚀 ${L("Leve o astronauta até","Take the astronaut to")}: ${sp.e} ${L(sp.pt,sp.en)}</h3>
+   <span class="src">${L("Setas, W A S D, botões na tela ou toque no chão.","Arrow keys, W A S D, on-screen buttons or tap the ground.")}</span></div>
+   <button class="btn alt small" data-a="walk">${L("Ir sozinho","Walk by itself")} 👣</button></div></div>`;
+}
+let sceneKey="";
+function setScene(){
+  const p=G.phase,t=G.T?G.T.task:"",d=Math.max(1,G.day),sh=G.day>0&&isShadow(G.day)&&p!=="intro"&&p!=="end"&&p!=="credits";
+  let kind="base", place=L("Polo sul da Lua","Moon's south pole");
+  if(p==="task"&&(t==="amostra"||t==="rover")){kind="campo";place=L("Campo de pedras","Rock field");}
+  else if(p==="task"&&t==="estufa"){kind="estufa";place=L("Estufa","Greenhouse");}
+  else if((p==="task"&&["vazamento","agua","filtros","exercicio","co2","treino"].includes(t))||p==="alloc"){kind="interior";place=L("Dentro do abrigo","Inside the shelter");}
+  else if(sh) place=L("Dia de sombra","Shadow day");
+  if(p==="map"){kind="map";const sp=spotNow();place=L(sp.pt,sp.en);}
+  const key=[kind,kind==="base"||kind==="map"?d:0,sh,p==="anim",lang,kind==="map"?G.mapGoal:""].join("-");
+  if(key===sceneKey) return; sceneKey=key;
+  const svg=kind==="map"?sceneMap():kind==="campo"?sceneCampo():kind==="estufa"?sceneEstufa():kind==="interior"?sceneInterior():sceneBase(d,sh,p==="anim");
+  const stg=$("#stage"); stg.dataset.kind=kind; stg.dataset.place=place; stg.dataset.dim=sh&&(kind==="base"||kind==="map")?"1":"0";
+  stg.innerHTML=svg+`<span class="place">📍 ${place}</span>`;
+}
+
+/* ================= HUD (fixo, para as barras animarem) ================= */
+let hudLast=null;
+function hudBuild(){
+  const m=(id,ic,bg,label,col)=>`<div class="meter" id="${id}"><span class="ic" style="background:${bg}">${ic}</span><div style="flex:1"><div class="lab"><span>${label}</span><span class="v"></span></div><div class="bar"><i style="background:${col}"></i></div></div></div>`;
+  /* o iPhone não tem tela cheia para páginas: lá o botão não aparece */
+  const fsBtn=document.documentElement.requestFullscreen?`<button class="langbtn" data-a="fs" aria-label="${L("Tela cheia","Full screen")}">⤢<span class="lbl"> ${L("Tela cheia","Full screen")}</span></button>`:"";
+  $("#hud").innerHTML=`<div class="row" id="hudTop" style="justify-content:flex-end;margin-bottom:10px">${fsBtn}<button class="langbtn" data-a="lang" aria-label="Mudar idioma / Change language">${lang==="pt"?"English":"Português"}</button></div>
+  <div class="panel hud" id="hudMain"><span class="daypill" id="hDay"></span>
+   ${m("mO2","O₂","var(--o2)",L("Oxigênio","Oxygen"),"var(--o2)")}${m("mRad","☢","var(--rad)",L("Radiação","Radiation"),"var(--rad)")}${m("mBat","⚡","var(--en)",L("Bateria","Battery"),"var(--en)")}
+   <div class="chips"><span class="chip" id="cFood"></span><span class="chip" id="cStars"></span>${fsBtn}<button class="langbtn" data-a="lang" aria-label="Mudar idioma / Change language">${lang==="pt"?"English":"Português"}</button></div></div>`;
+  hudLast=null;
+}
+function hudUpdate(){
+  const inGame=G.phase!=="intro"&&G.phase!=="mgmenu"&&!(G.phase==="credits"&&G.prev==="intro");
+  $("#hudTop").style.display=inGame?"none":"flex"; $("#hudMain").style.display=inGame?"flex":"none";
+  if(!inGame||G.phase==="anim") return;
+  $("#hDay").textContent=L(`Dia ${Math.max(1,G.day)} de ${DAYS}`,`Day ${Math.max(1,G.day)} of ${DAYS}`);
+  const set=(id,k,v,max,col,warn)=>{const el=$(id);el.querySelector(".v").textContent=`${v}/${max}`;el.querySelector("i").style.width=100*v/max+"%";el.classList.toggle("warn",warn);
+    if(hudLast&&hudLast[k]!==v){const f=document.createElement("span");f.className="float";f.style.color=col;f.textContent=(v>hudLast[k]?"+":"−")+Math.abs(v-hudLast[k]);el.appendChild(f);setTimeout(()=>f.remove(),1700);}};
+  set("#mO2","o2",G.o2,MAX_O2,"#4dd0e1",G.o2<=3); set("#mRad","rad",G.rad,MAX_RAD,"#c77dff",G.rad>=7); set("#mBat","bat",G.bat,MAX_BAT,"#ffd23f",false);
+  const chip=(id,k,v,txt)=>{const el=$(id);el.textContent=txt;if(hudLast&&hudLast[k]!==v){el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop");}};
+  chip("#cFood","food",G.food,`🍽️ ${G.food} ${L("dias","days")}`); chip("#cStars","stars",G.stars,`⭐ ${G.stars}`);
+  hudLast={o2:G.o2,rad:G.rad,bat:G.bat,food:G.food,stars:G.stars};
+}
+const cellsHtml=(on,off,fresh)=>`${'<span class="cellic on">⚡</span>'.repeat(Math.max(0,on-(fresh?1:0)))}${fresh&&on>0?'<span class="cellic on new">⚡</span>':""}${'<span class="cellic off"></span>'.repeat(Math.max(0,off))}`;
+const icon={en:`<span class="ic" style="background:var(--en)">⚡</span>`,o2:`<span class="ic" style="background:var(--o2)">O₂</span>`,rad:`<span class="ic" style="background:var(--rad)">☢</span>`};
+
+/* ================= TELAS ================= */
+function vMgMenu(){
+  const names={amostra:["Buscar pedras","Fetch rocks"],painel:["Painel solar","Solar panel"],vazamento:["Vazamento de ar","Air leak"],antena:["Antena","Antenna"],estufa:["Estufa","Greenhouse"],falha:["Trocar peças do painel","Swap panel parts"],agua:["Reciclagem de água","Water recycling"],poeira:["Limpar painéis","Clean panels"],micro:["Microscópio","Microscope"],upload:["Transmissão de dados","Data upload"],filtros:["Filtros de ar","Air filters"],exercicio:["Exercício","Exercise"],braco:["Braço robótico","Robotic arm"],rover:["Rover","Rover"],co2:["Filtro de CO₂","CO₂ filter"],treino:["Treino de emergência","Emergency drill"]};
+  const btns=Object.keys(MG).map(k=>`<button class="choice" style="--c:var(--orange)" data-a="mgTest" data-v="${k}"><b>${SPOTS[k]?SPOTS[k].e:"🎮"} ${L(...(names[k]||[k,k]))}</b><span>${k}</span></button>`).join("");
+  return `<div class="panel"><h2>🎮 ${L("Teste de minigames","Minigame test")}</h2>
+   <p>${L("Escolha um minigame para jogar direto, sem passar pelo jogo. Cada partida começa com o oxigênio cheio.","Pick a minigame to play it directly, without going through the game. Each run starts with full oxygen.")}</p>
+   <div class="row" style="margin-bottom:10px"><button class="btn ${G.mode==="easy"?"":"alt"}" data-a="mgMode" data-v="easy">${L("Cadete (mais tempo)","Cadet (more time)")}</button><button class="btn ${G.mode==="hard"?"":"alt"}" data-a="mgMode" data-v="hard">${L("Comandante","Commander")}</button></div>
+   <div class="grid choices">${btns}</div></div>`;
+}
+function vIntro(){ return `<div class="panel">
+  <h1>${L("Dez Dias na Lua","Ten Days on the Moon")}</h1>
+  <p>${L("Você comanda uma base no polo sul da Lua, com quatro astronautas. A missão dura 10 dias.","You command a base at the Moon's south pole, with four astronauts. The mission lasts 10 days.")}</p>
+  <ul>
+   <li>${L("Todo dia a base ganha poucas <b>células de energia</b>. Você escolhe para onde elas vão. Não dá para ligar tudo.","Every day the base gets a few <b>energy cells</b>. You choose where they go. You cannot power everything.")}</li>
+   <li>${L("Cuide do <b>oxigênio</b>, da <b>radiação</b> e da <b>comida</b>, e faça <b>ciência</b> para ganhar estrelas.","Look after <b>oxygen</b>, <b>radiation</b> and <b>food</b>, and do <b>science</b> to earn stars.")}</li>
+   <li>${L("Toda escolha tem um custo. As erupções solares do jogo <b>aconteceram de verdade</b>: são dados arquivados da NASA.","Every choice has a cost. The solar flares in the game <b>really happened</b>: they are archived NASA data.")}</li>
+  </ul>
+  <h3 style="margin-top:14px">${L("Escolha sua missão","Choose your mission")}</h3>
+  <div class="grid choices">
+   <button class="choice" style="--c:var(--green)" data-a="start" data-v="easy"><b>🧑‍🚀 ${L("Cadete","Cadet")}</b><span class="cost">${L("7 a 9 anos","Ages 7 to 9")}</span><span>${L("Mais ar e comida no começo. Menos erupções.","More air and food at the start. Fewer flares.")}</span></button>
+   <button class="choice" style="--c:var(--orange)" data-a="start" data-v="hard"><b>🚀 ${L("Comandante","Commander")}</b><span class="cost">${L("10 a 12 anos","Ages 10 to 12")}</span><span>${L("Mais alertas, dias de sombra mais duros e um painel que pode falhar.","More alerts, harsher shadow days and a panel that can fail.")}</span></button>
+  </div>
+  <div class="row" style="margin-top:14px"><button class="btn alt" data-a="howto">❓ ${L("Como jogar","How to play")}</button><button class="btn alt" data-a="tutToggle">🎓 ${L("Tutorial no Dia 1","Day 1 tutorial")}: ${tutOn?L("ligado","on"):L("desligado","off")}</button><button class="btn alt" data-a="credits">${L("Créditos e fontes","Credits and sources")}</button></div></div>`; }
+
+function alertBox(al){ return al.high
+  ? `<div class="alert">⚠️ ${L("Alerta FORTE de erupção solar","STRONG solar flare alert")}</div><p>${L("É bem provável que a erupção venha hoje.","The flare will very likely come today.")}</p>`
+  : `<div class="alert low">⚠️ ${L("Alerta fraco de erupção solar","Weak solar flare alert")}</div><p>${L("Pode ser que a erupção não venha.","The flare may not come.")}</p>`; }
+function vBulletin(){
+  const d=G.day,sh=isShadow(d),al=alertOf(d);
+  return `<div class="panel"><h2>${L("Boletim da manhã","Morning briefing")}</h2><p class="src" style="font-size:14px">${actName()}</p>
+  <div class="note" style="--c:var(--en)"><b>${L("Luz de hoje","Today's light")}:</b> ${sh
+    ?L(`o Sol ficou atrás de um morro. Os painéis rendem só <b>${G.T.light} células</b>.`,`the Sun is behind a hill. The panels give only <b>${G.T.light} cells</b>.`)
+    :L(`o Sol anda baixo pelo horizonte e os painéis rendem <b>${G.T.light} células</b>.`,`the Sun travels low along the horizon and the panels give <b>${G.T.light} cells</b>.`)}
+    ${G.bat>0?L(` Há ${G.bat} na bateria.`,` There are ${G.bat} in the battery.`):""}</div>
+  ${al?alertBox(al)+`<p>${L("Ligar o abrigo protege, mas custa energia.","Powering the shelter protects, but costs energy.")}</p>`
+      :`<div class="note" style="--c:var(--green)"><b>${L("Clima espacial","Space weather")}:</b> ${L("Sol calmo hoje.","the Sun is calm today.")}</div>`}
+  ${G.leak?`<div class="note" style="--c:var(--red)"><b>${L("Vazamento aberto","Open leak")}:</b> ${L("a base perde 1 de oxigênio por dia até o conserto (2 células).","the base loses 1 oxygen a day until repaired (2 cells).")}</div>`:""}
+  ${G.T.fit?`<div class="note" style="--c:var(--green)"><b>${L("Tripulação","Crew")}:</b> ${G.T.fit>0?L("em ótima forma depois do exercício. 1 célula a mais hoje.","in great shape after exercising. 1 extra cell today."):L("mais fraca sem exercício. 1 célula a menos hoje.","weaker without exercise. 1 cell fewer today.")}</div>`:""}
+  ${G.drill?`<div class="note" style="--c:var(--red)"><b>${L("Tripulação treinada","Trained crew")}:</b> ${L("o próximo problema vai custar 1 a menos.","the next problem will cost 1 less.")}</div>`:""}
+  ${G.panelBroken?`<div class="note" style="--c:var(--en)"><b>${L("Painel com defeito","Faulty panel")}:</b> ${L("1 célula a menos por dia.","1 cell fewer per day.")}</div>`:""}
+  ${!G.contact?`<div class="note" style="--c:var(--o2)"><b>${L("Sem contato com a Terra","No contact with Earth")}:</b> ${L("hoje você decide sem a dica do controle da missão.","today you decide without mission control's hint.")}</div>`:""}
+  <div class="row" style="margin-top:12px"><button class="btn right" data-a="toTask">${L("Continuar","Continue")}</button></div></div>`;
+}
+
+/* ================= MINI JOGOS EM TEMPO REAL ================= */
+const MG={};
+let mgRaf=0,mgLast=0;
+const TFAC=()=>G.mode==="easy"?1.3:1;                 // o Cadete tem mais tempo
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const el=id=>document.getElementById(id);
+const setBar=f=>{const b=el("mgBar"); if(b) b.style.width=clamp(f,0,1)*100+"%";};
+const setTxt=(id,t)=>{const e=el(id); if(e&&e.textContent!==t) e.textContent=t;};
+const show=(id,on)=>{const e=el(id); if(e) e.style.display=on?"":"none";};
+const ready=()=>L("Prepare-se...","Get ready...");
+let mgInfoOnly=false;
+const mgWrap=(title,instr,svg,controls)=>mgInfoOnly?{title,instr}:`<div class="panel mgp"><h3 style="margin:0 0 2px">${title}</h3>
+  <details class="help"><summary>❓ ${L("Como jogar","How to play")}</summary>${instr}</details>${svg}
+  <div class="bar" style="margin:8px 0"><i id="mgBar" style="background:var(--orange);transition:none;width:100%"></i></div>
+  <div class="row mgc">${controls}</div></div>`;
+let seenMG=[]; try{ seenMG=JSON.parse(localStorage.getItem("tdm_seen")||"[]"); }catch(e){}
+function vMgHowto(){
+  const t=G.T.task; mgInfoOnly=true; const info=MG[t].view(MG[t].init()); mgInfoOnly=false;
+  return `<div class="panel slide"><div class="big" aria-hidden="true">${SPOTS[t].e}</div><h2>${info.title}</h2>
+   <p style="font-size:18px;max-width:720px;margin:6px auto">${info.instr}</p>
+   <p class="src" style="font-size:14px">${L("Este aviso aparece só na primeira vez deste mini jogo. Depois, ele fica no botão ❓.","This card only shows the first time you play this mini game. After that, it lives under the ❓ button.")}</p>
+   <div class="row" style="justify-content:center"><button class="btn" data-a="mgBegin">${L("Começar!","Start!")}</button></div></div>`;
+}
+const padBtn=(k,cls,ch,lab)=>`<button class="${cls}" data-k="${k}" aria-label="${lab}">${ch}</button>`;
+const dpad4=()=>`<div class="dpad" role="group" aria-label="${L("Andar","Walk")}">${padBtn("up","u","▲",L("Para cima","Up"))}${padBtn("left","l","◀",L("Para a esquerda","Left"))}${padBtn("down","d","▼",L("Para baixo","Down"))}${padBtn("right","r","▶",L("Para a direita","Right"))}</div>`;
+const chips=()=>`<span class="chip" id="mgT"></span><span class="chip" id="mgS"></span>`;
+
+function mgStart(){
+  const T=G.T,g=MG[T.task]; T.mg=g.init(); T.sub="play";
+  if(window.__noAnim){ g.auto(T.mg); g.finish(T.mg); }
+}
+function mgTap(k,v){ const T=G.T; if(G.phase!=="task"||!T||T.sub!=="play"||!T.mg||T.mg.grace>0) return; const g=MG[T.task]; if(g.tap){ g.tap(T.mg,k,+v); g.draw(T.mg); } }
+function mgLoop(t){
+  if(G.phase!=="task"||!G.T||G.T.sub!=="play"||!G.T.mg||!el("mg")){mgRaf=0;return;}
+  const dt=Math.min(.05,Math.max(0,(t-mgLast)/1000)); mgLast=t;
+  const g=MG[G.T.task],S=G.T.mg;
+  if(S.grace>0) S.grace-=dt; else g.step(S,dt);
+  g.draw(S);
+  if(S.done){ mgRaf=0; for(const k in keys)keys[k]=false; g.finish(S); render(); $("#screen").scrollTop=0; return; }
+  mgRaf=requestAnimationFrame(mgLoop);
+}
+
+/* 1. Buscar pedras: andar no campo com o ar do traje acabando */
+MG.amostra={
+  init(){ const j=()=>rnd(31)-15;
+    return {x:70,y:250,face:1,tx:null,ty:null,left:false,bag:[],t:0,max:Math.min(3,G.o2-1),tank:5*TFAC(),grace:1.2,
+      rocks:[[[185,212,1],[260,270,1],[400,165,2],[548,125,3]],[[150,150,1],[300,272,2],[470,255,2],[560,195,3]],[[200,268,1],[330,130,1],[450,268,3],[552,140,2]],[[240,180,2],[380,270,1],[520,268,3]]][rnd(4)]
+        .map(([x,y,v])=>({x:x+j(),y:clamp(y+j(),104,284),v,c:["","#7de3f0","#b6f07d","#ffb3f0"][v],got:false}))}; },
+  auto(S){ S.t=S.tank*1.5; S.bag=[3]; },
+  view(S){ return mgWrap(L("Busque pedras e volte antes do ar acabar","Fetch rocks and get back before the air runs out"),
+    L("Ande com as setas, W A S D, os botões ou tocando no chão. A mochila leva 2 pedras. Quanto mais tempo lá fora, mais oxigênio a base gasta. Volte para a porta para terminar.","Walk with the arrow keys, W A S D, the buttons or by tapping the ground. The bag holds 2 rocks. The longer you stay outside, the more oxygen the base spends. Go back to the door to finish."),
+    `<svg id="mg" class="task wide" data-field="1" viewBox="0 0 600 300" role="img" aria-label="${L("Campo de pedras","Rock field")}">
+     <rect width="600" height="300" fill="#04050c"/><circle cx="470" cy="92" r="70" fill="#ffd98a" opacity=".22"/><circle cx="470" cy="90" r="14" fill="#fffbe8"/>
+     <path d="M0,96 L0,84 Q80,66 140,88 Q230,96 300,78 Q380,60 450,86 Q530,96 600,76 L600,96Z" fill="#2b2d36"/>
+     <rect y="95" width="600" height="205" fill="#84868f"/>
+     <ellipse cx="330" cy="240" rx="50" ry="10" fill="#3d3f48"/><ellipse cx="335" cy="243" rx="42" ry="7" fill="#23252c"/><ellipse cx="500" cy="200" rx="30" ry="6" fill="#3d3f48"/><ellipse cx="130" cy="140" rx="24" ry="5" fill="#3d3f48"/>
+     <rect x="14" y="196" width="62" height="56" rx="10" fill="#e3e6ee"/><rect x="14" y="196" width="62" height="9" rx="4" fill="#ff9f43"/><rect x="40" y="214" width="28" height="38" rx="7" fill="#39405a"/>
+     <text x="45" y="190" font-size="13" font-weight="800" fill="#fff" text-anchor="middle">${L("Base","Base")}</text>
+     <ellipse class="goalring" id="mgDoor" cx="70" cy="254" rx="28" ry="9" fill="#6bd425" fill-opacity=".2" stroke="#6bd425" stroke-width="3"/>
+     ${S.rocks.map((r,i)=>`<g id="mgRock${i}"><circle class="blinkl" cx="${r.x}" cy="${r.y-8}" r="20" fill="${r.c}" opacity=".3"/>
+       <g transform="translate(${r.x},${r.y}) scale(.8)"><polygon points="-20,0 -14,-18 2,-26 18,-14 22,0" fill="#6b6d77"/><polygon points="-14,-18 2,-26 4,-10 -8,-6" fill="#b9bbc4"/><polygon points="2,-14 10,-20 14,-8 6,-4" fill="${r.c}"/></g>
+       <text x="${r.x}" y="${r.y-28}" font-size="13" font-weight="800" fill="#fff" text-anchor="middle">⭐${r.v}</text></g>`).join("")}
+     <g id="mgHero"><ellipse cx="3" cy="1" rx="24" ry="5" fill="#000" opacity=".35"/><g id="mgHop">${astroBody("#ff9f43")}</g></g></svg>`,
+    dpad4()+chips()); },
+  step(S,dt){
+    let dx=(keys.right?1:0)-(keys.left?1:0),dy=(keys.down?1:0)-(keys.up?1:0);
+    if(dx||dy) S.tx=null; else if(S.tx!==null){ S.tx=clamp(S.tx,24,576); S.ty=clamp(S.ty,100,288); const mx=S.tx-S.x,my=S.ty-S.y,d=Math.hypot(mx,my); if(d<4)S.tx=null; else{dx=mx/d;dy=my/d;} }
+    S.moving=!!(dx||dy);
+    if(S.moving){ const n=Math.hypot(dx,dy),v=150*dt; S.x=clamp(S.x+dx/n*v,24,576); S.y=clamp(S.y+dy/n*v,100,288); if(Math.abs(dx)>.15)S.face=dx>0?1:-1; }
+    S.t+=dt;
+    if(Math.hypot(S.x-70,S.y-250)>70) S.left=true;
+    for(const r of S.rocks) if(!r.got&&S.bag.length<2&&Math.hypot(S.x-r.x,S.y-r.y)<20){ r.got=true; S.bag.push(r.v); }
+    if(S.left&&Math.hypot(S.x-70,S.y-252)<24) S.done=true;
+    if(S.t>=S.max*S.tank){ S.fail=true; S.done=true; }
+  },
+  draw(S){
+    const h=el("mgHero"); if(!h) return; const k=.42+(S.y-100)/188*.36;
+    h.setAttribute("transform",`translate(${S.x.toFixed(1)},${S.y.toFixed(1)}) scale(${(k*S.face).toFixed(3)},${k.toFixed(3)})`);
+    el("mgHop").classList.toggle("moving",!!S.moving);
+    S.rocks.forEach((r,i)=>show("mgRock"+i,!r.got)); show("mgDoor",S.left);
+    setBar(1-S.t/(S.max*S.tank));
+    const used=Math.min(S.max,Math.max(1,Math.ceil(S.t/S.tank)));
+    setTxt("mgT",S.grace>0?ready():L(`O₂ gasto: ${used} de ${S.max}`,`O₂ spent: ${used} of ${S.max}`));
+    setTxt("mgS",`🎒 ${S.bag.length}/2 · ⭐ ${S.bag.reduce((a,b)=>a+b,0)}`);
+  },
+  finish(S){
+    const used=S.fail?S.max:Math.min(S.max,Math.max(1,Math.ceil(S.t/S.tank))), st=S.fail?0:S.bag.reduce((a,b)=>a+b,0);
+    G.o2-=used; G.stars+=st; G.T.outside=true;
+    if(S.fail) doneMsg(`O ar do traje acabou! O astronauta voltou correndo e largou as pedras. Oxigênio −${used}.`,`The suit ran out of air! The astronaut rushed back and dropped the rocks. Oxygen −${used}.`);
+    else if(st===0) doneMsg(`O astronauta voltou sem pedras. Oxigênio −${used}.`,`The astronaut came back without rocks. Oxygen −${used}.`);
+    else doneMsg(`Pedras na base! Ciência +${st}, oxigênio −${used}.`,`Rocks back at base! Science +${st}, oxygen −${used}.`);
+  }
+};
+
+/* 2. Painel solar: seguir o Sol que anda pelo horizonte */
+const rad=a=>a*Math.PI/180;
+MG.painel={
+  init(){ const s=rnd(360); return {s,dir:rnd(2)?1:-1,p:s+(rnd(2)?1:-1)*45,cap:0,t:0,dur:10*TFAC(),flip:3.5+Math.random()*3,sp:13+rnd(8),grace:1.2}; },
+  auto(S){ S.cap=.6*S.dur; },
+  view(){ return mgWrap(L("Siga o Sol com o painel","Follow the Sun with the panel"),
+    L("Segure ⟲ e ⟳ (ou as setas ◀ ▶) para manter a seta do painel apontada para o Sol. Quanto mais tempo alinhado, mais energia hoje. Aqui o tempo está acelerado: de verdade o Sol anda uns 12 graus por dia.","Hold ⟲ and ⟳ (or the ◀ ▶ arrow keys) to keep the panel's arrow pointed at the Sun. The longer it stays aligned, the more energy today. Time is sped up here: in reality the Sun moves about 12 degrees a day."),
+    `<svg id="mg" class="task" viewBox="0 0 300 300" role="img" aria-label="${L("Base vista de cima","Base seen from above")}">
+     <circle cx="150" cy="150" r="100" fill="#171d38" stroke="#3a4578" stroke-width="3"/>
+     <line id="mgRay" x1="150" y1="150" x2="150" y2="32" stroke="#fff3c4" stroke-width="3" stroke-dasharray="6 6"/>
+     <g id="mgSun"><circle class="pulse" r="24" fill="#ffd98a" opacity=".35"/><circle r="16" fill="#fffbe8"/></g>
+     <g id="mgPanel"><rect id="mgPanelR" x="143" y="104" width="14" height="92" rx="5" fill="#3f6fd0" stroke="#e3e6ee" stroke-width="3"/>
+      <line x1="157" y1="150" x2="205" y2="150" stroke="#8fb4ff" stroke-width="4" stroke-dasharray="4 5"/><polygon points="212,150 200,143 200,157" fill="#8fb4ff"/></g>
+     <circle cx="150" cy="150" r="7" fill="#e3e6ee"/></svg>`,
+    `<button class="btn alt" data-k="left" aria-label="${L("Girar para a esquerda","Turn left")}">⟲</button><button class="btn alt" data-k="right" aria-label="${L("Girar para a direita","Turn right")}">⟳</button>${chips()}`); },
+  step(S,dt){ S.t+=dt; if(S.t>S.flip){S.dir*=-1;S.flip=1e9;} S.s+=S.dir*S.sp*dt; S.p+=((keys.right?1:0)-(keys.left?1:0))*75*dt;
+    S.cap+=Math.max(0,Math.cos(rad(S.p-S.s)))**2*dt; if(S.t>=S.dur) S.done=true; },
+  draw(S){ const sun=el("mgSun"); if(!sun) return; const sx=150+118*Math.cos(rad(S.s)),sy=150+118*Math.sin(rad(S.s));
+    sun.setAttribute("transform",`translate(${sx.toFixed(1)},${sy.toFixed(1)})`); const r=el("mgRay"); r.setAttribute("x2",sx.toFixed(1)); r.setAttribute("y2",sy.toFixed(1));
+    el("mgPanel").setAttribute("transform",`rotate(${S.p.toFixed(1)} 150 150)`);
+    el("mgPanelR").setAttribute("fill",Math.cos(rad(S.p-S.s))>.97?"#6bd425":"#3f6fd0");
+    setBar(1-S.t/S.dur); setTxt("mgT",S.grace>0?ready():Math.max(0,Math.ceil(S.dur-S.t))+" s");
+    setTxt("mgS",L("Luz capturada","Light captured")+": "+Math.round(100*S.cap/S.dur)+"%"); },
+  finish(S){ const r=S.cap/S.dur,n=r>=.8?3:r>=.55?2:r>=.3?1:0; G.o2-=1; G.T.outside=true; G.T.bonus=n;
+    doneMsg(n?`Você capturou ${Math.round(r*100)}% da luz: energia +${n} hoje, oxigênio −1.`:`O painel quase não pegou luz (${Math.round(r*100)}%): energia +0, oxigênio −1.`,
+            n?`You captured ${Math.round(r*100)}% of the light: energy +${n} today, oxygen −1.`:`The panel caught almost no light (${Math.round(r*100)}%): energy +0, oxygen −1.`); }
+};
+
+/* 3. Vazamento: tapar os furos que vão abrindo */
+const HOLES=[[70,150],[105,95],[160,62],[240,62],[295,95],[330,150]];
+MG.vazamento={
+  init(){ return {open:HOLES.map(()=>false),pat:HOLES.map(()=>false),t:0,dur:12,next:.3,spawned:0,total:4+rnd(3),leak:0,grace:1.2}; },
+  auto(S){ S.leak=6; },
+  view(){ return mgWrap(L("Tape os furos, rápido!","Plug the holes, quick!"),
+    L("O ar escapa pela fumacinha branca. Toque em cada furo assim que ele abrir. Quanto mais tempo aberto, mais oxigênio a base perde.","Air escapes as a little white puff. Tap each hole as soon as it opens. The longer it stays open, the more oxygen the base loses."),
+    `<svg id="mg" class="task" viewBox="0 0 400 230"><path d="M30,210 Q30,20 200,20 Q370,20 370,210 Z" fill="#8d8f99"/><path d="M62,210 Q62,52 200,52 Q338,52 338,210 Z" fill="#1c2440" stroke="#e3e6ee" stroke-width="5"/>
+     <rect x="60" y="200" width="280" height="12" fill="#cfd3dc"/><rect x="160" y="150" width="80" height="50" rx="8" fill="#0e1326" stroke="#e3e6ee" stroke-width="3"/>
+     ${HOLES.map((h,i)=>`<g class="spot" data-g="hole" data-v="${i}" role="button" tabindex="0" aria-label="${L("Ponto","Spot")} ${i+1}">
+       <circle cx="${h[0]}" cy="${h[1]}" r="26" fill="transparent"/><circle cx="${h[0]}" cy="${h[1]}" r="5" fill="#3a4578"/>
+       <g id="mgPuff${i}" style="display:none"><circle cx="${h[0]}" cy="${h[1]}" r="22" fill="none" stroke="#ff5d5d" stroke-width="3" stroke-dasharray="6 5"/><circle cx="${h[0]}" cy="${h[1]}" r="7" fill="#04050c"/>
+        <circle class="puff" cx="${h[0]}" cy="${h[1]-8}" r="9" fill="#fff"/><circle class="puff" style="animation-delay:.6s" cx="${h[0]+6}" cy="${h[1]-10}" r="7" fill="#fff"/></g>
+       <g id="mgPatch${i}" style="display:none"><rect x="${h[0]-14}" y="${h[1]-14}" width="28" height="28" rx="7" fill="#ff9f43" stroke="#fff" stroke-width="2.5"/><path d="M${h[0]-7},${h[1]} l5,6 l9,-11" stroke="#2a1500" stroke-width="4" fill="none" stroke-linecap="round"/></g></g>`).join("")}</svg>`,
+    chips()); },
+  step(S,dt){ S.t+=dt; S.next-=dt;
+    if(S.next<=0&&S.spawned<S.total){ const free=S.open.map((o,i)=>o?-1:i).filter(i=>i>=0),i=free[rnd(free.length)]; S.open[i]=true; S.pat[i]=false; S.spawned++; S.next=1.5+Math.random(); }
+    S.leak+=S.open.filter(Boolean).length*dt;
+    if(S.t>=S.dur||(S.spawned>=S.total&&!S.open.some(Boolean))) S.done=true; },
+  tap(S,k,v){ if(k==="hole"&&S.open[v]){ S.open[v]=false; S.pat[v]=true; } },
+  lost(S){ const f=TFAC(); return S.leak<5*f?0:S.leak<10*f?1:2; },
+  draw(S){ if(!el("mgPuff0")) return; HOLES.forEach((_,i)=>{ show("mgPuff"+i,S.open[i]); show("mgPatch"+i,S.pat[i]); });
+    setBar(1-S.t/S.dur); setTxt("mgT",S.grace>0?ready():Math.max(0,Math.ceil(S.dur-S.t))+" s");
+    setTxt("mgS",L("Ar perdido","Air lost")+": "+[L("quase nada","almost none"),L("um pouco","a little"),L("muito","a lot")][this.lost(S)]); },
+  finish(S){ let lost=Math.max(0,Math.min(G.o2-1,this.lost(S))); if(G.drill&&lost>0){ lost--; G.drill=false; } G.o2-=lost;
+    G.T.leakMsg=lost===0?L("Que rapidez! Quase nenhum ar escapou.","So quick! Almost no air escaped."):L(`Escapou ar enquanto os furos ficaram abertos: oxigênio −${lost}.`,`Air escaped while the holes were open: oxygen −${lost}.`);
+    G.T.sub="decide"; }
+};
+
+/* 4. Antena: acompanhar a Terra, que balança no céu */
+MG.antena={
+  init(){ return {v:rnd(2)?6:94,base:36+rnd(29),amp:16,ph:Math.random()*6,sig:0,t:0,grace:1.2}; },
+  auto(S){ S.t=10; },
+  tgt(S){ return S.base+S.amp*Math.sin(S.t+S.ph); },
+  pos(v,r){ const a=-rad(5+v*.3); return [70+r*Math.cos(a),190+r*Math.sin(a)]; },
+  view(S){ return mgWrap(L("Mantenha a antena na Terra","Keep the antenna on Earth"),
+    L("Vista do polo sul da Lua, a Terra balança devagar para cima e para baixo. Siga a Terra com o controle (ou ▲ ▼) até o sinal encher. Quanto mais demorar, mais energia gasta.","Seen from the Moon's south pole, Earth slowly bobs up and down. Follow it with the slider (or ▲ ▼) until the signal fills up. The longer it takes, the more energy it costs."),
+    `<svg id="mg" class="task" viewBox="0 0 400 230"><rect width="400" height="230" fill="#04050c"/><rect y="196" width="400" height="34" fill="#6f717b"/>
+     <g id="mgEarth"><circle r="26" fill="#6fb7ff" opacity=".18"/><circle r="20" fill="#2f7fd6"/><path d="M-12,-4 q8,-8 16,-2 q2,8 -8,10z" fill="#4caf7a"/></g>
+     <line id="mgBeam" x1="70" y1="190" x2="300" y2="150" stroke="#4dd0e1" stroke-width="4" stroke-dasharray="5 9" stroke-linecap="round"/>
+     <rect x="66" y="190" width="8" height="20" fill="#cfd3dc"/>
+     <g id="mgDish"><path d="M-22,0 Q0,20 22,0 Z" fill="#e3e6ee" stroke="#8f939e" stroke-width="2"/><line x1="0" y1="0" x2="0" y2="-16" stroke="#cfd3dc" stroke-width="3"/><circle cx="0" cy="-18" r="4" fill="#ff9f43"/></g></svg>
+     <label for="ant">${L("Ângulo da antena","Antenna angle")}</label><input id="ant" type="range" min="0" max="100" step="1" value="${Math.round(S.v)}">`,
+    `<div class="dpad" style="grid-template-columns:52px;grid-template-rows:repeat(2,48px)">${padBtn("up","","▲",L("Subir a antena","Raise the antenna"))}${padBtn("down","","▼",L("Baixar a antena","Lower the antenna"))}</div>${chips()}`); },
+  step(S,dt){ S.t+=dt; const d=(keys.up?1:0)-(keys.down?1:0);
+    if(d){ S.v=clamp(S.v+d*45*dt,0,100); const sl=el("ant"); if(sl) sl.value=Math.round(S.v); }
+    S.ok=Math.abs(S.v-this.tgt(S))<7; S.sig=clamp(S.sig+(S.ok?dt/4:-dt/10),0,1);
+    if(S.sig>=1||S.t>40) S.done=true; },
+  draw(S){ const e=el("mgEarth"); if(!e) return; const [ex,ey]=this.pos(this.tgt(S),300),[bx,by]=this.pos(S.v,280);
+    e.setAttribute("transform",`translate(${ex.toFixed(1)},${ey.toFixed(1)})`);
+    const b=el("mgBeam"); b.setAttribute("x2",bx.toFixed(1)); b.setAttribute("y2",by.toFixed(1)); b.setAttribute("stroke",S.ok?"#6bd425":"#4dd0e1");
+    el("mgDish").setAttribute("transform",`translate(70,190) rotate(${(-(5+S.v*.3)+90).toFixed(1)})`);
+    setBar(S.sig); setTxt("mgT",S.grace>0?ready():Math.floor(S.t)+" s");
+    const n=Math.round(S.sig*5); setTxt("mgS",L("Sinal","Signal")+": "+"▮".repeat(n)+"▯".repeat(5-n)); },
+  finish(S){ const cost=S.t<=12*TFAC()?1:2; G.T.penalty=cost;
+    doneMsg(cost===1?"Contato recuperado bem rápido! Custou 1 célula de hoje.":"Contato recuperado, mas demorou: custou 2 células de hoje.",
+            cost===1?"Contact restored really fast! It cost 1 of today's cells.":"Contact restored, but it took a while: it cost 2 of today's cells.");
+    G.T.extra=`<div class="note" style="--c:var(--o2)"><b>${L("Você sabia?","Did you know?")}</b> ${L("Uma mensagem leva cerca de 1,3 segundo para ir da Lua à Terra. De Marte, pode levar até 20 minutos.","A message takes about 1.3 seconds to go from the Moon to Earth. From Mars, it can take up to 20 minutes.")}<div class="src">${L("Fontes","Sources")}: NASA Science (Webb explainers); NASA Human Research Program, Hazard: Distance From Earth; NASA SVS 4944.</div></div>`; }
+};
+
+/* 5. Estufa: manter a água de cada planta na faixa certa */
+MG.estufa={
+  init(){ return {w:[.6,.5,.7,.55],r:shuffle([.06,.085,.11,.135]),t:0,dur:12*TFAC(),good:0,grace:1.2}; },
+  auto(S){ S.good=.6*S.dur; },
+  view(){ return mgWrap(L("Regue na medida certa","Water just the right amount"),
+    L("Cada planta bebe em um ritmo diferente. Toque na planta para regar e mantenha a água na faixa verde: nem seca, nem encharcada.","Each plant drinks at its own pace. Tap a plant to water it and keep the water in the green band: not dry, not soaked."),
+    `<svg id="mg" class="task" viewBox="0 0 400 200" style="background:#12352a"><rect x="20" y="14" width="360" height="8" rx="4" fill="#ff8ad8"/><rect x="20" y="158" width="360" height="12" rx="5" fill="#cfd3dc"/>
+     ${[0,1,2,3].map(i=>{const x=58+i*92;return `<g class="spot" data-g="water" data-v="${i}" role="button" tabindex="0" aria-label="${L("Regar planta","Water plant")} ${i+1}">
+      <rect x="${x-42}" y="28" width="86" height="134" rx="12" fill="#1a4a36" stroke="#e6fff0" stroke-opacity=".4" stroke-width="2"/>
+      <polygon points="${x-34},130 ${x+10},130 ${x+5},156 ${x-29},156" fill="#ff9f43"/><rect x="${x-37}" y="124" width="50" height="9" rx="4" fill="#ffb86b"/>
+      <g class="sway"><line x1="${x-12}" y1="126" x2="${x-12}" y2="86" stroke="#3c9a2a" stroke-width="5" stroke-linecap="round"/>
+       <ellipse cx="${x-27}" cy="98" rx="16" ry="8" fill="#6bd425" transform="rotate(-25 ${x-27} 98)"/><ellipse cx="${x+3}" cy="88" rx="16" ry="8" fill="#8be04a" transform="rotate(25 ${x+3} 88)"/></g>
+      <rect x="${x+22}" y="40" width="14" height="110" rx="5" fill="#0e1326" stroke="#cfd3dc" stroke-width="2"/>
+      <rect x="${x+22}" y="${40+110*.15}" width="14" height="${110*.55}" fill="#6bd425" opacity=".28"/>
+      <rect id="mgW${i}" x="${x+24}" y="100" width="10" height="48" rx="3" fill="#4db8ff"/>
+      <text id="mgE${i}" x="${x-12}" y="54" font-size="20" text-anchor="middle"></text></g>`;}).join("")}</svg>`,
+    chips()); },
+  step(S,dt){ S.t+=dt; let ok=0; S.w=S.w.map((w,i)=>{ w=Math.max(0,w-S.r[i]*dt); if(w>=.3&&w<=.85) ok++; return w; }); S.good+=ok/4*dt; if(S.t>=S.dur) S.done=true; },
+  tap(S,k,v){ if(k==="water") S.w[v]=Math.min(1,S.w[v]+.2); },
+  draw(S){ if(!el("mgW0")) return; S.w.forEach((w,i)=>{ const r=el("mgW"+i),h=Math.max(2,106*w); r.setAttribute("y",(148-h).toFixed(1)); r.setAttribute("height",h.toFixed(1));
+      r.setAttribute("fill",w<.3?"#ff9f43":w>.85?"#7a6cff":"#4db8ff"); setTxt("mgE"+i,w<.3?"🥵":w>.85?"🌊":"😊"); });
+    setBar(1-S.t/S.dur); setTxt("mgT",S.grace>0?ready():Math.max(0,Math.ceil(S.dur-S.t))+" s");
+    setTxt("mgS",L("Plantas felizes","Happy plants")+": "+Math.round(100*S.good/Math.max(.01,S.t))+"%"); },
+  finish(S){ const r=S.good/S.dur,n=r>=.85?3:r>=.55?2:1; G.T.penalty=1; G.grow+=n;
+    doneMsg(`As plantas ficaram bem em ${Math.round(r*100)}% do tempo: a estufa adiantou ${n}. Custou 1 célula de hoje.`,`The plants were happy ${Math.round(r*100)}% of the time: the greenhouse moved ${n} ahead. It cost 1 of today's cells.`); }
+};
+
+/* 6. Painel quebrado: trocar as peças que vão queimando */
+MG.falha={
+  init(){ return {bad:shuffle([0,1,2,3,4,5,6,7,8,9]).slice(0,2),fixed:0,need:5+rnd(3),t:0,grace:1.2}; },
+  auto(S){ S.t=8; S.fixed=S.need; },
+  view(){ return mgWrap(L("Troque as peças queimadas","Swap the burned-out parts"),
+    L("Toque em cada peça que estiver soltando faísca. Outras vão queimar enquanto você conserta. Quanto mais demorar lá fora, mais oxigênio gasta.","Tap each part that is sparking. Others will burn out while you work. The longer you stay outside, the more oxygen it costs."),
+    `<svg id="mg" class="task" viewBox="0 0 400 200"><rect x="40" y="30" width="320" height="140" rx="10" fill="#16295a" stroke="#e3e6ee" stroke-width="4"/>
+     ${Array.from({length:10},(_,i)=>{const x=50+(i%5)*62,y=40+Math.floor(i/5)*62;
+       return `<g class="spot" data-g="part" data-v="${i}" role="button" tabindex="0" aria-label="${L("Peça","Part")} ${i+1}"><rect id="mgC${i}" x="${x}" y="${y}" width="54" height="54" rx="6" fill="#2f55a8" stroke="#8fb4ff" stroke-width="2"/><text id="mgX${i}" class="blinkl" x="${x+27}" y="${y+36}" font-size="24" text-anchor="middle" style="display:none">⚡</text></g>`;}).join("")}</svg>`,
+    chips()); },
+  step(S,dt){ S.t+=dt; if(S.fixed>=S.need||S.t>45) S.done=true; },
+  tap(S,k,v){ if(k!=="part") return; const i=S.bad.indexOf(v); if(i<0) return; S.bad.splice(i,1); S.fixed++;
+    if(S.fixed+S.bad.length<S.need){ let n; do{ n=rnd(10); }while(n===v||S.bad.includes(n)); S.bad.push(n); } },
+  draw(S){ if(!el("mgC0")) return; for(let i=0;i<10;i++){ const b=S.bad.includes(i); el("mgC"+i).setAttribute("fill",b?"#3a2222":"#2f55a8"); el("mgC"+i).setAttribute("stroke",b?"#ff5d5d":"#8fb4ff"); show("mgX"+i,b); }
+    setBar(S.fixed/S.need); setTxt("mgT",S.grace>0?ready():Math.floor(S.t)+" s"); setTxt("mgS",L("Peças trocadas","Parts swapped")+`: ${S.fixed}/${S.need}`); },
+  finish(S){ const cost=Math.max(1,Math.min(G.o2-1,S.t<=9*TFAC()?1:2)); G.o2-=cost; G.T.outside=true;
+    doneMsg(cost===1?"Painel consertado bem rápido! Oxigênio −1, energia normal.":"Painel consertado, mas demorou lá fora: oxigênio −2, energia normal.",
+            cost===1?"Panel fixed really fast! Oxygen −1, normal energy.":"Panel fixed, but it took a while outside: oxygen −2, normal energy."); }
+};
+
+/* 7. Reciclar água: pegar as gotas limpas com o tanque */
+MG.agua={
+  init(){ return {x:200,tx:null,drops:[],next:.2,spawned:0,total:14,caught:0,t:0,grace:1.2}; },
+  auto(S){ S.caught=Math.round(.6*S.total); },
+  view(){ return mgWrap(L("Pegue as gotas de água limpa","Catch the drops of clean water"),
+    L("Mova o tanque com ◀ ▶ (ou toque onde ele deve ir) e não deixe as gotas caírem no chão.","Move the tank with ◀ ▶ (or tap where it should go) and do not let the drops hit the floor."),
+    `<svg id="mg" class="task" data-field="1" viewBox="0 0 400 230"><rect width="400" height="230" fill="#1c2440"/>
+     <rect x="16" y="14" width="368" height="14" rx="7" fill="#9aa0ad"/>${[60,130,200,270,340].map(x=>`<rect x="${x-5}" y="26" width="10" height="10" rx="2" fill="#cfd3dc"/>`).join("")}
+     <rect y="214" width="400" height="16" fill="#cfd3dc"/>
+     ${Array.from({length:14},(_,i)=>`<g id="mgD${i}" style="display:none"><path d="M0,-12 C7,-3 9,2 9,5 A9,9 0 0 1 -9,5 C-9,2 -7,-3 0,-12Z" fill="#4db8ff"/></g>`).join("")}
+     <g id="mgTank"><rect x="-34" y="-20" width="68" height="34" rx="8" fill="#12233f" stroke="#cfd3dc" stroke-width="3"/><rect id="mgFill" x="-30" y="10" width="60" height="0" rx="3" fill="#4db8ff"/></g></svg>`,
+    `<button class="btn alt" data-k="left" aria-label="${L("Para a esquerda","Left")}">◀</button><button class="btn alt" data-k="right" aria-label="${L("Para a direita","Right")}">▶</button>${chips()}`); },
+  step(S,dt){ S.t+=dt; S.next-=dt;
+    if(S.next<=0&&S.spawned<S.total){ S.drops.push({i:S.spawned,x:40+rnd(321),y:36,v:85+rnd(50)}); S.spawned++; S.next=.6+Math.random()*.4; }
+    const d=(keys.right?1:0)-(keys.left?1:0),v=270*dt;
+    if(d){ S.tx=null; S.x+=d*v; } else if(S.tx!==null){ const m=S.tx-S.x; if(Math.abs(m)<=v){S.x=S.tx;S.tx=null;} else S.x+=Math.sign(m)*v; }
+    S.x=clamp(S.x,36,364);
+    S.drops=S.drops.filter(o=>{ o.y+=o.v*dt; if(o.y>=178&&o.y<=202&&Math.abs(o.x-S.x)<38){ S.caught++; return false; } return o.y<214; });
+    if(S.spawned>=S.total&&!S.drops.length) S.done=true; },
+  draw(S){ const tk=el("mgTank"); if(!tk) return; tk.setAttribute("transform",`translate(${S.x.toFixed(1)},198)`);
+    const h=26*S.caught/S.total,f=el("mgFill"); f.setAttribute("y",(11-h).toFixed(1)); f.setAttribute("height",h.toFixed(1));
+    for(let i=0;i<14;i++){ const o=S.drops.find(o=>o.i===i),e=el("mgD"+i); e.style.display=o?"":"none"; if(o) e.setAttribute("transform",`translate(${o.x},${o.y.toFixed(1)})`); }
+    setBar(1-S.spawned/S.total); setTxt("mgT",S.grace>0?ready():L(`Faltam ${S.total-S.spawned} gotas`,`${S.total-S.spawned} drops to come`)); setTxt("mgS",`💧 ${S.caught}/${S.total}`); },
+  finish(S){ const r=S.caught/S.total,n=r>=.8?2:r>=.5?1:0; G.T.penalty=1; G.o2=Math.min(MAX_O2,G.o2+n);
+    doneMsg(`Você pegou ${S.caught} de ${S.total} gotas: oxigênio +${n}. Custou 1 célula de hoje.`,`You caught ${S.caught} of ${S.total} drops: oxygen +${n}. It cost 1 of today's cells.`); }
+};
+
+/* 8. Poeira: esfregar os painéis antes do tempo acabar */
+MG.poeira={
+  init(){ const dust=Array.from({length:10},()=>1+rnd(3)); return {dust,total:dust.reduce((a,b)=>a+b,0),t:0,dur:9*TFAC(),grace:1.2}; },
+  auto(S){ S.clean=.7; },
+  rem(S){ return S.dust.reduce((a,b)=>a+b,0); },
+  view(){ return mgWrap(L("Limpe a poeira dos painéis","Wipe the dust off the panels"),
+    L("Toque ou esfregue (arraste o dedo ou o mouse) em cada parte suja até ela ficar azul. As mais sujas precisam de mais passadas.","Tap or rub (drag your finger or the mouse) on each dirty part until it turns blue. The dirtiest ones need more wipes."),
+    `<svg id="mg" class="task" viewBox="0 0 400 200"><rect width="400" height="200" fill="#04050c"/><rect x="40" y="30" width="320" height="140" rx="10" fill="#16295a" stroke="#e3e6ee" stroke-width="4"/>
+     ${Array.from({length:10},(_,i)=>{const x=50+(i%5)*62,y=40+Math.floor(i/5)*62;
+       return `<g class="spot" data-g="dust" data-v="${i}" role="button" tabindex="0" aria-label="${L("Parte do painel","Panel part")} ${i+1}"><rect x="${x}" y="${y}" width="54" height="54" rx="6" fill="#2f55a8" stroke="#8fb4ff" stroke-width="2"/><rect id="mgDu${i}" x="${x}" y="${y}" width="54" height="54" rx="6" fill="#b9a98a"/></g>`;}).join("")}</svg>`,
+    chips()); },
+  step(S,dt){ S.t+=dt; if(S.t>=S.dur||this.rem(S)===0) S.done=true; },
+  tap(S,k,v){ if(k==="dust"&&S.dust[v]>0) S.dust[v]--; },
+  draw(S){ if(!el("mgDu0")) return; S.dust.forEach((d,i)=>el("mgDu"+i).setAttribute("opacity",(d/3*.9).toFixed(2)));
+    setBar(1-S.t/S.dur); setTxt("mgT",S.grace>0?ready():Math.max(0,Math.ceil(S.dur-S.t))+" s");
+    setTxt("mgS",L("Limpo","Clean")+": "+Math.round(100*(1-this.rem(S)/S.total))+"%"); },
+  finish(S){ const c=S.clean!==undefined?S.clean:1-this.rem(S)/S.total,n=c>=.9?2:c>=.5?1:0; G.o2-=1; G.T.outside=true; G.T.bonus=n;
+    doneMsg(`Painéis ${Math.round(c*100)}% limpos: energia +${n} hoje, oxigênio −1.`,`Panels ${Math.round(c*100)}% clean: energy +${n} today, oxygen −1.`); }
+};
+
+/* 9. Microscópio: repetir a ordem dos cristais (memória) */
+const GEMS=["#7de3f0","#b6f07d","#ffb3f0","#ffd23f"];
+MG.micro={
+  init(){ return {seq:Array.from({length:4},()=>rnd(4)),round:0,ph:"show",timer:-.4,idx:0,lit:-1,flash:null,t:0,grace:1.2}; },
+  auto(S){ S.round=2; },
+  view(){ return mgWrap(L("Repita a ordem dos cristais","Repeat the order of the crystals"),
+    L("Primeiro olhe: os cristais acendem em uma ordem. Depois toque neles na mesma ordem. São 3 rodadas, cada uma um pouco mais longa. Se errar, a análise para ali.","First watch: the crystals light up in an order. Then tap them in the same order. There are 3 rounds, each a little longer. If you miss, the analysis stops there."),
+    `<svg id="mg" class="task" viewBox="0 0 400 200"><rect width="400" height="200" fill="#12162e"/><circle cx="200" cy="100" r="92" fill="#0b0e1e" stroke="#454c66" stroke-width="6"/>
+     ${GEMS.map((c,i)=>{const x=[140,260,140,260][i],y=[62,62,138,138][i];return `<g class="spot" data-g="gem" data-v="${i}" role="button" tabindex="0" aria-label="${L("Cristal","Crystal")} ${i+1}">
+       <circle cx="${x}" cy="${y}" r="36" fill="transparent"/><polygon id="mgG${i}" points="${x},${y-30} ${x+26},${y} ${x},${y+30} ${x-26},${y}" fill="${c}" stroke="#fff" stroke-width="3" opacity=".3"/></g>`;}).join("")}</svg>`,
+    chips()); },
+  step(S,dt){ S.t+=dt; if(S.flash){ S.flash.t-=dt; if(S.flash.t<=0) S.flash=null; }
+    const len=S.round+2;
+    if(S.ph==="show"){ S.timer+=dt; const k=Math.floor(S.timer/.75); S.lit=(S.timer>=0&&k<len&&(S.timer%.75)<.5)?S.seq[k]:-1; if(k>=len){ S.ph="input"; S.idx=0; S.lit=-1; } }
+    else if(S.ph==="pause"){ S.timer-=dt; if(S.timer<=0){ S.ph="show"; S.timer=-.2; } } },
+  tap(S,k,v){ if(k!=="gem"||S.ph!=="input") return; S.flash={i:v,t:.25};
+    if(v!==S.seq[S.idx]){ S.fail=true; S.done=true; return; }
+    if(++S.idx>=S.round+2){ S.round++; if(S.round>=3) S.done=true; else { S.ph="pause"; S.timer=.8; } } },
+  draw(S){ if(!el("mgG0")) return; for(let i=0;i<4;i++) el("mgG"+i).setAttribute("opacity",(S.lit===i||(S.flash&&S.flash.i===i))?"1":".3");
+    setBar(S.round/3); setTxt("mgT",S.grace>0?ready():S.ph==="input"?"👉 "+L("Sua vez!","Your turn!"):"👀 "+L("Olhe a ordem","Watch the order")); setTxt("mgS",L("Rodada","Round")+` ${Math.min(3,S.round+1)}/3`); },
+  finish(S){ const n=S.round; G.T.penalty=1; G.stars+=n;
+    doneMsg(n===3?"Análise completa! Ciência +3. Custou 1 célula de hoje.":`A análise parou na rodada ${n+1}: ciência +${n}. Custou 1 célula de hoje.`,
+            n===3?"Full analysis! Science +3. It cost 1 of today's cells.":`The analysis stopped at round ${n+1}: science +${n}. It cost 1 of today's cells.`); }
+};
+
+/* 10. Transmissão: apertar Enviar quando o sinal passa na faixa verde (pontaria no tempo) */
+MG.upload={
+  init(){ const zw=G.mode==="easy"?.3:.22; return {pos:0,dir:1,sp:.8,zw,zone:Math.random()*(1-zw),n:0,sent:0,last:null,t:0,grace:1.2}; },
+  auto(S){ S.sent=2; },
+  view(){ return mgWrap(L("Envie os dados na hora certa","Send the data at the right moment"),
+    L("O sinal anda de um lado para o outro. Aperte Enviar quando ele estiver dentro da faixa verde. São 3 pacotes, e cada um é mais rápido que o anterior.","The signal moves from side to side. Press Send when it is inside the green band. There are 3 packets, and each one is faster than the last."),
+    `<svg id="mg" class="task spot" data-g="send" data-v="0" viewBox="0 0 400 200"><rect width="400" height="200" fill="#04050c"/>
+     <text x="200" y="52" font-size="30" text-anchor="middle">🛰️ ➜ 🌍</text>
+     <rect x="40" y="96" width="320" height="34" rx="10" fill="#252c4d"/><rect id="mgZone" x="40" y="96" width="60" height="34" rx="8" fill="#6bd425" opacity=".85"/>
+     <rect id="mgMk" x="38" y="88" width="6" height="50" rx="3" fill="#fff"/>
+     <text id="mgFb" x="200" y="172" font-size="20" font-weight="800" fill="#fff" text-anchor="middle"></text></svg>`,
+    `<button class="btn" data-g="send" data-v="0">📡 ${L("Enviar!","Send!")}</button>${chips()}`); },
+  step(S,dt){ S.t+=dt; S.pos+=S.dir*S.sp*dt; if(S.pos>=1){S.pos=1;S.dir=-1;} if(S.pos<=0){S.pos=0;S.dir=1;} },
+  tap(S,k){ if(k!=="send"||S.done) return; const hit=S.pos>=S.zone&&S.pos<=S.zone+S.zw; if(hit) S.sent++; S.last=hit; S.n++; S.sp+=.4; S.zone=Math.random()*(1-S.zw); if(S.n>=3) S.done=true; },
+  draw(S){ const z=el("mgZone"); if(!z) return; z.setAttribute("x",(40+320*S.zone).toFixed(1)); z.setAttribute("width",(320*S.zw).toFixed(1)); el("mgMk").setAttribute("x",(37+320*S.pos).toFixed(1));
+    setTxt("mgFb",S.last===null?"":S.last?L("Pacote enviado!","Packet sent!"):L("O pacote se perdeu...","The packet got lost..."));
+    setBar(1-S.n/3); setTxt("mgT",S.grace>0?ready():L("Pacote","Packet")+` ${Math.min(3,S.n+1)}/3`); setTxt("mgS",`📦 ${S.sent}`); },
+  finish(S){ const n=S.sent===3?4:S.sent; G.T.penalty=2; G.stars+=n;
+    doneMsg(`${S.sent} de 3 pacotes chegaram à Terra: ciência +${n}. Custou 2 células de hoje.`,`${S.sent} of 3 packets reached Earth: science +${n}. It cost 2 of today's cells.`); }
+};
+
+/* 11. Filtros de ar: aspirar a poeira que fica andando */
+MG.filtros={
+  init(){ return {x:200,y:115,tx:null,ty:null,t:0,dur:10*TFAC(),grace:1.2,
+    dust:Array.from({length:8},()=>({x:30+rnd(341),y:30+rnd(171),vx:(rnd(2)?1:-1)*(25+rnd(35)),vy:(rnd(2)?1:-1)*(25+rnd(35)),on:true}))}; },
+  auto(S){ S.c=.7; },
+  left(S){ return S.dust.filter(d=>d.on).length; },
+  view(){ return mgWrap(L("Aspire a poeira do filtro","Vacuum the dust off the filter"),
+    L("Leve o aspirador até cada bolinha de poeira com as setas, W A S D, os botões ou tocando na tela. A poeira não fica parada!","Take the vacuum to each ball of dust with the arrow keys, W A S D, the buttons or by tapping the screen. The dust does not sit still!"),
+    `<svg id="mg" class="task" data-field="1" viewBox="0 0 400 230"><rect width="400" height="230" fill="#1c2440"/>
+     ${Array.from({length:9},(_,i)=>`<line x1="${20+i*45}" y1="14" x2="${20+i*45}" y2="216" stroke="#39405a" stroke-width="6"/>`).join("")}<rect x="14" y="14" width="372" height="202" rx="12" fill="none" stroke="#cfd3dc" stroke-width="5"/>
+     ${Array.from({length:8},(_,i)=>`<g id="mgF${i}"><circle r="11" fill="#b9a98a"/><circle cx="-3" cy="-3" r="4" fill="#d8cbb0"/></g>`).join("")}
+     <g id="mgNoz"><circle r="22" fill="#4dd0e1" fill-opacity=".18" stroke="#4dd0e1" stroke-width="4"/><circle r="6" fill="#4dd0e1"/></g></svg>`,
+    dpad4()+chips()); },
+  step(S,dt){ S.t+=dt; let dx=(keys.right?1:0)-(keys.left?1:0),dy=(keys.down?1:0)-(keys.up?1:0);
+    if(dx||dy) S.tx=null; else if(S.tx!==null){ const mx=S.tx-S.x,my=S.ty-S.y,d=Math.hypot(mx,my); if(d<4) S.tx=null; else { dx=mx/d; dy=my/d; } }
+    if(dx||dy){ const n=Math.hypot(dx,dy),v=230*dt; S.x=clamp(S.x+dx/n*v,24,376); S.y=clamp(S.y+dy/n*v,24,206); }
+    for(const d of S.dust){ if(!d.on) continue; d.x+=d.vx*dt; d.y+=d.vy*dt; if(d.x<28||d.x>372){d.vx*=-1;d.x=clamp(d.x,28,372);} if(d.y<28||d.y>202){d.vy*=-1;d.y=clamp(d.y,28,202);}
+      if(Math.hypot(d.x-S.x,d.y-S.y)<26) d.on=false; }
+    if(S.t>=S.dur||this.left(S)===0) S.done=true; },
+  draw(S){ const n=el("mgNoz"); if(!n) return; n.setAttribute("transform",`translate(${S.x.toFixed(1)},${S.y.toFixed(1)})`);
+    S.dust.forEach((d,i)=>{ const e=el("mgF"+i); e.style.display=d.on?"":"none"; if(d.on) e.setAttribute("transform",`translate(${d.x.toFixed(1)},${d.y.toFixed(1)})`); });
+    setBar(1-S.t/S.dur); setTxt("mgT",S.grace>0?ready():Math.max(0,Math.ceil(S.dur-S.t))+" s"); setTxt("mgS",L("Poeira","Dust")+`: ${this.left(S)}/8`); },
+  finish(S){ const c=S.c!==undefined?S.c:1-this.left(S)/8,n=c>=.85?1:c>=.5?0:-1,b=G.o2; G.T.penalty=1; G.o2=clamp(G.o2+n,1,MAX_O2); const d=G.o2-b;
+    doneMsg(d>0?`Filtros limpinhos! Oxigênio +${d}. Custou 1 célula de hoje.`:d===0?`Filtros ${Math.round(c*100)}% limpos: o ar ficou igual. Custou 1 célula de hoje.`:`Sobrou muita poeira: oxigênio −${-d}. Custou 1 célula de hoje.`,
+            d>0?`Squeaky-clean filters! Oxygen +${d}. It cost 1 of today's cells.`:d===0?`Filters ${Math.round(c*100)}% clean: the air stayed the same. It cost 1 of today's cells.`:`Too much dust left: oxygen −${-d}. It cost 1 of today's cells.`); }
+};
+
+/* 12. Exercício: correr na esteira alternando os pés (ritmo) */
+MG.exercicio={
+  init(){ return {steps:0,goal:G.mode==="easy"?24:30,nx:0,pk:{},t:0,dur:10,grace:1.2}; },
+  auto(S){ S.steps=Math.round(.7*S.goal); },
+  view(){ return mgWrap(L("Corra alternando os pés","Run by alternating your feet"),
+    L("Aperte os dois pés um de cada vez, bem rápido: esquerdo, direito, esquerdo, direito. Pode usar as setas ◀ ▶. Apertar o mesmo pé duas vezes não conta.","Press the two feet one at a time, really fast: left, right, left, right. You can use the ◀ ▶ arrow keys. Pressing the same foot twice does not count."),
+    `<svg id="mg" class="task" viewBox="0 0 400 200"><rect width="400" height="200" fill="#1c2440"/><rect x="60" y="150" width="280" height="22" rx="11" fill="#39405a"/>
+     <g id="mgBelt">${Array.from({length:8},(_,i)=>`<rect x="${70+i*36}" y="156" width="18" height="10" rx="3" fill="#6b7399"/>`).join("")}</g>
+     <rect x="300" y="60" width="10" height="92" fill="#9aa0ad"/><rect x="270" y="56" width="70" height="12" rx="6" fill="#cfd3dc"/>
+     <g id="mgRun" transform="translate(200,150) scale(1.5)"><g id="mgHop">${astroBody("#6bd425")}</g></g></svg>`,
+    `<button class="btn" id="mgF0" data-g="foot" data-v="0">🦶 ${L("Esquerdo","Left")}</button><button class="btn" id="mgF1" data-g="foot" data-v="1">${L("Direito","Right")} 🦶</button>${chips()}`); },
+  foot(S,f){ if(f===S.nx){ S.steps++; S.nx=1-S.nx; } },
+  step(S,dt){ S.t+=dt; if(keys.left&&!S.pk.l) this.foot(S,0); if(keys.right&&!S.pk.r) this.foot(S,1); S.pk={l:keys.left,r:keys.right};
+    if(S.t>=S.dur||S.steps>=S.goal) S.done=true; },
+  tap(S,k,v){ if(k==="foot") this.foot(S,v); },
+  draw(S){ const b=el("mgBelt"); if(!b) return; b.setAttribute("transform",`translate(${-(S.steps*9)%36},0)`); el("mgHop").classList.toggle("moving",S.steps>0&&!S.done);
+    el("mgF0").style.opacity=S.nx===0?"1":".45"; el("mgF1").style.opacity=S.nx===1?"1":".45";
+    setBar(1-S.t/S.dur); setTxt("mgT",S.grace>0?ready():Math.max(0,Math.ceil(S.dur-S.t))+" s"); setTxt("mgS",`👣 ${S.steps}/${S.goal}`); },
+  finish(S){ const r=S.steps/S.goal,f=r>=1?1:r>=.6?0:-1; G.T.penalty=1; G.fit=f;
+    doneMsg(f>0?"Treino completo! Amanhã a tripulação rende 1 célula a mais. Custou 1 célula de hoje.":f===0?"Treino pela metade: amanhã fica tudo igual. Custou 1 célula de hoje.":"Foi pouco exercício: amanhã a tripulação rende 1 célula a menos. Custou 1 célula de hoje.",
+            f>0?"Full workout! Tomorrow the crew gives 1 extra cell. It cost 1 of today's cells.":f===0?"Half a workout: tomorrow stays the same. It cost 1 of today's cells.":"Too little exercise: tomorrow the crew gives 1 cell fewer. It cost 1 of today's cells."); }
+};
+
+/* 13. Braço robótico: manter a garra sobre a caixa que se move até agarrar */
+MG.braco={
+  init(){ const a=Math.random()*6.28,v=38+rnd(18); return {x:200,y:170,tx:null,ty:null,cx:90+rnd(220),cy:50+rnd(70),vx:Math.cos(a)*v,vy:Math.sin(a)*v,hold:0,cap:false,t:0,dur:14*TFAC(),grace:1.2}; },
+  auto(S){ S.cap=true; S.t=10; },
+  view(){ return mgWrap(L("Agarre a caixa com o braço robótico","Grab the box with the robotic arm"),
+    L("Mova a garra com as setas, W A S D, os botões ou tocando na tela. Mantenha a garra em cima da caixa até a barra encher. A caixa não fica parada!","Move the claw with the arrow keys, W A S D, the buttons or by tapping the screen. Keep the claw over the box until the bar fills. The box does not sit still!"),
+    `<svg id="mg" class="task" data-field="1" viewBox="0 0 400 230"><rect width="400" height="230" fill="#04050c"/><rect y="200" width="400" height="30" fill="#6f717b"/>
+     <rect x="176" y="196" width="48" height="16" rx="5" fill="#9aa0ad"/>
+     <g id="mgCg"><rect x="-24" y="-18" width="48" height="36" rx="6" fill="#ff9f43" stroke="#fff" stroke-width="2.5"/><text y="7" font-size="18" text-anchor="middle">🍽️</text><circle id="mgRing" r="30" fill="none" stroke="#4dd0e1" stroke-width="3" stroke-dasharray="6 5"/></g>
+     <line id="mgArm" x1="200" y1="198" x2="200" y2="170" stroke="#cfd3dc" stroke-width="9" stroke-linecap="round"/>
+     <g id="mgTip"><circle r="12" fill="#e3e6ee" stroke="#8f939e" stroke-width="3"/><path d="M-9,-12 l-5,-12 M9,-12 l5,-12" stroke="#e3e6ee" stroke-width="5" stroke-linecap="round"/></g></svg>`,
+    dpad4()+chips()); },
+  step(S,dt){ S.t+=dt; let dx=(keys.right?1:0)-(keys.left?1:0),dy=(keys.down?1:0)-(keys.up?1:0);
+    if(dx||dy) S.tx=null; else if(S.tx!==null){ const mx=S.tx-S.x,my=S.ty-S.y,d=Math.hypot(mx,my); if(d<4) S.tx=null; else { dx=mx/d; dy=my/d; } }
+    if(dx||dy){ const n=Math.hypot(dx,dy),v=160*dt; S.x=clamp(S.x+dx/n*v,20,380); S.y=clamp(S.y+dy/n*v,20,190); }
+    S.cx+=S.vx*dt; S.cy+=S.vy*dt; if(S.cx<40||S.cx>360){S.vx*=-1;S.cx=clamp(S.cx,40,360);} if(S.cy<35||S.cy>150){S.vy*=-1;S.cy=clamp(S.cy,35,150);}
+    S.on=Math.hypot(S.x-S.cx,S.y-S.cy)<24; S.hold=clamp(S.hold+(S.on?dt:-dt*.5),0,1.5);
+    if(S.hold>=1.5){ S.cap=true; S.done=true; } if(S.t>=S.dur) S.done=true; },
+  draw(S){ const tp=el("mgTip"); if(!tp) return; tp.setAttribute("transform",`translate(${S.x.toFixed(1)},${S.y.toFixed(1)})`);
+    const a=el("mgArm"); a.setAttribute("x2",S.x.toFixed(1)); a.setAttribute("y2",S.y.toFixed(1));
+    el("mgCg").setAttribute("transform",`translate(${S.cx.toFixed(1)},${S.cy.toFixed(1)})`); el("mgRing").setAttribute("stroke",S.on?"#6bd425":"#4dd0e1");
+    setBar(S.hold/1.5); setTxt("mgT",S.grace>0?ready():Math.max(0,Math.ceil(S.dur-S.t))+" s"); setTxt("mgS",L("Agarrando","Grabbing")+": "+Math.round(100*S.hold/1.5)+"%"); },
+  finish(S){ const n=!S.cap?0:S.t<=8*TFAC()?3:2; G.T.penalty=1; G.food+=n;
+    doneMsg(n?`Caixa agarrada! Comida para mais ${n} dias. Custou 1 célula de hoje.`:"A caixa escapou do braço. Sem comida nova. Custou 1 célula de hoje.",
+            n?`Box captured! Food for ${n} more days. It cost 1 of today's cells.`:"The box slipped away from the arm. No new food. It cost 1 of today's cells."); }
+};
+
+/* 14. Rover: trocar de pista para desviar das crateras e pegar amostras */
+MG.rover={
+  init(){ const types=shuffle(["s","s","s","s","s","s","c","c","c","c","c","c","c","c"]); let last=-1;
+    return {lane:1,y:200,got:0,hits:0,pk:{},t:0,sp:G.mode==="easy"?165:195,grace:1.2,
+      objs:types.map((ty,i)=>{ let ln; do{ ln=rnd(3); }while(ln===last&&ty==="c"); last=ln; return {ty,ln,x:640+i*150,on:true}; })}; },
+  auto(S){ S.got=3; S.hits=1; },
+  view(S){ return mgWrap(L("Dirija o rover pelas crateras","Drive the rover through the craters"),
+    L("O rover anda sozinho. Troque de pista com ▲ ▼ (ou tocando na pista) para desviar das crateras e passar por cima das amostras brilhantes.","The rover drives by itself. Change lanes with ▲ ▼ (or by tapping a lane) to dodge the craters and drive over the glowing samples."),
+    `<svg id="mg" class="task wide" viewBox="0 0 600 300"><rect width="600" height="300" fill="#04050c"/><rect y="110" width="600" height="190" fill="#84868f"/>
+     ${[0,1,2].map(l=>`<g class="spot" data-g="lane" data-v="${l}"><rect x="0" y="${125+l*50}" width="600" height="50" fill="${l%2?"#7b7d86":"#84868f"}"/></g>`).join("")}
+     ${S.objs.map((o,i)=>`<g id="mgO${i}" pointer-events="none">${o.ty==="c"?`<ellipse rx="26" ry="11" fill="#3d3f48"/><ellipse cx="3" cy="2" rx="21" ry="7" fill="#23252c"/>`:`<circle class="blinkl" r="17" fill="#ffb3f0" opacity=".4"/><polygon points="0,-12 10,0 0,12 -10,0" fill="#ffb3f0" stroke="#fff" stroke-width="2"/>`}</g>`).join("")}
+     <g id="mgRv" pointer-events="none"><rect x="-26" y="-22" width="52" height="18" rx="6" fill="#e3e6ee"/><rect x="-8" y="-34" width="22" height="14" rx="4" fill="#ff9f43"/><circle cx="-16" cy="-2" r="9" fill="#39405a"/><circle cx="16" cy="-2" r="9" fill="#39405a"/></g></svg>`,
+    `<div class="dpad" style="grid-template-columns:52px;grid-template-rows:repeat(2,48px)">${padBtn("up","","▲",L("Pista de cima","Lane up"))}${padBtn("down","","▼",L("Pista de baixo","Lane down"))}</div>${chips()}`); },
+  step(S,dt){ S.t+=dt; if(keys.up&&!S.pk.u) S.lane=Math.max(0,S.lane-1); if(keys.down&&!S.pk.d) S.lane=Math.min(2,S.lane+1); S.pk={u:keys.up,d:keys.down};
+    S.y+=((150+S.lane*50)-S.y)*Math.min(1,dt*14);
+    for(const o of S.objs){ o.x-=S.sp*dt; if(o.on&&Math.abs(o.x-90)<30&&o.ln===S.lane){ o.on=false; if(o.ty==="s") S.got++; else S.hits++; } }
+    if(S.objs[S.objs.length-1].x<-40) S.done=true; },
+  tap(S,k,v){ if(k==="lane") S.lane=v; },
+  draw(S){ const r=el("mgRv"); if(!r) return; r.setAttribute("transform",`translate(90,${S.y.toFixed(1)})`);
+    S.objs.forEach((o,i)=>{ const e=el("mgO"+i),vis=o.x>-40&&o.x<640&&(o.on||o.ty==="c"); e.style.display=vis?"":"none"; if(vis) e.setAttribute("transform",`translate(${o.x.toFixed(1)},${150+o.ln*50})`); });
+    setBar(clamp((S.objs[S.objs.length-1].x+40)/(640+13*150+40),0,1)); setTxt("mgT",S.grace>0?ready():"💥 "+S.hits); setTxt("mgS","💎 "+S.got); },
+  finish(S){ const n=clamp(S.got-Math.floor(S.hits/2),0,4); G.o2-=1; G.T.outside=true; G.T.penalty=1; G.stars+=n;
+    doneMsg(`O rover voltou com ${S.got} amostras e ${S.hits} batidas: ciência +${n}. Oxigênio −1 e 1 célula de hoje.`,`The rover came back with ${S.got} samples and ${S.hits} bumps: science +${n}. Oxygen −1 and 1 of today's cells.`); }
+};
+
+/* 15. Filtro de CO₂: escolher o filtro com a forma do encaixe */
+const shapeSvg=(i,x,y,r,at)=>[`<circle cx="${x}" cy="${y}" r="${r}" ${at}/>`,`<rect x="${x-r*.88}" y="${y-r*.88}" width="${r*1.76}" height="${r*1.76}" rx="4" ${at}/>`,
+  `<polygon points="${x},${y-r} ${x+r},${y+r*.8} ${x-r},${y+r*.8}" ${at}/>`,`<polygon points="${x-r},${y} ${x-r/2},${y-r*.87} ${x+r/2},${y-r*.87} ${x+r},${y} ${x+r/2},${y+r*.87} ${x-r/2},${y+r*.87}" ${at}/>`][i];
+MG.co2={
+  init(){ return {slot:rnd(4),n:0,need:8,lock:0,bad:false,t:0,dur:12*TFAC(),grace:1.2}; },
+  auto(S){ S.n=6; },
+  view(){ return mgWrap(L("Encaixe o filtro certo","Fit the right filter"),
+    L("O encaixe de cima mostra uma forma. Toque no filtro que tem a mesma forma. Se errar, o filtro trava por um instante.","The slot at the top shows a shape. Tap the filter with the same shape. If you miss, the filter jams for a moment."),
+    `<svg id="mg" class="task" viewBox="0 0 400 220"><rect width="400" height="220" fill="#1c2440"/><rect x="140" y="12" width="120" height="92" rx="14" fill="#0e1326" stroke="#cfd3dc" stroke-width="4"/>
+     ${[0,1,2,3].map(i=>`<g id="mgSl${i}" style="display:none">${shapeSvg(i,200,58,32,'fill="none" stroke="#4dd0e1" stroke-width="5" stroke-dasharray="8 6"')}</g>`).join("")}
+     <rect id="mgBad" x="140" y="12" width="120" height="92" rx="14" fill="#ff5d5d" opacity="0"/>
+     ${[0,1,2,3].map(i=>`<g class="spot" data-g="can" data-v="${i}" role="button" tabindex="0" aria-label="${L("Filtro","Filter")} ${i+1}"><rect x="${22+i*92}" y="124" width="80" height="84" rx="12" fill="#12233f" stroke="#cfd3dc" stroke-width="3"/>${shapeSvg(i,62+i*92,166,26,'fill="#b9f2f9" stroke="#fff" stroke-width="3"')}</g>`).join("")}</svg>`,
+    chips()); },
+  step(S,dt){ S.t+=dt; if(S.lock>0){ S.lock-=dt; if(S.lock<=0) S.bad=false; } if(S.t>=S.dur||S.n>=S.need) S.done=true; },
+  tap(S,k,v){ if(k!=="can"||S.lock>0) return; if(v===S.slot){ S.n++; let x; do{ x=rnd(4); }while(x===S.slot); S.slot=x; } else { S.lock=.8; S.bad=true; } },
+  draw(S){ if(!el("mgSl0")) return; for(let i=0;i<4;i++) show("mgSl"+i,i===S.slot); el("mgBad").setAttribute("opacity",S.bad?".45":"0");
+    setBar(1-S.t/S.dur); setTxt("mgT",S.grace>0?ready():Math.max(0,Math.ceil(S.dur-S.t))+" s"); setTxt("mgS",L("Filtros trocados","Filters swapped")+`: ${Math.min(S.n,S.need)}/${S.need}`); },
+  finish(S){ const r=S.n/S.need,n=r>=1?1:r>=.5?0:-1,b=G.o2; G.T.penalty=1; G.o2=clamp(G.o2+n,1,MAX_O2); const d=G.o2-b;
+    doneMsg(d>0?`Todos os filtros trocados! Oxigênio +${d}. Custou 1 célula de hoje.`:d===0?`${Math.min(S.n,S.need)} de ${S.need} filtros trocados: o ar ficou igual. Custou 1 célula de hoje.`:`Poucos filtros trocados: oxigênio −${-d}. Custou 1 célula de hoje.`,
+            d>0?`All filters swapped! Oxygen +${d}. It cost 1 of today's cells.`:d===0?`${Math.min(S.n,S.need)} of ${S.need} filters swapped: the air stayed the same. It cost 1 of today's cells.`:`Too few filters swapped: oxygen −${-d}. It cost 1 of today's cells.`); }
+};
+
+/* 16. Treino de emergência: seguir a lista de passos na ordem */
+const DRILL=[["😷","máscara","mask"],["🧯","extintor","extinguisher"],["🚪","escotilha","hatch"],["📡","avisar a Terra","call Earth"],["🔦","lanterna","torch"],["🧰","ferramentas","tools"]];
+MG.treino={
+  init(){ const S={round:0,idx:0,err:0,t:0,dur:22*TFAC(),grace:1.2}; this.deal(S); return S; },
+  deal(S){ S.seq=shuffle([0,1,2,3,4,5]).slice(0,4); S.pos=shuffle([0,1,2,3,4,5]); S.idx=0; },
+  auto(S){ S.round=3; },
+  view(){ return mgWrap(L("Siga a lista de emergência","Follow the emergency checklist"),
+    L("A lista de cima mostra 4 passos em ordem. Toque nos botões nessa mesma ordem, o mais rápido que puder. Se errar, a lista recomeça. São 3 listas.","The list at the top shows 4 steps in order. Tap the buttons in that same order, as fast as you can. If you miss, the list starts again. There are 3 lists."),
+    `<svg id="mg" class="task" viewBox="0 0 400 230"><rect width="400" height="230" fill="#2a1420"/><rect x="20" y="12" width="360" height="56" rx="12" fill="#0e1326" stroke="#ff5d5d" stroke-width="3"/>
+     <text id="mgCk" x="200" y="50" font-size="26" text-anchor="middle" fill="#fff"></text>
+     ${[0,1,2,3,4,5].map(k=>{const x=30+(k%3)*118,y=82+Math.floor(k/3)*72;return `<g class="spot" data-g="ic" data-v="${k}" role="button" tabindex="0"><rect x="${x}" y="${y}" width="104" height="62" rx="12" fill="#12233f" stroke="#cfd3dc" stroke-width="3"/><text id="mgI${k}" x="${x+52}" y="${y+30}" font-size="24" text-anchor="middle"></text><text id="mgL${k}" x="${x+52}" y="${y+52}" font-size="12" font-weight="700" fill="#cfd5f5" text-anchor="middle"></text></g>`;}).join("")}</svg>`,
+    chips()); },
+  step(S,dt){ S.t+=dt; if(S.t>=S.dur) S.done=true; },
+  tap(S,k,v){ if(k!=="ic") return; if(S.pos[v]===S.seq[S.idx]){ if(++S.idx>=4){ S.round++; if(S.round>=3) S.done=true; else this.deal(S); } } else { S.idx=0; S.err++; } },
+  draw(S){ if(!el("mgCk")) return; setTxt("mgCk",S.seq.map((ic,i)=>i<S.idx?"✅":DRILL[ic][0]).join("  ➜  "));
+    S.pos.forEach((ic,k)=>{ setTxt("mgI"+k,DRILL[ic][0]); setTxt("mgL"+k,L(DRILL[ic][1],DRILL[ic][2])); });
+    setBar(1-S.t/S.dur); setTxt("mgT",S.grace>0?ready():Math.max(0,Math.ceil(S.dur-S.t))+" s"); setTxt("mgS",L("Lista","List")+` ${Math.min(3,S.round+1)}/3`); },
+  finish(S){ const ok=S.round>=3; G.T.penalty=1; if(ok) G.drill=true;
+    doneMsg(ok?"Treino completo! No próximo problema, a tripulação perde 1 a menos. Custou 1 célula de hoje.":`O tempo acabou na lista ${S.round+1}. O treino não valeu desta vez. Custou 1 célula de hoje.`,
+            ok?"Drill complete! In the next problem, the crew loses 1 less. It cost 1 of today's cells.":`Time ran out on list ${S.round+1}. The drill did not count this time. It cost 1 of today's cells.`); }
+};
+
+function vTask(){
+  const T=G.T,o2ok=n=>G.o2>n, low=L("Oxigênio baixo demais para sair.","Oxygen is too low to go outside.");
+  const today=L("hoje","today");
+  const risk=alertOf(G.day)&&["amostra","painel","falha","poeira","rover"].includes(T.task)?`<div class="alert low" style="font-size:16px">⚠️ ${L("Hoje tem alerta de erupção. Quem sai da base fica sem a proteção do abrigo.","There is a flare alert today. Anyone who goes outside is away from the shelter's protection.")}</div>`:"";
+  const title={amostra:L("Saída para coletar pedras","Rock-collecting walk"),painel:L("Painel solar","Solar panel"),vazamento:L("Vazamento de ar","Air leak"),antena:L("Antena","Antenna"),estufa:L("Estufa","Greenhouse"),falha:L("Painel solar","Solar panel"),agua:L("Reciclagem de água","Water recycling"),poeira:L("Painéis solares","Solar panels"),micro:L("Laboratório","Lab"),upload:L("Transmissão de dados","Data upload"),filtros:L("Filtros de ar","Air filters"),exercicio:L("Exercício","Exercise"),braco:L("Braço robótico","Robotic arm"),rover:L("Passeio de rover","Rover drive"),co2:L("Filtro de gás carbônico","Carbon dioxide filter"),treino:L("Treino de emergência","Emergency drill")}[T.task];
+  if(T.sub==="done") return `<div class="panel"><h2>${title}</h2><div class="note" style="--c:var(--green)"><b>${T.taskMsg}</b></div>${T.extra||""}<div class="row">${G.test?`<button class="btn right" data-a="mgTest" data-v="${T.task}">🔁 ${L("Jogar de novo","Play again")}</button><button class="btn alt" data-a="mgMenu">← ${L("Menu de minigames","Minigame menu")}</button>`:`<button class="btn right" data-a="toAlloc">${L("Voltar ao abrigo e distribuir energia","Back to the shelter to share out energy")}</button>`}</div></div>`;
+  if(T.sub==="howto") return vMgHowto();
+  if(T.sub==="play") return MG[T.task].view(T.mg);
+  const go=(c,icon,pt,en,cost,dpt,den,ok=true)=>`<button class="choice" style="--c:${c}" data-a="mgGo" ${ok?"":"disabled"}><b>${icon} ${L(pt,en)}</b><span class="cost">${cost}</span><span>${ok?L(dpt,den):low}</span></button>`;
+  const stay=(a,icon,pt,en,cost,dpt,den,c)=>`<button class="choice" ${c?`style="--c:${c}"`:""} data-a="${a}"><b>${icon} ${L(pt,en)}</b><span class="cost">${cost}</span><span>${L(dpt,den)}</span></button>`;
+  const box=(h,p,btns,src)=>`<div class="panel"><h2>${h}</h2><p>${p}</p>${risk}<div class="grid choices">${btns}</div>${src?`<p class="src">${src}</p>`:""}</div>`;
+  if(T.task==="amostra") return box(L("Tem pedras interessantes lá fora","There are interesting rocks out there"),
+    L("Lá fora o astronauta respira o ar do traje. Quanto mais longe e mais tempo, mais ciência e menos oxigênio. Você decide até onde vale ir.","Outside, the astronaut breathes the air in the suit. The farther and the longer, the more science and the less oxygen. You decide how far is worth going."),
+    go("#7de3f0","🧑‍🚀","Sair para buscar pedras","Go out to fetch rocks",L("O₂ −1 a −3 · ⭐ até +5","O₂ −1 to −3 · ⭐ up to +5"),"Você controla o astronauta no campo de pedras.","You control the astronaut in the rock field.",o2ok(1))
+    +stay("rockStay","🏠","Ficar na base","Stay at base","O₂ 0 · ⭐ 0","Guarda o ar, perde a descoberta.","Saves air, misses the discovery."));
+  if(T.task==="painel") return box(L("O Sol andou. E o painel?","The Sun has moved. What about the panel?"),
+    L("No polo sul da Lua o Sol não sobe: ele anda em volta do horizonte, uns 12 graus por dia. O painel precisa acompanhar.","At the Moon's south pole the Sun does not rise: it travels around the horizon, about 12 degrees a day. The panel has to follow it."),
+    go("var(--en)","🧑‍🚀","Sair e seguir o Sol","Go out and follow the Sun",`O₂ −1 · ⚡ +0 ${L("a","to")} +3 ${today}`,"Quanto melhor você seguir o Sol, mais energia.","The better you follow the Sun, the more energy.",o2ok(1))
+    +stay("panelStay","🏠","Ficar dentro","Stay inside","O₂ 0 · ⚡ +0","Economiza ar, rende menos energia.","Saves air, gives less energy."),
+    L("Fonte do fato: NASA NSSDC, Moon Fact Sheet. Conta nossa: 360° ÷ 29,53 dias.","Fact source: NASA NSSDC, Moon Fact Sheet. Our calculation: 360° ÷ 29.53 days."));
+  if(T.task==="vazamento"){
+    if(T.sub==="decide") return `<div class="panel"><h2>${L("Furos tapados por enquanto. E agora?","Holes plugged for now. Now what?")}</h2><div class="note" style="--c:var(--o2)"><b>${T.leakMsg}</b></div>
+      <p>${L("Os remendos rápidos não seguram por muito tempo.","The quick patches will not hold for long.")}</p><div class="grid choices">
+      ${stay("leakFix","🩹","Reforçar os remendos agora","Reinforce the patches now",`⚡ −2 ${today}`,"Dois astronautas param o trabalho para terminar o conserto.","Two astronauts stop their work to finish the repair.","var(--green)")}
+      ${stay("leakLater","⏳","Deixar para depois","Leave it for later",`O₂ −1 ${L("por dia","per day")}`,"A energia de hoje fica inteira, mas o ar vai embora até consertar.","Today's energy stays whole, but air keeps escaping until it is fixed.","var(--red)")}</div></div>`;
+    return `<div class="panel"><h2>🚨 ${L("Alarme! Tem ar escapando do abrigo","Alarm! Air is escaping from the shelter")}</h2>
+      <p>${L("Vão abrir vários furinhos na parede. Tape cada um o mais rápido que puder.","Several little holes will open in the wall. Plug each one as fast as you can.")}</p>
+      <div class="row"><button class="btn right" data-a="mgGo">${L("Pegar os remendos!","Grab the patches!")}</button></div></div>`;
+  }
+  if(T.task==="antena") return box(L("A antena saiu do lugar","The antenna has slipped"),
+    L("A base perdeu o contato com a Terra. Sem ele, você não recebe a dica do controle da missão antes de cada dia.","The base has lost contact with Earth. Without it, you do not get mission control's hint before each day."),
+    go("var(--o2)","📡","Apontar a antena de novo","Point the antenna again",`⚡ −1 ${L("ou","or")} −2 ${today}`,"Quanto mais rápido achar a Terra, menos energia gasta.","The faster you find Earth, the less energy it costs.")
+    +stay("antStay","🙈","Seguir sem contato","Carry on without contact","⚡ −0","Guarda a energia, mas decide no escuro até o fim da missão.","Saves energy, but you decide in the dark until the mission ends."));
+  if(T.task==="estufa") return box(L("As plantas pedem cuidado","The plants need care"),
+    L("Planta dá comida e um pouco de ar, mas demora. Regando na medida certa ela cresce mais rápido.","Plants give food and a little air, but they take time. Watered just right, they grow faster."),
+    go("var(--green)","💧","Regar as plantas","Water the plants",`⚡ −1 ${today} · 🌱 +1 ${L("a","to")} +3`,"Quanto melhor a rega, mais a estufa adianta.","The better the watering, the further the greenhouse gets.")
+    +stay("greenStay","⏭️","Deixar para depois","Leave it for later","⚡ −0 · 🌱 +0","A energia de hoje fica inteira, a comida demora mais.","Today's energy stays whole, food takes longer."));
+  if(T.task==="agua") return box(L("A máquina de reciclar água pede ajuda","The water recycler needs a hand"),
+    L("Na base nenhuma gota vai fora: a máquina limpa até o xixi e o suor dos astronautas para virar água de beber. E com água a base também faz oxigênio.","At the base no drop is wasted: the machine cleans even the astronauts' pee and sweat into drinking water. And with water the base also makes oxygen."),
+    go("var(--o2)","💧","Recolher a água limpa","Collect the clean water",`⚡ −1 ${today} · O₂ +0 ${L("a","to")} +2`,"Quanto mais gotas você pegar, mais ar para a base.","The more drops you catch, the more air for the base.")
+    +stay("aguaStay","⏭️","Deixar para depois","Leave it for later","⚡ −0 · O₂ +0","A energia de hoje fica inteira, mas a água de hoje se perde.","Today's energy stays whole, but today's water is lost."));
+  if(T.task==="poeira") return box(L("Os painéis estão cobertos de poeira","The panels are covered in dust"),
+    L("A poeira da Lua é fina e gruda em tudo. Com poeira em cima, o painel pega menos luz.","Moon dust is fine and sticks to everything. Under dust, a panel catches less light."),
+    go("var(--en)","🧹","Sair e limpar os painéis","Go out and clean the panels",`O₂ −1 · ⚡ +0 ${L("a","to")} +2 ${today}`,"Quanto mais limpo, mais energia hoje.","The cleaner the panel, the more energy today.",o2ok(1))
+    +stay("poeiraStay","🏠","Ficar dentro","Stay inside","O₂ 0 · ⚡ +0","Economiza ar, os painéis seguem sujos.","Saves air, the panels stay dirty."));
+  if(T.task==="micro") return box(L("Tem uma pedra esperando no microscópio","A rock is waiting under the microscope"),
+    L("No laboratório, o computador mostra os cristais da pedra em uma certa ordem. Repita a ordem para descobrir do que ela é feita.","In the lab, the computer shows the rock's crystals in a certain order. Repeat the order to find out what it is made of."),
+    go("var(--orange)","🔬","Analisar a pedra","Analyse the rock",`⚡ −1 ${today} · ⭐ +0 ${L("a","to")} +3`,"Cada rodada certa vale 1 estrela de ciência.","Each correct round is worth 1 science star.")
+    +stay("microStay","⏭️","Deixar para depois","Leave it for later","⚡ −0 · ⭐ 0","A energia de hoje fica inteira, a descoberta espera.","Today's energy stays whole, the discovery waits."));
+  if(T.task==="upload") return box(L("Hora de mandar as descobertas para a Terra","Time to send the discoveries to Earth"),
+    L("Enviar um arquivo grande gasta bastante energia da antena. Cada pacote que chega inteiro vale ciência.","Sending a big file uses a lot of the antenna's energy. Each packet that arrives whole is worth science."),
+    go("var(--o2)","🛰️","Transmitir os dados","Upload the data",`⚡ −2 ${today} · ⭐ +0 ${L("a","to")} +4`,"Aperte Enviar quando o sinal estiver na faixa verde.","Press Send when the signal is in the green band.")
+    +stay("uploadStay","⏭️","Guardar a energia","Save the energy","⚡ −0 · ⭐ 0","A base usa a energia em outra coisa. Os dados ficam para depois.","The base uses the energy on something else. The data waits."));
+  if(T.task==="filtros") return box(L("Os filtros de ar estão cheios de poeira","The air filters are full of dust"),
+    L("A poeira da Lua entra na base grudada nos trajes e entope os filtros. Com o filtro sujo, o ar da base piora.","Moon dust gets into the base stuck to the suits and clogs the filters. With a dirty filter, the air in the base gets worse."),
+    go("var(--o2)","🌀","Aspirar os filtros","Vacuum the filters",`⚡ −1 ${today} · O₂ −1 ${L("a","to")} +1`,"Quanto mais poeira você aspirar, melhor fica o ar.","The more dust you vacuum up, the better the air.")
+    +stay("filtrosStay","⏭️","Deixar sujo hoje","Leave them dirty today","⚡ −0 · O₂ −1","A energia fica inteira, mas o ar piora hoje.","The energy stays whole, but the air gets worse today.","var(--red)"));
+  if(T.task==="exercicio") return box(L("Hora do exercício","Exercise time"),
+    L("No espaço o corpo perde músculo e osso. Na Estação Espacial, os astronautas fazem até 10 horas de exercício por semana para continuar fortes.","In space the body loses muscle and bone. On the Space Station, astronauts exercise for up to 10 hours a week to stay strong."),
+    go("var(--green)","🏃","Correr na esteira","Run on the treadmill",`⚡ −1 ${today} · ${L("amanhã","tomorrow")} ⚡ −1 ${L("a","to")} +1`,"Uma tripulação em forma trabalha melhor amanhã.","A crew in good shape works better tomorrow.")
+    +stay("exStay","🛋️","Pular o exercício","Skip the exercise",`${L("amanhã","tomorrow")} ⚡ −1`,"A energia de hoje fica inteira, mas a tripulação fica mais fraca amanhã.","Today's energy stays whole, but the crew is weaker tomorrow.","var(--red)"),
+    L("Fonte: NASA, Astronaut Exercise.","Source: NASA, Astronaut Exercise."));
+  if(T.task==="braco") return box(L("Chegou uma caixa de suprimentos","A box of supplies has arrived"),
+    L("Na Estação Espacial, os astronautas capturam as naves de carga com um braço robótico, o Canadarm2, e treinam isso a cada 60 dias. Aqui, o braço da base pega a caixa de comida.","On the Space Station, astronauts capture cargo ships with a robotic arm, Canadarm2, and practise it every 60 days. Here, the base's arm picks up the food box."),
+    go("var(--orange)","🦾","Operar o braço robótico","Operate the robotic arm",`⚡ −1 ${today} · 🍽️ +0 ${L("a","to")} +3 ${L("dias","days")}`,"Segure a garra em cima da caixa até agarrar.","Hold the claw over the box until it grabs.")
+    +stay("bracoStay","⏭️","Deixar a caixa lá fora","Leave the box outside","⚡ −0 · 🍽️ +0","A energia fica inteira. Hoje não entra comida nova.","The energy stays whole. No new food comes in today."),
+    L("Fonte: NASA, blog da Estação Espacial.","Source: NASA, Space Station blog."));
+  if(T.task==="rover") return box(L("O rover está pronto para um passeio","The rover is ready for a drive"),
+    L("A NASA prepara um jipe lunar sem cabine, o Lunar Terrain Vehicle, para os astronautas do programa Artemis andarem pelo polo sul da Lua.","NASA is preparing an open Moon buggy, the Lunar Terrain Vehicle, for Artemis astronauts to drive around the Moon's south pole."),
+    go("#7de3f0","🚙","Dirigir o rover","Drive the rover",`O₂ −1 · ⚡ −1 ${today} · ⭐ +0 ${L("a","to")} +4`,"Desvie das crateras e pegue as amostras.","Dodge the craters and pick up the samples.",o2ok(1))
+    +stay("roverStay","🏠","Deixar o rover na garagem","Leave the rover in the garage","O₂ 0 · ⚡ −0 · ⭐ 0","Guarda ar e energia, perde as amostras.","Saves air and energy, misses the samples."),
+    L("Fonte: NASA, Lunar Terrain Vehicle.","Source: NASA, Lunar Terrain Vehicle."));
+  if(T.task==="co2") return box(L("O filtro de gás carbônico está cheio","The carbon dioxide filter is full"),
+    L("Quando respiramos, soltamos gás carbônico, e um filtro tira esse gás do ar. Na missão Apollo 13, os filtros quadrados não cabiam no encaixe redondo, e a equipe teve de improvisar um adaptador.","When we breathe out, we release carbon dioxide, and a filter takes it out of the air. On the Apollo 13 mission, the square filters did not fit the round slot, and the team had to improvise an adapter."),
+    go("var(--o2)","🫧","Trocar os filtros","Swap the filters",`⚡ −1 ${today} · O₂ +0 ${L("a","to")} +1`,"Escolha o filtro com a mesma forma do encaixe.","Pick the filter with the same shape as the slot.")
+    +stay("co2Stay","⏭️","Deixar para depois","Leave it for later","⚡ −0 · O₂ −1","A energia fica inteira, mas o ar piora hoje.","The energy stays whole, but the air gets worse today.","var(--red)"),
+    L("Fonte: NASA, Apollo 13: Mission Details.","Source: NASA, Apollo 13: Mission Details."));
+  if(T.task==="treino") return box(L("Dia de treino de emergência","Emergency drill day"),
+    L("Na Estação Espacial, a tripulação treina o que fazer em caso de fogo, perda de ar ou vazamento químico, seguindo a lista de passos em tablets.","On the Space Station, the crew practises what to do in case of fire, loss of air or a chemical leak, following the list of steps on tablets."),
+    go("var(--red)","🚨","Fazer o treino","Do the drill",`⚡ −1 ${today} · 🛡️ ${L("protege 1 vez","protects once")}`,"Uma tripulação treinada perde 1 a menos no próximo problema.","A trained crew loses 1 less in the next problem.")
+    +stay("treinoStay","⏭️","Pular o treino","Skip the drill","⚡ −0","A energia de hoje fica inteira. Sem proteção extra.","Today's energy stays whole. No extra protection."),
+    L("Fonte: NASA, blog da Estação Espacial.","Source: NASA, Space Station blog."));
+  if(T.task==="falha") return box(L("Um painel parou de funcionar","A panel has stopped working"),
+    L("Peças do painel estão queimando. Trocar exige sair da base.","Parts of the panel are burning out. Swapping them means going outside."),
+    go("var(--en)","🔧","Sair e trocar as peças","Go out and swap the parts",`O₂ −1 ${L("ou","or")} −2`,"Quanto mais rápido, menos ar gasta. A energia volta ao normal.","The faster you are, the less air it costs. Energy goes back to normal.",o2ok(1))
+    +stay("fixStay","🏠","Deixar quebrado","Leave it broken",`⚡ −1 ${L("por dia","per day")}`,"Poupa o ar, mas a base fica com menos energia até o fim da missão.","Saves air, but the base has less energy until the mission ends.","var(--red)"));
+  return "";
+}
+
+function previewLines(){
+  const a=G.T.alloc,out=[],al=alertOf(G.day);
+  if(!G.contact) return [L("📡 Sem contato com a Terra: sem previsão hoje.","📡 No contact with Earth: no forecast today.")];
+  const dO=(a.air>=3?1:a.air===2?0:a.air===1?-1:-2)-(G.leak&&a.repair<2?1:0);
+  out.push(dO===0?L("💨 O oxigênio se mantém.","💨 Oxygen holds steady."):dO>0?L(`💨 O oxigênio sobe ${dO}.`,`💨 Oxygen rises ${dO}.`):L(`💨 O oxigênio cai ${-dO}.`,`💨 Oxygen drops ${-dO}.`));
+  if(al) out.push(a.shelter>=2?L("🛡️ Se a erupção vier, a tripulação fica protegida.","🛡️ If the flare hits, the crew is protected.")
+    :a.shelter===1?L("🛡️ Se a erupção vier, o abrigo barra só metade da radiação.","🛡️ If the flare hits, the shelter blocks only half the radiation.")
+    :L("🛡️ Se a erupção vier, a tripulação fica exposta.","🛡️ If the flare hits, the crew is exposed."));
+  if(a.lab>0) out.push(L(`⭐ Ciência: +${a.lab}.`,`⭐ Science: +${a.lab}.`));
+  if(a.green>0||G.grow>=GROW_NEED) out.push(G.grow+a.green>=GROW_NEED?L("🌱 A estufa dá colheita hoje.","🌱 The greenhouse gives a harvest today."):L(`🌱 A estufa cresce. Faltarão ${GROW_NEED-G.grow-a.green} células.`,`🌱 The greenhouse grows. ${GROW_NEED-G.grow-a.green} more cells to go.`));
+  if(G.food<=1) out.push(L("🍽️ A comida está acabando!","🍽️ Food is running out!"));
+  out.push(L(`🔋 ${a.bat} célula(s) ficam guardadas para amanhã.`,`🔋 ${a.bat} cell(s) stay saved for tomorrow.`));
+  return out;
+}
+function vAlloc(){
+  const a=G.T.alloc,free=totalCells()-usedCells(),al=alertOf(G.day),lastK=G.T.lastPlus; G.T.lastPlus=null;
+  return `<div class="panel alloctop" style="margin-bottom:10px"><div class="row"><div><h2>${L("Distribuir energia","Share out the energy")}</h2>
+   <p>${L("Use + e − para mandar células a cada módulo. Não dá para ligar tudo.","Use + and − to send cells to each module. You cannot power everything.")}${G.mode==="easy"?" "+L("Já deixamos 2 no ar e água; você pode mudar.","We already put 2 on air & water; you can change that."):""}</p></div>
+   <div class="right"><div class="src">${L("Células livres","Free cells")}: <b style="font-size:18px;color:#fff">${free}</b></div><div class="tray">${cellsHtml(free,0)||"—"}</div></div></div>
+   ${al?`<div class="alert ${al.high?"":"low"}" style="margin-bottom:0;animation:none">⚠️ ${al.high?L("Alerta FORTE de erupção hoje","STRONG flare alert today"):L("Alerta fraco de erupção hoje","Weak flare alert today")}</div>`:""}</div>
+  <div class="grid mods">${modules().map(m=>`<div class="mod ${a[m.k]>0?"lit":""}" style="--c:${m.c}"><div class="head">${m.name}</div>
+    <div class="art" aria-hidden="true">${m.e}</div>
+    <div class="slots" aria-label="${m.name}: ${a[m.k]} / ${m.max}">${cellsHtml(a[m.k],m.max-a[m.k],lastK===m.k)}</div>
+    <div class="pm"><button data-a="minus" data-v="${m.k}" ${a[m.k]>0?"":"disabled"} aria-label="${L("Tirar célula de","Remove cell from")} ${m.name}">−</button>
+      <button class="plus" data-a="plus" data-v="${m.k}" ${a[m.k]<m.max&&free>0?"":"disabled"} aria-label="${L("Pôr célula em","Add cell to")} ${m.name}">+</button></div>
+    <div class="hint">${m.hint}</div></div>`).join("")}</div>
+  <div class="panel" style="margin-top:10px"><h3>${L("Dica do controle da missão","Mission control's hint")}</h3>
+   <ul>${previewLines().map(x=>`<li>${x}</li>`).join("")}</ul>
+   ${free>0?`<p style="color:#fff0b0"><b>${L(`${free} célula(s) livres vão se perder se não forem usadas ou guardadas.`,`${free} free cell(s) will be lost unless used or saved.`)}</b></p>`:""}
+   <div class="row"><button class="btn right" data-a="run">${L("Começar o dia","Start the day")}</button></div></div>`;
+}
+
+function animCaption(){
+  const r=G.T.res;
+  if(G.animStep===0) return L("O dia começou. A energia corre para os módulos...","The day has begun. Energy flows to the modules...");
+  if(r.flare) return r.dRad>0?L("⚠️ A erupção chegou e pegou a base desprotegida!","⚠️ The flare arrived and caught the base unprotected!"):L("⚠️ A erupção chegou, e o abrigo segurou!","⚠️ The flare arrived, and the shelter held!");
+  if(r.falseAlarm) return L("Ufa! O alerta não se confirmou.","Phew! The alert did not come true.");
+  if(r.harvest) return L("🥕 Dia de colheita na estufa!","🥕 Harvest day in the greenhouse!");
+  if(isShadow(G.day)) return L("Dia de sombra: a base vive do que guardou.","Shadow day: the base lives on what it saved.");
+  return L("Dia tranquilo na base.","A quiet day at the base.");
+}
+function vAnim(){
+  const a=G.T.alloc; let n=0;
+  return `<div class="panel"><p class="cap" id="cap">${animCaption()}</p>
+  <div class="daystrip">${modules().map(m=>`<div class="dm ${a[m.k]>0?"lit":""}" style="--c:${m.c}"><div class="e">${m.e}</div><div class="c">${Array.from({length:a[m.k]},()=>`<span style="animation-delay:${(n++)*.14}s">⚡</span>`).join("")}</div><div class="src">${m.name}</div></div>`).join("")}</div>
+  <div class="row"><button class="btn alt right" data-a="skip">${L("Pular","Skip")} ⏭️</button></div></div>`;
+}
+
+function flareCard(f){ return `<div class="real"><div class="head">${L("Isso aconteceu de verdade","This really happened")}</div><div class="body">
+  <b style="font-size:20px">${L("Erupção solar classe","Solar flare class")} ${f.cls}</b><br>${fmtDate(f.date)}
+  <p>${L("No jogo ela vale como erupção","In the game it counts as a")} <b>${[L("fraca","weak"),L("média","medium"),L("forte","strong")][f.g]}</b>${L("."," flare.")}</p>
+  <div class="src">${L("Fonte","Source")}: NASA DONKI (CCMC). ${L("Dado arquivado, consultado em 13/11/2026. Não é dado ao vivo.","Archived data, retrieved on 2026-11-13. Not live data.")}
+   <a href="${f.url}" target="_blank" rel="noopener">${L("Ver o registro","See the record")}</a></div></div></div>`; }
+function vResult(){
+  const r=G.T.res,b=r.before,d=(x,y)=>y===x?L("igual","same"):(y>x?"+":"−")+Math.abs(y-x);
+  const row=(ic,name,x,y,col)=>`<div class="delta">${icon[ic]}<div><b>${name}</b><div class="src">${x} → ${y}</div></div><span class="tag" style="background:${col}">${d(x,y)}</span></div>`;
+  return `<div class="panel"><h2>${L(`Fim do dia ${G.day}`,`End of day ${G.day}`)}</h2>
+  ${row("o2",L("Oxigênio","Oxygen"),b.o2,G.o2,"var(--o2)")}${row("rad",L("Radiação","Radiation"),b.rad,G.rad,"var(--rad)")}${row("en",L("Bateria","Battery"),b.bat,G.bat,"var(--en)")}
+  <h3 style="margin-top:12px">${L("Por quê?","Why?")}</h3>
+  <div class="lines">${r.lines.map((l,i)=>`<div class="note" style="--c:${l.c};animation-delay:${.15+i*.12}s">${l.t}</div>`).join("")}</div>
+  ${r.flare?flareCard(r.flare):""}
+  <div class="row" style="margin-top:12px"><button class="btn right" data-a="next">${r.end?L("Ver o relatório da missão","See the mission report"):L("Próximo dia","Next day")}</button></div></div>`;
+}
+function chart(){
+  const w=560,h=200,x=i=>30+(w-50)*i/(DAYS-1),y=v=>h-28-(h-48)*v,H=G.hist;
+  const line=(f,col)=>`<polyline fill="none" stroke="${col}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" points="${H.map((p,i)=>`${x(i)},${y(f(p))}`).join(" ")}"/>${H.length?`<circle cx="${x(H.length-1)}" cy="${y(f(H[H.length-1]))}" r="6" fill="${col}"/>`:""}`;
+  return `<svg class="task" viewBox="0 0 ${w} ${h}" style="max-width:100%;background:var(--panel2)" role="img" aria-label="${L("Gráfico da missão por dia","Mission chart by day")}">
+   ${Array.from({length:DAYS},(_,i)=>`<line x1="${x(i)}" y1="16" x2="${x(i)}" y2="${h-28}" stroke="#2b3358" stroke-width="1.5"/><text x="${x(i)}" y="${h-8}" fill="#aab2dd" font-size="13" text-anchor="middle">${i+1}</text>`).join("")}
+   ${line(p=>p.o2/MAX_O2,"#4dd0e1")}${line(p=>p.rad/MAX_RAD,"#c77dff")}${line(p=>p.bat/MAX_BAT,"#ffd23f")}</svg>
+   <div class="row" style="justify-content:center;font-size:14px"><span style="color:#4dd0e1">▬ ${L("Oxigênio","Oxygen")}</span><span style="color:#c77dff">▬ ${L("Radiação","Radiation")}</span><span style="color:#ffd23f">▬ ${L("Bateria","Battery")}</span></div>`;
+}
+function rating(){ return G.end!=="ok"?0:(G.stars>=G.M.s3&&G.rad<=3?3:(G.stars>=G.M.s2?2:1)); }
+function vEnd(){
+  const e=G.end,ok=e==="ok",n=rating();
+  const title=ok?L("Missão completa: 10 dias na Lua!","Mission complete: 10 days on the Moon!"):L(`Missão interrompida no dia ${G.day}`,`Mission cut short on day ${G.day}`);
+  const sub=ok?L("A tripulação está bem e volta para casa.","The crew is well and heads home.")
+    :e==="o2"?L("O oxigênio chegou ao limite. A tripulação voltou para casa em segurança antes da hora.","Oxygen reached its limit. The crew went home safely ahead of time.")
+    :e==="rad"?L("A radiação chegou ao limite seguro. A tripulação voltou para casa para se cuidar.","Radiation reached the safe limit. The crew went home to recover.")
+    :L("A comida acabou. A tripulação voltou para casa em segurança antes da hora.","Food ran out. The crew went home safely ahead of time.");
+  const tip=e==="o2"?L("E se você mantivesse 2 células no ar e água e saísse menos da base?","What if you kept 2 cells on air & water and went outside less often?")
+    :e==="rad"?L("E se você ligasse o abrigo nos alertas fortes, mesmo perdendo ciência?","What if you powered the shelter on strong alerts, even if it costs science?")
+    :e==="food"?L("E se você ligasse a estufa mais cedo? Planta demora para dar comida.","What if you powered the greenhouse earlier? Plants take time to give food.")
+    :n<3&&G.rad>3?L("A radiação ficou alta. E se o abrigo ficasse ligado nos alertas fortes?","Radiation ended up high. What if the shelter stayed on during strong alerts?")
+    :n<3?L(`Para 3 estrelas, faça ${G.M.s3} de ciência com pouca radiação. Vale arriscar nos alertas fracos?`,`For 3 stars, reach ${G.M.s3} science with low radiation. Is it worth the risk on weak alerts?`)
+    :L("Missão excelente! Será que dá certo de novo com outros eventos?","Excellent mission! Will it work again with different events?");
+  const moments=[...G.hist].filter(p=>p.impact>0).sort((p,q)=>q.impact-p.impact).slice(0,3).sort((p,q)=>p.day-q.day);
+  return `<div class="panel"><h1>${title}</h1><p>${sub}</p>
+  ${ok?`<div class="stars" role="img" aria-label="${n} / 3">${[0,1,2].map(i=>`<span class="${i<n?"":"off"}" style="animation-delay:${.2+i*.25}s">★</span>`).join("")}</div>`:""}
+  <div class="row"><span class="chip">${G.mode==="easy"?L("Cadete","Cadet"):L("Comandante","Commander")}</span><span class="chip">⭐ ${L("Ciência","Science")}: ${G.stars}</span><span class="chip">☢ ${L("Radiação","Radiation")}: ${G.rad}/${MAX_RAD}</span><span class="chip">O₂: ${G.o2}/${MAX_O2}</span></div>
+  ${chart()}
+  ${moments.length?`<h3 style="margin-top:12px">${L("O que mais pesou","What mattered most")}</h3>${moments.map(p=>`<div class="note" style="--c:var(--rad)"><b>${L("Dia","Day")} ${p.day}</b> · ${p.moment}</div>`).join("")}`:""}
+  <div class="note" style="--c:var(--green)"><b>${L("Para a próxima missão","For the next mission")}</b><br>${tip} ${L("Os eventos mudam a cada partida.","Events change every game.")}</div>
+  <div class="row" style="margin-top:12px"><button class="btn" data-a="again">${L("Jogar de novo","Play again")}</button><button class="btn alt" data-a="credits">${L("Créditos e fontes","Credits and sources")}</button></div></div>`;
+}
+function vCredits(){
+  const S=[
+   ["NASA DONKI (CCMC), Space Weather Database Of Notifications, Knowledge, Information","https://ccmc.gsfc.nasa.gov/tools/DONKI/",L("As 20 erupções solares do jogo, com data e classe reais. Dado arquivado, consultado em 13/11/2026. A classe real decide com que força a radiação atinge a base.","The game's 20 solar flares, with real dates and classes. Archived data, retrieved on 2026-11-13. The real class decides how hard radiation hits the base.")],
+   ["NASA NSSDC, Moon Fact Sheet","https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",L("Período de 29,53 dias, base da conta de 12° por dia do Sol no horizonte.","The 29.53-day period, the basis of our 12°-per-day figure for the Sun along the horizon.")],
+   ["NASA Science, 9 Phenomena NASA Astronauts Will Encounter at Moon's South Pole","https://science.nasa.gov/solar-system/moon/phenomena-nasa-astronauts-will-encounter-at-moons-south-pole/",L("Sol baixo, sombras longas e céu preto de dia.","Low Sun, long shadows and a black daytime sky.")],
+   ["NASA, Vertical Solar Array Technologies for Lunar Surface","https://www.nasa.gov/technology/nasa-industry-to-mature-vertical-solar-array-technologies-for-lunar-surface/",L("Painéis solares verticais para os polos da Lua.","Vertical solar arrays for the lunar poles.")],
+   ["NASA Science, How Does Webb See Back in Time?","https://science.nasa.gov/mission/webb/science-overview/science-explainers/how-does-webb-see-back-in-time/",L("A luz leva cerca de 1,3 segundo da Lua à Terra.","Light takes about 1.3 seconds from the Moon to Earth.")],
+   ["NASA Human Research Program, Hazard: Distance From Earth","https://www.nasa.gov/hrp/hazard-distance-from-earth/",L("Atraso de comunicação de até 20 minutos em Marte.","A communication delay of up to 20 minutes at Mars.")],
+   ["NASA NTRS 20210022066, Long-Duration Lunar Safe Haven","https://ntrs.nasa.gov/citations/20210022066",L("Estudo de conceito: abrigo coberto de regolito contra a radiação.","Concept study: a regolith-covered shelter against radiation.")],
+   ["NASA, Astronaut Exercise","https://www.nasa.gov/missions/station/iss-research/astronaut-exercise/",L("Astronautas fazem até 10 horas de exercício por semana na Estação Espacial.","Astronauts exercise for up to 10 hours a week on the Space Station.")],
+   ["NASA Space Station blog, Canadarm2 captures Cygnus XL","https://www.nasa.gov/blogs/spacestation/2026/04/13/canadarm2-reaches-out-and-captures-cygnus-xl-cargo-craft/",L("Captura de naves de carga com o braço robótico e treino a cada 60 dias.","Capturing cargo ships with the robotic arm, with practice every 60 days.")],
+   ["NASA, Lunar Terrain Vehicle","https://www.nasa.gov/suits-and-rovers/lunar-terrain-vehicle/",L("Rover sem cabine para os astronautas do Artemis.","An unpressurised rover for Artemis astronauts.")],
+   ["NASA, Apollo 13: Mission Details","https://www.nasa.gov/missions/apollo/apollo-13-mission-details/",L("Filtros quadrados que não cabiam no encaixe redondo.","Square canisters that did not fit the round receptacles.")],
+   ["NASA Space Station blog, emergency drill","https://www.nasa.gov/blogs/spacestation/2025/08/27/head-and-eye-health-dragon-reboost-preps-and-emergency-drill-fill-crew-day/",L("Treinos de emergência da tripulação: fogo, perda de ar e vazamento químico.","Crew emergency drills: fire, depressurisation and chemical leak.")]];
+  return `<div class="panel"><h2>${L("Créditos e fontes","Credits and sources")}</h2>
+  <h3>${L("Dados e fatos da NASA","NASA data and facts")}</h3>
+  ${S.map(s=>`<div class="note"><b>${s[0]}</b><br>${s[2]}<br><a href="${s[1]}" target="_blank" rel="noopener">${s[1]}</a></div>`).join("")}
+  <h3>${L("O que é número de jogo","What is a game value")}</h3>
+  <p>${L("Células de energia, pontos de oxigênio, de radiação e de comida, estrelas e dias de sombra são valores de jogo, não medições. Os alertas fortes e fracos e os alarmes falsos também são regra de jogo, não previsões reais. A classe da erupção (C, M, X) é a publicada pelo DONKI; tratar C como fraca, M como média e X como forte é escolha nossa.","Energy cells, oxygen, radiation and food points, stars and shadow days are game values, not measurements. Strong and weak alerts and false alarms are also game rules, not real forecasts. The flare class (C, M, X) is the one DONKI publishes; treating C as weak, M as medium and X as strong is our own choice.")}</p>
+  <h3>${L("Uso de IA","Use of AI")}</h3>
+  <p>${L("O código e a arte deste protótipo foram gerados com ajuda de IA. Este jogo não é um produto da NASA e não tem o endosso dela.","The code and art of this prototype were generated with AI assistance. This game is not a NASA product and is not endorsed by NASA.")}</p>
+  <div class="row"><button class="btn" data-a="back">${L("Voltar","Back")}</button></div></div>`;
+}
+
+const actName=()=>G.day<=4?L("Parte 1 de 3 · Rotina da base","Part 1 of 3 · Base routine"):G.day<=8?L("Parte 2 de 3 · Imprevistos do espaço","Part 2 of 3 · Space surprises"):L("Parte 3 de 3 · Preparar a volta para casa","Part 3 of 3 · Getting ready to go home");
+let tutOn=true; try{ tutOn=!localStorage.getItem("tdm_tut"); }catch(e){}
+const SLIDES=()=>[
+  ["🌙",L("Sua missão","Your mission"),L("Você comanda uma base no polo sul da Lua, com quatro astronautas. A missão dura 10 dias.","You command a base at the Moon's south pole, with four astronauts. The mission lasts 10 days.")],
+  ["⚡",L("A energia é pouca","Energy is scarce"),L("Todo dia os painéis solares dão poucas células de energia. Você escolhe o que ligar: ar e água, estufa, abrigo, laboratório ou bateria. Não dá para ligar tudo!","Every day the solar panels give a few energy cells. You choose what to power: air & water, greenhouse, shelter, lab or battery. You cannot power everything!")],
+  ["💨 ☢️ 🍽️",L("Três coisas para cuidar","Three things to look after"),L("O oxigênio não pode acabar. A radiação não pode encher. A comida não pode faltar. Se uma delas chegar ao limite, a tripulação volta para casa mais cedo, em segurança.","Oxygen must not run out. Radiation must not fill up. Food must not run short. If one of them hits its limit, the crew goes home early, safely.")],
+  ["🧑‍🚀",L("Ande e resolva","Walk and solve"),L("Todo dia tem uma tarefa. Leve o astronauta até o balão amarelo com as setas, W A S D ou tocando no chão. Cada tarefa é um mini jogo, e toda tarefa tem um custo.","Every day has a task. Take the astronaut to the yellow balloon with the arrow keys, W A S D or by tapping the ground. Each task is a mini game, and every task has a cost.")],
+  ["☀️",L("O Sol é de verdade","The Sun is real"),L("Às vezes chega um alerta de erupção solar, forte ou fraco. Ligar o abrigo protege da radiação, mas gasta energia. As erupções do jogo aconteceram de verdade: são dados arquivados do NASA DONKI.","Sometimes a solar flare alert arrives, strong or weak. Powering the shelter protects from radiation, but uses energy. The flares in the game really happened: they are archived NASA DONKI data.")]];
+function vHowto(){
+  const S=SLIDES(),i=G.slide||0,sl=S[i],last=i===S.length-1;
+  return `<div class="panel slide"><div class="big" aria-hidden="true">${sl[0]}</div><h2>${sl[1]}</h2><p style="font-size:18px;max-width:720px;margin:6px auto">${sl[2]}</p>
+  <div class="dots" aria-label="${i+1} / ${S.length}">${S.map((_,k)=>`<span class="${k===i?"on":""}"></span>`).join("")}</div>
+  <div class="row" style="justify-content:center"><button class="btn alt" data-a="slidePrev" ${i?"":"disabled"}>◀ ${L("Voltar","Back")}</button>
+  <button class="btn" data-a="slideNext">${last?(G.ret==="intro"?L("Entendi!","Got it!"):L("Começar o Dia 1","Start Day 1")):L("Próximo","Next")+" ▶"}</button>
+  ${last?"":`<button class="btn alt" data-a="slideSkip">${L("Pular","Skip")} ⏭️</button>`}</div></div>`;
+}
+const TIPS={
+  bulletin:["Todo dia começa com o boletim. Ele mostra quanta energia a base vai ter e se o Sol está calmo. Hoje está tudo tranquilo.","Every day starts with the briefing. It shows how much energy the base will have and whether the Sun is calm. All quiet today."],
+  map_task:["Leve o astronauta até o balão amarelo: é lá que fica a tarefa de hoje.","Take the astronaut to the yellow balloon: that is where today's task is."],
+  task_choose:["Toda tarefa tem um custo, escrito em cada botão. Você pode sair para buscar pedras ou ficar na base: as duas escolhas custam alguma coisa.","Every task has a cost, written on each button. You can go out for rocks or stay at base: both choices cost something."],
+  task_play:["A barra laranja é o ar do traje. Pegue uma pedra e volte para a porta antes que ela acabe.","The orange bar is the air in the suit. Grab a rock and get back to the door before it runs out."],
+  task_done:["Viu? Cada escolha muda os medidores lá em cima. Na Lua nada é de graça.","See? Each choice changes the meters up top. On the Moon nothing is free."],
+  map_alloc:["Agora volte ao abrigo. A mesa de controle fica lá dentro.","Now head back to the shelter. The control desk is inside."],
+  alloc:["Esta é a decisão mais importante do dia. Use + e − para mandar células a cada módulo. Ar e água com 2 células seguram o oxigênio. O resto é com você: comida, ciência ou guardar para depois?","This is the most important decision of the day. Use + and − to send cells to each module. Air & water with 2 cells keeps oxygen steady. The rest is up to you: food, science or saving for later?"],
+  result:["Aqui você vê o que mudou e por quê. A partir de amanhã podem chegar alertas de erupção solar. Boa missão!","Here you see what changed and why. From tomorrow on, solar flare alerts may arrive. Have a good mission!"]};
+function tipKey(){ if(!G.tut||G.day!==1) return null; const p=G.phase; if(p==="map") return "map_"+(G.mapGoal==="alloc"?"alloc":"task"); if(p==="task") return "task_"+G.T.sub; return p; }
+// o cenário fica centralizado; o fundo da área continua o céu e o chão para os lados e para baixo
+function fitStage(){
+  const st=$("#stage"),sv=st.querySelector("svg"); if(!sv||st.style.display==="none") return;
+  const r=st.getBoundingClientRect(),vb=sv.viewBox.baseVal; if(!r.height||!vb.width) return;
+  const isMap=st.dataset.kind==="map";
+  if(!isMap){   // em tela estreita o cenário é ampliado e cortado nas laterais, em vez de virar uma faixa minúscula
+    if(!sv.dataset.vb0) sv.dataset.vb0=sv.getAttribute("viewBox");
+    const [,,W0,H0]=sv.dataset.vb0.split(/\s+/).map(Number),s=Math.max(Math.min(r.width/W0,r.height/H0),.7),vw=r.width/s,vh=r.height/s;
+    const nv=`${((W0-vw)/2).toFixed(1)} ${((H0-vh)/2).toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}`;
+    if(sv.getAttribute("viewBox")!==nv) sv.setAttribute("viewBox",nv);
+  }
+  if(st.dataset.kind==="estufa"){ st.style.background="#0b1a16"; st.dataset.bg=""; return; }
+  const hz={map:120,interior:270}[st.dataset.kind]||150,sc=Math.min(r.width/vb.width,r.height/vb.height),oy=(r.height-vb.height*sc)/2,dim=st.dataset.dim==="1";
+  const hy=(oy+(hz-vb.y)*sc).toFixed(0),by=(oy+((isMap?500:300)-vb.y)*sc).toFixed(0);
+  const bg=`linear-gradient(#04050c ${hy}px,${dim?"#40424a":"#a3a5af"} ${hy}px,${dim?"#23242b":"#55575f"} ${by}px)`;
+  if(st.dataset.bg!==bg){ st.dataset.bg=bg; st.style.background=bg; }
+}
+/* Câmera do mapa: em tela estreita o mapa inteiro ficaria minúsculo, então ele é ampliado e a câmera segue o astronauta.
+   Em tela larga nada muda: o mapa aparece inteiro, centralizado. */
+const MAPZ=.72;   // mínimo de pixels de tela por unidade do mapa
+let camVB="";
+function mapCam(){
+  const m=$("#map"),st=$("#stage"); if(!m) return;
+  const W=st.clientWidth,H=st.clientHeight; if(!W||!H) return;
+  const s=Math.max(Math.min(W/1000,H/500),MAPZ),vw=W/s,vh=H/s,h=G.hero;
+  const x=vw>=1000?(1000-vw)/2:clamp(h.x-vw/2,0,1000-vw), y=vh>=500?(500-vh)/2:clamp(h.y-vh*.6,0,500-vh);
+  const vb=`${x.toFixed(1)} ${y.toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}`;
+  if(vb!==camVB||m.getAttribute("viewBox")!==vb){ camVB=vb; m.setAttribute("viewBox",vb); fitStage(); }
+  // seta que aponta para o destino quando ele está fora da tela
+  const ar=$("#goalArrow"); if(!ar) return;
+  const sp=spotNow(),pad=62,off=sp.x<x+pad||sp.x>x+vw-pad||sp.y<y+pad||sp.y>y+vh-pad;
+  ar.style.display=off?"":"none"; if(!off) return;
+  const ax=clamp(sp.x,x+pad,x+vw-pad), ay=clamp(sp.y-30,Math.max(y,140)+pad,Math.min(y+vh,500)-pad);
+  ar.setAttribute("transform",`translate(${ax.toFixed(1)},${ay.toFixed(1)}) scale(1.35)`);
+  $("#goalArrowDir").setAttribute("transform",`rotate(${(Math.atan2(sp.y-30-ay,sp.x-ax)*180/Math.PI).toFixed(0)})`);
+}
+
+let tabMin=false,lastPh="";
+function tabletSync(){
+  const tb=$("#tablet"),ph=G.phase,play=ph==="task"&&!!G.T&&G.T.sub==="play",mini=ph==="map"||ph==="anim";
+  if(ph!==lastPh){ tabMin=false; lastPh=ph; }
+  const closed=tabMin&&!play&&!mini;
+  tb.className=play?"play":mini?"mini":"open"; tb.style.display=closed?"none":""; $("#tabOpen").style.display=closed?"":"none"; $("#pad").style.display=ph==="map"?"":"none";
+  const app={mgmenu:"Minigames",intro:L("Início","Start"),howto:L("Como jogar","How to play"),bulletin:L("Boletim","Briefing"),task:L("Tarefa do dia","Today's task"),alloc:L("Energia","Energy"),result:L("Relatório do dia","Day report"),end:L("Relatório da missão","Mission report"),credits:L("Fontes","Sources")}[ph]||"";
+  $("#tabTop").innerHTML=`<span><span class="dot"></span>📟 ${L("Tablet da missão","Mission tablet")} · ${app}</span><span><span class="pl">📍 ${$("#stage").dataset.place||""} </span><button data-a="tabToggle" aria-label="${L("Guardar o tablet e ver a base","Put the tablet away and see the base")}">▾ ${L("Ver a base","See the base")}</button></span>`;
+  $("#tabOpen").textContent="📟 "+L("Abrir o tablet","Open the tablet");
+}
+function render(){
+  document.documentElement.lang=lang==="pt"?"pt-BR":"en";
+  document.body.dataset.ph=G.phase==="credits"&&G.prev!=="intro"&&G.prev!=="end"?"credits":G.phase;
+  $("#stage").classList.toggle("big",G.phase==="map");
+  $("#stage").style.display=(G.phase==="task"&&G.T&&G.T.sub==="play")?"none":"";   /* no mini jogo, a tela é toda dele */
+  $("#screen").classList.toggle("play",G.phase==="task"&&!!G.T&&G.T.sub==="play");
+ setScene(); hudUpdate();
+  $("#screen").innerHTML={mgmenu:vMgMenu,intro:vIntro,howto:vHowto,bulletin:vBulletin,map:vMap,task:vTask,alloc:vAlloc,anim:vAnim,result:vResult,end:vEnd,credits:vCredits}[G.phase]();
+  const tk=tipKey(); if(tk&&TIPS[tk]) $("#screen").insertAdjacentHTML("afterbegin",`<div class="coach"><span class="who" aria-hidden="true">🧑‍🚀</span><div><b>${L("Controle da missão","Mission control")}</b><br>${L(...TIPS[tk])}</div></div>`);
+  $("#testBack").style.display=(G.test&&G.phase==="task"&&G.T&&G.T.sub==="play")?"":"none";
+  tabletSync(); fitStage();
+  if(G.phase==="map") initMap();
+  if(G.phase==="task"&&G.T.sub==="play"&&G.T.mg){ MG[G.T.task].draw(G.T.mg); if(!mgRaf){ mgLast=performance.now(); mgRaf=requestAnimationFrame(mgLoop); } }
+  $("#foot").textContent=L("Arte e código gerados com IA · Protótipo para o NASA Space Apps Challenge 2026 · Não é um produto da NASA","AI-generated art and code · Prototype for the NASA Space Apps Challenge 2026 · Not a NASA product");
+}
+function clearTimers(){ timers.forEach(clearTimeout); timers=[]; }
+function endAnim(){ clearTimers(); G.phase="result"; render(); }
+
+const doneMsg=(pt,en)=>{G.T.taskMsg=L(pt,en);G.T.sub="done";};
+const ACT={
+  lang(){ lang=lang==="pt"?"en":"pt"; hudBuild(); sceneKey=""; },
+  start(v){ newGame(v); hudLast=null; startDay(); if(tutOn&&!window.__noAnim){ G.tut=true; G.slide=0; G.ret="bulletin"; G.phase="howto"; } },
+  again(){ newGame(G.mode); G.phase="intro"; },
+  credits(){ G.prev=G.phase; G.phase="credits"; },
+  back(){ G.phase=G.prev||"intro"; },
+  toTask(){ goMap("task"); },
+  toAlloc(){ goMap("alloc"); },
+  walk(){ const sp=spotNow(); G.path=route(G.hero,{x:sp.x,y:sp.y}); },
+  mgGo(){ const t=G.T.task; if(["amostra","painel","falha","poeira","rover"].includes(t)&&G.o2<=1) return;
+    if(!seenMG.includes(t)&&!window.__noAnim){ G.T.sub="howto"; return; } mgStart(); },
+  mgBegin(){ const t=G.T.task; if(!seenMG.includes(t)){ seenMG.push(t); try{ localStorage.setItem("tdm_seen",JSON.stringify(seenMG)); }catch(e){} } mgStart(); },
+  tabToggle(){ tabMin=!tabMin; },
+  mgMenu(){ const m=G.mode; newGame(m); G.test=true; G.phase="mgmenu"; },
+  mgMode(v){ newGame(v); G.test=true; G.phase="mgmenu"; },
+  mgTest(t){ const m=G.mode; newGame(m); G.test=true; G.day=1; hudLast=null;
+    const data= t==="vazamento"?{leakAt:rnd(6)} : t==="estufa"?{t:[0,0,0,0]} : t==="falha"?{bad:shuffle([0,1,2,3,4,5,6,7,8,9]).slice(0,3),ok:[]} : {};
+    G.T={fit:0,light:G.M.light,bonus:0,penalty:0,task:t,sub:"choose",taskMsg:"",data,alloc:{air:0,green:0,shelter:0,lab:0,bat:0,repair:0},res:null};
+    G.alerts={}; G.phase="task"; mgStart(); },
+  rockStay(){ doneMsg("A tripulação ficou na base. O ar foi poupado, a descoberta ficou para outro dia.","The crew stayed at base. Air was saved, the discovery waits for another day."); },
+  panelStay(){ doneMsg("O painel ficou meio torto. Ar poupado, energia normal hoje.","The panel stayed a bit off. Air saved, normal energy today."); },
+  leakFix(){ G.T.penalty=2; doneMsg("Remendos reforçados! Custou 2 células de hoje.","Patches reinforced! It cost 2 of today's cells."); },
+  leakLater(){ G.leak=true; doneMsg("Os remendos rápidos não seguraram: oxigênio −1 por dia até o conserto (2 células).","The quick patches did not hold: oxygen −1 per day until repaired (2 cells)."); },
+  antStay(){ G.contact=false; doneMsg("A base segue sem contato com a Terra. A energia de hoje ficou inteira.","The base carries on without contact with Earth. Today's energy stays whole."); },
+  greenStay(){ doneMsg("As plantas seguem no ritmo delas. A energia de hoje ficou inteira.","The plants carry on at their own pace. Today's energy stays whole."); },
+  fixStay(){ G.panelBroken=true; doneMsg("O painel ficou quebrado: 1 célula a menos por dia até o fim da missão.","The panel stays broken: 1 cell fewer per day until the mission ends."); },
+  fs(){ const d=document; if(d.fullscreenElement) d.exitFullscreen(); else if(d.documentElement.requestFullscreen) d.documentElement.requestFullscreen().catch(()=>{}); },
+  howto(){ G.slide=0; G.ret="intro"; G.phase="howto"; },
+  slideNext(){ if((G.slide||0)>=SLIDES().length-1) G.phase=G.ret; else G.slide=(G.slide||0)+1; },
+  slidePrev(){ G.slide=Math.max(0,(G.slide||0)-1); },
+  slideSkip(){ G.phase=G.ret; },
+  tutToggle(){ tutOn=!tutOn; try{ if(tutOn) localStorage.removeItem("tdm_tut"); else localStorage.setItem("tdm_tut","1"); }catch(e){} },
+  aguaStay(){ doneMsg("A máquina ficou parada hoje. A energia ficou inteira.","The machine stayed off today. The energy stays whole."); },
+  poeiraStay(){ doneMsg("Os painéis seguem com poeira. Ar poupado, energia normal hoje.","The panels stay dusty. Air saved, normal energy today."); },
+  microStay(){ doneMsg("A pedra ficou guardada. A energia de hoje ficou inteira.","The rock stays in storage. Today's energy stays whole."); },
+  uploadStay(){ doneMsg("Os dados ficaram guardados no computador. A energia de hoje ficou inteira.","The data stays saved on the computer. Today's energy stays whole."); },
+  filtrosStay(){ const b=G.o2; G.o2=Math.max(1,G.o2-1); doneMsg(`Os filtros ficaram sujos: oxigênio −${b-G.o2}. A energia de hoje ficou inteira.`,`The filters stayed dirty: oxygen −${b-G.o2}. Today's energy stays whole.`); },
+  exStay(){ G.fit=-1; doneMsg("Sem exercício hoje. Amanhã a tripulação rende 1 célula a menos.","No exercise today. Tomorrow the crew gives 1 cell fewer."); },
+  bracoStay(){ doneMsg("A caixa ficou lá fora. A energia de hoje ficou inteira.","The box stays outside. Today's energy stays whole."); },
+  roverStay(){ doneMsg("O rover ficou na garagem. Ar e energia poupados.","The rover stays in the garage. Air and energy saved."); },
+  co2Stay(){ const b=G.o2; G.o2=Math.max(1,G.o2-1); doneMsg(`O filtro ficou cheio: oxigênio −${b-G.o2}. A energia de hoje ficou inteira.`,`The filter stayed full: oxygen −${b-G.o2}. Today's energy stays whole.`); },
+  treinoStay(){ doneMsg("Sem treino hoje. A energia ficou inteira.","No drill today. The energy stays whole."); },
+  plus(k){ const a=G.T.alloc,m=modules().find(x=>x.k===k); if(m&&a[k]<m.max&&totalCells()-usedCells()>0){a[k]++;G.T.lastPlus=k;} },
+  minus(k){ const a=G.T.alloc; if(a[k]>0)a[k]--; },
+  run(){ resolve(); if(REDUCED||window.__noAnim){G.phase="result";return;}
+    G.phase="anim"; G.animStep=0; clearTimers();
+    timers.push(setTimeout(()=>{G.animStep=1;const c=$("#cap");if(c)c.textContent=animCaption();},1500), setTimeout(endAnim,3600)); },
+  skip(){ clearTimers(); G.phase="result"; },
+  next(){ if(G.tut){ G.tut=false; tutOn=false; try{ localStorage.setItem("tdm_tut","1"); }catch(e){} } if(G.end) G.phase="end"; else startDay(); }
+};
+const KEEP=["mgMode","plus","minus","rot","spot","tend","part","lang","walk","fs","tutToggle","slideNext","slidePrev","tabToggle"];
+function act(el){
+  const fn=ACT[el.dataset.a]; if(!fn||el.disabled)return;
+  const y=$("#screen").scrollTop; $("#screen").classList.toggle("still",KEEP.includes(el.dataset.a)); fn(el.dataset.v); render();
+  if(KEEP.includes(el.dataset.a)){ $("#screen").scrollTop=y; const again=document.querySelector(`[data-a="${el.dataset.a}"][data-v="${el.dataset.v}"]`); if(again&&again.focus&&!again.disabled) again.focus({preventScroll:true}); }
+  else $("#screen").scrollTop=0;
+}
+const KEYMAP={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",w:"up",s:"down",a:"left",d:"right",W:"up",S:"down",A:"left",D:"right"};
+document.addEventListener("keydown",e=>{const k=KEYMAP[e.key]; if(k&&(G.phase==="map"||(G.phase==="task"&&G.T&&G.T.sub==="play"))&&!e.ctrlKey&&!e.metaKey&&!e.altKey){keys[k]=true;e.preventDefault();}});
+document.addEventListener("keyup",e=>{const k=KEYMAP[e.key]; if(k)keys[k]=false;});
+window.addEventListener("blur",()=>{for(const k in keys)keys[k]=false;});
+document.addEventListener("pointerdown",e=>{
+  const b=e.target.closest("[data-k]"); if(b){keys[b.dataset.k]=true;b.classList.add("on");e.preventDefault();return;}
+  const ge=e.target.closest("[data-g]"); if(ge){ mgTap(ge.dataset.g,ge.dataset.v); e.preventDefault(); return; }
+  const fd=e.target.closest("#mg[data-field]"); if(fd&&G.T&&G.T.mg&&G.T.sub==="play"){ const pt=fd.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY; const q=pt.matrixTransform(fd.getScreenCTM().inverse());
+    G.T.mg.tx=q.x; G.T.mg.ty=q.y; return; }
+  const m=e.target.closest("#map"); if(m&&G.phase==="map"){ const pt=m.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY; const q=pt.matrixTransform(m.getScreenCTM().inverse());
+    G.path=route(G.hero,{x:Math.max(MAPB.minX,Math.min(MAPB.maxX,q.x)),y:Math.max(MAPB.minY,Math.min(MAPB.maxY,q.y))}); }});
+const padUp=()=>{document.querySelectorAll("[data-k].on").forEach(b=>{keys[b.dataset.k]=false;b.classList.remove("on");});};
+let lastWipe=null;
+document.addEventListener("pointermove",e=>{ if(!(e.buttons&1)||!G.T||G.phase!=="task"||G.T.sub!=="play"||G.T.task!=="poeira") return;
+  const t=document.elementFromPoint(e.clientX,e.clientY),c=t&&t.closest?t.closest('[data-g="dust"]'):null,v=c?c.dataset.v:null;
+  if(v!==lastWipe){ lastWipe=v; if(c) mgTap("dust",v); } });
+document.addEventListener("pointerup",()=>{lastWipe=null;});
+document.addEventListener("pointerup",padUp); document.addEventListener("pointercancel",padUp);
+document.addEventListener("contextmenu",e=>{ if(e.target.closest("[data-k],[data-g],#map,#mg")) e.preventDefault(); });   // toque longo não abre menu no meio do jogo
+document.addEventListener("click",e=>{const el=e.target.closest("[data-a]");if(el&&el.type!=="range")act(el);});
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches("g[data-a]")){e.preventDefault();act(e.target);}});
+document.addEventListener("input",e=>{ if(e.target.id==="ant"&&G.T&&G.T.mg) G.T.mg.v=+e.target.value; });
+document.addEventListener("keydown",e=>{ if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("[data-g]")){ e.preventDefault(); mgTap(e.target.dataset.g,e.target.dataset.v); } });
+
+newGame("easy"); hudBuild();
+if(/minigames?/i.test(location.search+location.hash)){ G.test=true; G.phase="mgmenu"; }
+render();
+if(window.ResizeObserver) new ResizeObserver(fitStage).observe($("#stage")); window.addEventListener("resize",fitStage);
+window.__game={get G(){return G;},keys,MG,mgTap,SPOTS,BLOCKS,blocked,stepHero,route,ACT,render,resolve,startDay,newGame,enterAlloc,totalCells,usedCells,rating,alertOf,isShadow,MODES};
+</script>
+</body>
+</html>

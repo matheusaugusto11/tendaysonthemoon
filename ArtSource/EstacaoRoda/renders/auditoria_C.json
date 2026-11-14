@@ -1,0 +1,3300 @@
+{
+ "resumo": {
+  "blend": "c:\\GitHub\\tendaysonthemoon\\ArtSource\\EstacaoRoda\\Montagem.blend",
+  "versao_arquivo": "5.2",
+  "perfil": "Estação-Roda (WebGL)",
+  "objetos": 235,
+  "malhas": 215,
+  "tris_total": 6120,
+  "texturas": 0,
+  "textura_mb_sem_compressao": 0.0,
+  "materiais": 15,
+  "erros": 0,
+  "avisos": 45
+ },
+ "objetos": {
+  "SM_Blk_Terreno_Nucleo": {
+   "tris": 192,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 1.0,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.855
+    }
+   }
+  },
+  "SM_Blk_Terreno_Muralha": {
+   "tris": 192,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 3.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 1.0
+    }
+   }
+  },
+  "SM_Blk_Hub_Plaza": {
+   "tris": 96,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 6.1,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.853
+    }
+   }
+  },
+  "SM_Blk_Hub_Casco": {
+   "tris": 80,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.7,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 1.0
+    }
+   }
+  },
+  "SM_Blk_Hub_Teto": {
+   "tris": 80,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 19.9,
+     "espalhamento": 1.69,
+     "sobreposicao": 0.0,
+     "aproveitamento": 1.0
+    }
+   }
+  },
+  "SM_Blk_Hub_Claraboia": {
+   "tris": 20,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 30.7,
+     "espalhamento": 3.84,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.774
+    }
+   }
+  },
+  "SM_Blk_Hub_Console": {
+   "tris": 80,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 32.3,
+     "espalhamento": 1.67,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.856
+    }
+   }
+  },
+  "SM_Blk_Escala_Boneco_Hub": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 67.5,
+     "espalhamento": 1.29,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Marcador_Hub_air": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Hub_air_Interno": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Hub_green": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Hub_green_Interno": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Hub_battery": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Hub_battery_Interno": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Hub_shelter": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Hub_shelter_Interno": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Hub_lab": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Hub_lab_Interno": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Hub_eclusa": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Hub_eclusa_Interno": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Eclusa_Frente_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 53.5,
+     "espalhamento": 1.35,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Eclusa_Frente_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 53.5,
+     "espalhamento": 1.35,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Eclusa_Frente_Verga": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 78.8,
+     "espalhamento": 1.58,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Eclusa_Fundo": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 21.8,
+     "espalhamento": 2.94,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Eclusa_Lado_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 25.6,
+     "espalhamento": 2.83,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Eclusa_Lado_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 25.6,
+     "espalhamento": 2.83,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Eclusa_Teto": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 20.3,
+     "espalhamento": 3.16,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Eclusa_Escotilha_Externa": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 29.1,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Escala_Boneco_Eclusa": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 67.5,
+     "espalhamento": 1.29,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Ar_e_Agua_Tubo": {
+   "tris": 96,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 25.3,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 1.0
+    }
+   }
+  },
+  "SM_Blk_Corredor_Ar_e_Agua_Piso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 18.5,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Ar_e_Agua_Faixa": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 37.7,
+     "espalhamento": 2.24,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Ar_e_Agua_Apoio_L1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Ar_e_Agua_Apoio_R1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Ar_e_Agua_Apoio_L2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Ar_e_Agua_Apoio_R2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Ar_e_Agua_Apoio_L3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Ar_e_Agua_Apoio_R3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Marcador_Corredor_Ar_e_Agua_Modulo": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Corredor_Ar_e_Agua_Hub": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Corredor_Estufa_Tubo": {
+   "tris": 96,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 25.3,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 1.0
+    }
+   }
+  },
+  "SM_Blk_Corredor_Estufa_Piso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 18.5,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Estufa_Faixa": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 37.7,
+     "espalhamento": 2.24,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Estufa_Apoio_L1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Estufa_Apoio_R1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Estufa_Apoio_L2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Estufa_Apoio_R2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Estufa_Apoio_L3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Estufa_Apoio_R3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Marcador_Corredor_Estufa_Modulo": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Corredor_Estufa_Hub": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Corredor_Bateria_Tubo": {
+   "tris": 96,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 25.3,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 1.0
+    }
+   }
+  },
+  "SM_Blk_Corredor_Bateria_Piso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 18.5,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Bateria_Faixa": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 37.7,
+     "espalhamento": 2.24,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Bateria_Apoio_L1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Bateria_Apoio_R1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Bateria_Apoio_L2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Bateria_Apoio_R2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Bateria_Apoio_L3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Bateria_Apoio_R3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Marcador_Corredor_Bateria_Modulo": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Corredor_Bateria_Hub": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Corredor_Abrigo_Tubo": {
+   "tris": 96,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 25.3,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 1.0
+    }
+   }
+  },
+  "SM_Blk_Corredor_Abrigo_Piso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 18.5,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Abrigo_Faixa": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 37.7,
+     "espalhamento": 2.24,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Abrigo_Apoio_L1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Abrigo_Apoio_R1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Abrigo_Apoio_L2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Abrigo_Apoio_R2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Abrigo_Apoio_L3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Abrigo_Apoio_R3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Marcador_Corredor_Abrigo_Modulo": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Corredor_Abrigo_Hub": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Corredor_Laboratorio_Tubo": {
+   "tris": 96,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 25.3,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 1.0
+    }
+   }
+  },
+  "SM_Blk_Corredor_Laboratorio_Piso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 18.5,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Laboratorio_Faixa": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 37.7,
+     "espalhamento": 2.24,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Laboratorio_Apoio_L1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Laboratorio_Apoio_R1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Laboratorio_Apoio_L2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Laboratorio_Apoio_R2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Laboratorio_Apoio_L3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Corredor_Laboratorio_Apoio_R3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Marcador_Corredor_Laboratorio_Modulo": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Marcador_Corredor_Laboratorio_Hub": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 55.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Escala_Boneco_Corredor_Ar": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 67.5,
+     "espalhamento": 1.29,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Ar_Piso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 9.8,
+     "espalhamento": 3.74,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Ar_Frente_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 18.2,
+     "espalhamento": 3.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Ar_Frente_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 18.2,
+     "espalhamento": 3.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Ar_Frente_Verga": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 29.6,
+     "espalhamento": 2.71,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Ar_Fundo": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 10.8,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Ar_Lado_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 13.3,
+     "espalhamento": 3.92,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Ar_Lado_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 13.3,
+     "espalhamento": 3.92,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Ar_Teto": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 9.8,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Ar_Tanque_1": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.7,
+     "espalhamento": 2.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Ar_Tanque_2": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.7,
+     "espalhamento": 2.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Ar_Tanque_3": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.7,
+     "espalhamento": 2.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Ar_Mezanino": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 24.2,
+     "espalhamento": 2.58,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Ar_Tanque_Horizontal": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 33.0,
+     "espalhamento": 1.78,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.847
+    }
+   }
+  },
+  "SM_Blk_Ar_Ponte_Tubos": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 47.7,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Ar_Chamine": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 112.2,
+     "espalhamento": 2.19,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Escala_Boneco_Ar": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 67.5,
+     "espalhamento": 1.29,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Piso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 6.8,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Frente_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 17.1,
+     "espalhamento": 3.06,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Frente_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 17.1,
+     "espalhamento": 3.06,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Frente_Verga": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 78.8,
+     "espalhamento": 1.03,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Fundo": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 11.0,
+     "espalhamento": 3.06,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Lado_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 14.9,
+     "espalhamento": 3.06,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Lado_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 14.9,
+     "espalhamento": 3.06,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Agua_A": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 9.1,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Agua_B": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 9.1,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Cumeeira": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 33.5,
+     "espalhamento": 1.1,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Canteiro_A1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 32.4,
+     "espalhamento": 2.34,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Canteiro_B1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 32.4,
+     "espalhamento": 2.34,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Canteiro_A2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 32.4,
+     "espalhamento": 2.34,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Canteiro_B2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 32.4,
+     "espalhamento": 2.34,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Canteiro_A3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 32.4,
+     "espalhamento": 2.34,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Estufa_Canteiro_B3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 32.4,
+     "espalhamento": 2.34,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Escala_Boneco_Estufa": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 67.5,
+     "espalhamento": 1.29,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Laje": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 4.5,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Controle_Frente_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 44.4,
+     "espalhamento": 1.63,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Controle_Frente_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 44.4,
+     "espalhamento": 1.63,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Controle_Frente_Verga": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 78.8,
+     "espalhamento": 1.58,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Controle_Fundo": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 20.4,
+     "espalhamento": 2.94,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Controle_Lado_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 16.9,
+     "espalhamento": 2.94,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Controle_Lado_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 16.9,
+     "espalhamento": 2.94,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Controle_Teto": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 13.3,
+     "espalhamento": 3.56,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Conteiner_C1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 16.6,
+     "espalhamento": 1.58,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Faixa_C1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 16.4,
+     "espalhamento": 2.66,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Conteiner_C2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 16.6,
+     "espalhamento": 1.58,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Faixa_C2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 16.4,
+     "espalhamento": 2.66,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Conteiner_C3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 16.6,
+     "espalhamento": 1.58,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Faixa_C3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 16.4,
+     "espalhamento": 2.66,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Transformador": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 37.9,
+     "espalhamento": 1.13,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bateria_Poste": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 144.6,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Escala_Boneco_Bateria": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 67.5,
+     "espalhamento": 1.29,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Abrigo_Piso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 8.5,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Abrigo_Abobada": {
+   "tris": 96,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 19.6,
+     "espalhamento": 1.03,
+     "sobreposicao": 0.0,
+     "aproveitamento": 1.0
+    }
+   }
+  },
+  "SM_Blk_Abrigo_Parede_Fundo": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 14.1,
+     "espalhamento": 3.21,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Abrigo_Berma": {
+   "tris": 120,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 13.9,
+     "espalhamento": 1.34,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.833
+    }
+   }
+  },
+  "SM_Blk_Abrigo_Gabiao_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 29.6,
+     "espalhamento": 1.61,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Abrigo_Gabiao_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 29.6,
+     "espalhamento": 1.61,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Escala_Boneco_Abrigo": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 67.5,
+     "espalhamento": 1.29,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lab_Piso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 10.4,
+     "espalhamento": 3.54,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lab_Frente_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 22.5,
+     "espalhamento": 3.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lab_Frente_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 22.5,
+     "espalhamento": 3.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lab_Frente_Verga": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 59.8,
+     "espalhamento": 1.32,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lab_Fundo": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 13.4,
+     "espalhamento": 3.16,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lab_Lado_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 17.6,
+     "espalhamento": 3.16,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lab_Lado_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 17.6,
+     "espalhamento": 3.16,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lab_Teto": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 10.4,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lab_Faixa": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 10.3,
+     "espalhamento": 3.03,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lab_HVAC": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 50.3,
+     "espalhamento": 1.41,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lab_Mastro": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 154.6,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Lab_Prato": {
+   "tris": 120,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 69.4,
+     "espalhamento": 1.32,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.833
+    }
+   }
+  },
+  "SM_Blk_Lab_Tanque": {
+   "tris": 48,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 60.5,
+     "espalhamento": 1.69,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.844
+    }
+   }
+  },
+  "SM_Blk_Lab_Rampa": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 28.8,
+     "espalhamento": 3.56,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Escala_Boneco_Lab": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 67.5,
+     "espalhamento": 1.29,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_A_00": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_A_00": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_A_01": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_A_01": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_A_02": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_A_02": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_A_03": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_A_03": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_A_04": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_A_04": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_A_10": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_A_10": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_A_11": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_A_11": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_A_12": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_A_12": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_A_13": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_A_13": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_A_14": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_A_14": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_B_00": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_B_00": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_B_01": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_B_01": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_B_02": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_B_02": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_B_03": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_B_03": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_B_04": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_B_04": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_B_10": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_B_10": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_B_11": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_B_11": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_B_12": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_B_12": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_B_13": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_B_13": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Solar_B_14": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 23.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Solar_Poste_B_14": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 185.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Pouso_Plataforma": {
+   "tris": 32,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 8.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.821
+    }
+   }
+  },
+  "SM_Blk_Pouso_Modulo_Carga": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 24.1,
+     "espalhamento": 1.21,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Pouso_Perna_1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 119.3,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Pouso_Perna_2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 119.3,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Pouso_Perna_3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 119.3,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Pouso_Perna_4": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 119.3,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Prato_Base": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 34.9,
+     "espalhamento": 1.31,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Prato_Disco": {
+   "tris": 140,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 24.9,
+     "espalhamento": 1.38,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.828
+    }
+   }
+  },
+  "SM_Blk_Rover_Chassi": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 22.7,
+     "espalhamento": 1.66,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Rover_Roda_L1": {
+   "tris": 40,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 111.7,
+     "espalhamento": 1.24,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.834
+    }
+   }
+  },
+  "SM_Blk_Rover_Roda_R1": {
+   "tris": 40,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 111.7,
+     "espalhamento": 1.24,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.834
+    }
+   }
+  },
+  "SM_Blk_Rover_Roda_L2": {
+   "tris": 40,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 111.7,
+     "espalhamento": 1.24,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.834
+    }
+   }
+  },
+  "SM_Blk_Rover_Roda_R2": {
+   "tris": 40,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 111.7,
+     "espalhamento": 1.24,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.834
+    }
+   }
+  },
+  "SM_Blk_Rover_Roda_L3": {
+   "tris": 40,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 111.7,
+     "espalhamento": 1.24,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.834
+    }
+   }
+  },
+  "SM_Blk_Rover_Roda_R3": {
+   "tris": 40,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 111.7,
+     "espalhamento": 1.24,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.834
+    }
+   }
+  },
+  "SM_Blk_Conteiner_Suprimento_1": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 16.6,
+     "espalhamento": 1.58,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Conteiner_Suprimento_2": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 16.6,
+     "espalhamento": 1.58,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Conteiner_Suprimento_3": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 16.6,
+     "espalhamento": 1.58,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  }
+ },
+ "armaduras": {},
+ "achados": [
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Hub_Claraboia",
+   "msg": "UV0: densidade de texel varia 3.8x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Eclusa_Fundo",
+   "msg": "UV0: densidade de texel varia 2.9x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Eclusa_Lado_L",
+   "msg": "UV0: densidade de texel varia 2.8x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Eclusa_Lado_R",
+   "msg": "UV0: densidade de texel varia 2.8x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Eclusa_Teto",
+   "msg": "UV0: densidade de texel varia 3.2x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Corredor_Ar_e_Agua_Faixa",
+   "msg": "UV0: densidade de texel varia 2.2x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Corredor_Estufa_Faixa",
+   "msg": "UV0: densidade de texel varia 2.2x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Corredor_Bateria_Faixa",
+   "msg": "UV0: densidade de texel varia 2.2x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Corredor_Abrigo_Faixa",
+   "msg": "UV0: densidade de texel varia 2.2x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Corredor_Laboratorio_Faixa",
+   "msg": "UV0: densidade de texel varia 2.2x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Ar_Piso",
+   "msg": "UV0: densidade de texel varia 3.7x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Ar_Frente_L",
+   "msg": "UV0: densidade de texel varia 3.0x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Ar_Frente_R",
+   "msg": "UV0: densidade de texel varia 3.0x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Ar_Frente_Verga",
+   "msg": "UV0: densidade de texel varia 2.7x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Ar_Lado_L",
+   "msg": "UV0: densidade de texel varia 3.9x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Ar_Lado_R",
+   "msg": "UV0: densidade de texel varia 3.9x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Ar_Mezanino",
+   "msg": "UV0: densidade de texel varia 2.6x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Ar_Chamine",
+   "msg": "UV0: densidade de texel varia 2.2x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Estufa_Frente_L",
+   "msg": "UV0: densidade de texel varia 3.1x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Estufa_Frente_R",
+   "msg": "UV0: densidade de texel varia 3.1x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Estufa_Fundo",
+   "msg": "UV0: densidade de texel varia 3.1x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Estufa_Lado_L",
+   "msg": "UV0: densidade de texel varia 3.1x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Estufa_Lado_R",
+   "msg": "UV0: densidade de texel varia 3.1x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Estufa_Canteiro_A1",
+   "msg": "UV0: densidade de texel varia 2.3x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Estufa_Canteiro_B1",
+   "msg": "UV0: densidade de texel varia 2.3x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Estufa_Canteiro_A2",
+   "msg": "UV0: densidade de texel varia 2.3x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Estufa_Canteiro_B2",
+   "msg": "UV0: densidade de texel varia 2.3x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Estufa_Canteiro_A3",
+   "msg": "UV0: densidade de texel varia 2.3x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Estufa_Canteiro_B3",
+   "msg": "UV0: densidade de texel varia 2.3x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Bateria_Controle_Fundo",
+   "msg": "UV0: densidade de texel varia 2.9x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Bateria_Controle_Lado_L",
+   "msg": "UV0: densidade de texel varia 2.9x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Bateria_Controle_Lado_R",
+   "msg": "UV0: densidade de texel varia 2.9x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Bateria_Controle_Teto",
+   "msg": "UV0: densidade de texel varia 3.6x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Bateria_Faixa_C1",
+   "msg": "UV0: densidade de texel varia 2.7x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Bateria_Faixa_C2",
+   "msg": "UV0: densidade de texel varia 2.7x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Bateria_Faixa_C3",
+   "msg": "UV0: densidade de texel varia 2.7x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Abrigo_Parede_Fundo",
+   "msg": "UV0: densidade de texel varia 3.2x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lab_Piso",
+   "msg": "UV0: densidade de texel varia 3.5x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lab_Frente_L",
+   "msg": "UV0: densidade de texel varia 3.0x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lab_Frente_R",
+   "msg": "UV0: densidade de texel varia 3.0x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lab_Fundo",
+   "msg": "UV0: densidade de texel varia 3.2x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lab_Lado_L",
+   "msg": "UV0: densidade de texel varia 3.2x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lab_Lado_R",
+   "msg": "UV0: densidade de texel varia 3.2x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lab_Faixa",
+   "msg": "UV0: densidade de texel varia 3.0x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lab_Rampa",
+   "msg": "UV0: densidade de texel varia 3.6x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  }
+ ]
+}

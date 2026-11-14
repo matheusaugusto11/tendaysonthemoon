@@ -1,0 +1,690 @@
+{
+  "projeto": "EstacaoRoda",
+  "blender": "5.2",
+  "abre_no_blender": "5.3",
+  "fps": 30,
+  "semente": 11,
+  "arquitetura": {
+    "piso_z": 0.4,
+    "eixo_escotilha_z": 1.78,
+    "escotilha_vao": 2.2,
+    "corredor": {
+      "interno": 3.0,
+      "parede": 0.15,
+      "comprimento": 10.0,
+      "piso_largura": 1.2
+    },
+    "hub": {
+      "apotema_externo": 6.0,
+      "apotema_interno": 5.5,
+      "lados": 10,
+      "plaza_raio": 10.0
+    },
+    "r_modulo": 16.0,
+    "r_eclusa": 6.0,
+    "angulos": {
+      "air": 0,
+      "green": 72,
+      "battery": 144,
+      "shelter": 216,
+      "lab": 288,
+      "eclusa": 180
+    }
+  },
+  "astronauta": {
+    "altura": 1.8,
+    "capacete_diametro": 0.46,
+    "bota": [
+      0.14,
+      0.26,
+      0.1
+    ],
+    "canela": [
+      0.13,
+      0.13,
+      0.38
+    ],
+    "coxa": [
+      0.15,
+      0.15,
+      0.37
+    ],
+    "pelve": [
+      0.34,
+      0.24,
+      0.12
+    ],
+    "torso": [
+      0.44,
+      0.28,
+      0.44
+    ],
+    "mochila": [
+      0.38,
+      0.2,
+      0.46
+    ],
+    "braco_sup": [
+      0.11,
+      0.11,
+      0.3
+    ],
+    "braco_inf": [
+      0.1,
+      0.1,
+      0.28
+    ],
+    "mao": [
+      0.1,
+      0.1,
+      0.12
+    ],
+    "pescoco_anel": [
+      0.3,
+      0.3,
+      0.05
+    ],
+    "ombro_x": 0.29,
+    "quadril_x": 0.1
+  },
+  "bip": {
+    "altura_corpo": 0.95,
+    "corpo_raios": [
+      0.31,
+      0.275,
+      0.475
+    ],
+    "esteira": [
+      0.22,
+      0.8,
+      0.24
+    ],
+    "esteira_x": 0.32,
+    "tela": [
+      0.34,
+      0.03,
+      0.22
+    ],
+    "antena": [
+      0.03,
+      0.12
+    ],
+    "braco_sup": [
+      0.08,
+      0.08,
+      0.22
+    ],
+    "braco_inf": [
+      0.08,
+      0.08,
+      0.22
+    ],
+    "garra": [
+      0.1,
+      0.1,
+      0.08
+    ]
+  },
+  "lineup": {
+    "x": {
+      "Lia": -1.5,
+      "Teo": -0.5,
+      "Nina": 0.5,
+      "Kai": 1.5,
+      "Bip": 2.9
+    },
+    "cubo_x": -2.7,
+    "porta_x": -4.0
+  },
+  "cameras": {
+    "andar": {
+      "alvo": "Lia",
+      "distancia": 2.5,
+      "inclinacao": 25,
+      "fov": 45
+    },
+    "close": {
+      "alvo": "Teo",
+      "fov": 35
+    },
+    "elenco": {
+      "pos": [
+        -0.2,
+        -6.8,
+        1.5
+      ],
+      "alvo": [
+        -0.2,
+        0,
+        0.95
+      ],
+      "fov": 45
+    },
+    "mapa": {
+      "distancia": 75,
+      "inclinacao": 62,
+      "fov": 45
+    },
+    "geral": {
+      "pos": [
+        48,
+        -58,
+        38
+      ],
+      "alvo": [
+        0,
+        0,
+        3
+      ],
+      "fov": 40
+    },
+    "interior_hub": {
+      "pos": [
+        0,
+        -4.6,
+        2.0
+      ],
+      "alvo": [
+        0,
+        5,
+        1.78
+      ],
+      "fov": 50
+    },
+    "topo": {
+      "altura": 95,
+      "escala": 78
+    }
+  },
+  "cores": {
+    "branco": "#E6E4DF",
+    "cinza": "#BFC0C4",
+    "escuro": "#2E323B",
+    "dourado": "#C9A24A",
+    "borracha": "#1E2026",
+    "chao": "#8E8C95",
+    "Lia": "#4DD0E1",
+    "Teo": "#6BD425",
+    "Nina": "#C77DFF",
+    "Kai": "#FF9F43",
+    "bip_banda": "#8FB4FF",
+    "tela": "#14182E"
+  },
+  "cenario": {
+    "parede": 0.3,
+    "hub": {
+      "teto_z_base": 3.4,
+      "teto_z_topo": 5.1,
+      "teto_topo_circunraio": 2.2,
+      "parede_hub": 0.5,
+      "teto_espessura": 0.4,
+      "claraboia_raio": 2.0,
+      "console_raio": 1.9,
+      "console_altura": 0.95
+    },
+    "ar": {
+      "ext": [
+        7.6,
+        5.6
+      ],
+      "topo_z": 5.3,
+      "tanque_diam": 2.6,
+      "tanque_topo_z": 7.6,
+      "mezanino_z": 2.8
+    },
+    "estufa": {
+      "ext": [
+        12.2,
+        7.2
+      ],
+      "parede_z_topo": 3.2,
+      "cumeeira_z": 5.0,
+      "canteiro": [
+        3.0,
+        1.3,
+        0.55
+      ],
+      "corredor_central": 2.0
+    },
+    "abrigo": {
+      "ext": [
+        6.6,
+        8.6
+      ],
+      "coroa_z": 3.5,
+      "berma_z": 4.4
+    },
+    "lab": {
+      "ext": [
+        7.6,
+        5.0
+      ],
+      "topo_z": 3.7,
+      "equip_z": 6.5
+    },
+    "bateria": {
+      "controle_ext": [
+        3.8,
+        6.1,
+        3.0
+      ],
+      "conteiner": [
+        2.44,
+        6.1,
+        2.6
+      ],
+      "lado_x": 3.6,
+      "traseiro_y": 6.5,
+      "transformador": [
+        1.9,
+        1.9,
+        1.5
+      ],
+      "transformador_x": 6.8
+    },
+    "eclusa": {
+      "ext": [
+        3.3,
+        3.0,
+        3.0
+      ]
+    },
+    "apoio": {
+      "solar_a": [
+        -40,
+        22
+      ],
+      "solar_b": [
+        24,
+        34
+      ],
+      "solar_painel": [
+        3.3,
+        2.3,
+        0.14
+      ],
+      "solar_passo": 4.6,
+      "pouso": [
+        40,
+        -18
+      ],
+      "pouso_raio": 7.5,
+      "prato": [
+        -38,
+        -6
+      ],
+      "rover": [
+        -18,
+        -32
+      ],
+      "conteineres": [
+        [
+          22,
+          -34
+        ],
+        [
+          26.5,
+          -34
+        ],
+        [
+          31,
+          -34
+        ]
+      ]
+    },
+    "terreno": {
+      "raio": 60.0,
+      "muralha_raio": 85.0,
+      "muralha_altura": 12.0
+    }
+  },
+  "paleta": [
+    [
+      "01",
+      "Branco_Pintura",
+      "#E6E4DF",
+      0.65,
+      0.0
+    ],
+    [
+      "02",
+      "Cinza_Claro",
+      "#BFC0C4",
+      0.65,
+      0.0
+    ],
+    [
+      "03",
+      "Cinza_Medio",
+      "#9A98A0",
+      0.85,
+      0.0
+    ],
+    [
+      "04",
+      "Aco_Claro",
+      "#7C828C",
+      0.45,
+      0.6
+    ],
+    [
+      "05",
+      "Aco_Escuro",
+      "#2E323B",
+      0.5,
+      0.5
+    ],
+    [
+      "06",
+      "Borracha",
+      "#1E2026",
+      0.9,
+      0.0
+    ],
+    [
+      "07",
+      "Concreto_Piso",
+      "#8E8C95",
+      0.9,
+      0.0
+    ],
+    [
+      "10",
+      "Rocha_A",
+      "#85828F",
+      1.0,
+      0.0
+    ],
+    [
+      "11",
+      "Rocha_B",
+      "#9692A2",
+      1.0,
+      0.0
+    ],
+    [
+      "12",
+      "Rocha_C",
+      "#75727F",
+      1.0,
+      0.0
+    ],
+    [
+      "13",
+      "Regolito_Berma",
+      "#77747F",
+      1.0,
+      0.0
+    ],
+    [
+      "20",
+      "Solo_Canteiro",
+      "#4A3A2E",
+      1.0,
+      0.0
+    ],
+    [
+      "21",
+      "Planta_1",
+      "#2F7A22",
+      0.8,
+      0.0
+    ],
+    [
+      "22",
+      "Planta_2",
+      "#4FA832",
+      0.8,
+      0.0
+    ],
+    [
+      "23",
+      "Planta_3",
+      "#7FD14A",
+      0.8,
+      0.0
+    ],
+    [
+      "24",
+      "Espiga",
+      "#F2B84B",
+      0.8,
+      0.0
+    ],
+    [
+      "30",
+      "Painel_Solar",
+      "#2B5C9E",
+      0.35,
+      0.2
+    ],
+    [
+      "32",
+      "Dourado_Viseira",
+      "#C9A24A",
+      0.3,
+      0.8
+    ],
+    [
+      "33",
+      "Agua_Tanque",
+      "#3FA9E0",
+      0.4,
+      0.0
+    ],
+    [
+      "34",
+      "Caixa_Verde",
+      "#5C7A3A",
+      0.7,
+      0.0
+    ],
+    [
+      "37",
+      "Amarelo_Seguranca",
+      "#E8B923",
+      0.6,
+      0.0
+    ],
+    [
+      "40",
+      "Bip_Banda",
+      "#8FB4FF",
+      0.5,
+      0.0
+    ],
+    [
+      "41",
+      "Tela_Escura",
+      "#14182E",
+      0.4,
+      0.0
+    ]
+  ],
+  "acentos": {
+    "Neutral": "#E8B923",
+    "Air": "#4DD0E1",
+    "Green": "#6BD425",
+    "Shelter": "#C77DFF",
+    "Lab": "#FF9F43",
+    "Battery": "#FFD23F"
+  },
+  "glow": {
+    "Neutral": "#FFF1C2",
+    "Air": "#4DD0E1",
+    "Green": "#6BD425",
+    "Shelter": "#C77DFF",
+    "Lab": "#FF9F43",
+    "Battery": "#FFD23F",
+    "Hub": "#FFF7E0"
+  },
+  "vidro": {
+    "cor": "#5FB3C4",
+    "alfa": 0.35
+  },
+  "kit": {
+    "escotilha": {
+      "vao": 2.2,
+      "quadro": 0.25,
+      "prof": 0.3,
+      "lados": 12,
+      "parafusos": 4
+    },
+    "porta": {
+      "diam": 2.1,
+      "espessura": 0.1,
+      "lados": 12,
+      "raios": 6
+    },
+    "corrimao": {
+      "altura": 1.0,
+      "comprimento": 1.0,
+      "tubo_raio": 0.025,
+      "montante": 0.05,
+      "lados": 8
+    },
+    "escada_vertical": {
+      "altura": 2.4,
+      "largura": 0.5,
+      "degrau_passo": 0.3,
+      "trilho": 0.04
+    },
+    "escada_degrau": {
+      "degraus": 5,
+      "altura": 0.2,
+      "profundidade": 0.25,
+      "largura": 1.0
+    },
+    "grade": {
+      "lado": 1.0,
+      "altura": 0.05,
+      "borda": 0.05,
+      "ripas": 3
+    },
+    "bandeja": {
+      "largura": 0.4,
+      "altura": 0.08,
+      "parede": 0.015,
+      "cabo_raio": 0.03,
+      "comprimento": 1.0,
+      "curva_raio": 0.5
+    },
+    "valvula": {
+      "diam": 0.5,
+      "raios": 8
+    },
+    "poste": {
+      "altura": 3.2,
+      "mastro_raio": 0.05,
+      "lados": 8,
+      "cabeca": [
+        0.5,
+        0.3,
+        0.12
+      ]
+    },
+    "respiro": {
+      "lado": 0.6,
+      "prof": 0.18,
+      "venezianas": 6
+    },
+    "janela_redonda": {
+      "diam": 0.7,
+      "lados": 8,
+      "prof": 0.08,
+      "aro": 0.07
+    },
+    "janela_retangular": {
+      "tam": [
+        1.5,
+        1.0
+      ],
+      "prof": 0.1,
+      "aro": 0.1
+    },
+    "armario": {
+      "tam": [
+        0.9,
+        0.5,
+        2.0
+      ],
+      "bisel": 0.025,
+      "venezianas": 4
+    },
+    "bancada": {
+      "tam": [
+        2.0,
+        0.8,
+        0.9
+      ],
+      "tampo": 0.06,
+      "bisel": 0.02
+    },
+    "caixa": {
+      "P": 0.6,
+      "M": 1.0,
+      "G": 1.6,
+      "bisel": 0.03,
+      "cinta": 0.06
+    }
+  },
+  "orcamento_kit": {
+    "SM_Kit_Escotilha": 300,
+    "SM_Kit_Escotilha_Porta": 250,
+    "SM_Kit_Corrimao_1m": 80,
+    "SM_Kit_Escada_Vertical": 140,
+    "SM_Kit_Escada_Degrau": 160,
+    "SM_Kit_Grade_Piso_1x1": 60,
+    "SM_Kit_Bandeja_Cabos_1m": 70,
+    "SM_Kit_Bandeja_Cabos_Curva": 70,
+    "SM_Kit_Valvula": 90,
+    "SM_Kit_Poste_Luz": 70,
+    "SM_Kit_Respiro": 60,
+    "SM_Kit_Janela_Redonda": 90,
+    "SM_Kit_Janela_Retangular": 70,
+    "SM_Kit_Armario": 120,
+    "SM_Kit_Bancada": 110,
+    "SM_Kit_Caixa_P": 80,
+    "SM_Kit_Caixa_M": 80,
+    "SM_Kit_Caixa_G": 80
+  },
+  "layout_kit": {
+    "z": {
+      "SM_Kit_Escotilha": 1.5,
+      "SM_Kit_Escotilha_Porta": 1.5,
+      "SM_Kit_Janela_Retangular": 1.2,
+      "SM_Kit_Janela_Redonda": 1.2,
+      "SM_Kit_Respiro": 1.0,
+      "SM_Kit_Valvula": 1.0,
+      "SM_Kit_Grade_Piso_1x1": 0.1
+    },
+    "grupos": [
+      [
+        "SM_Kit_Escotilha",
+        "SM_Kit_Escotilha_Porta",
+        "SM_Kit_Janela_Retangular",
+        "SM_Kit_Poste_Luz"
+      ],
+      [
+        "SM_Kit_Bancada",
+        "SM_Kit_Armario",
+        "SM_Kit_Escada_Vertical",
+        "SM_Kit_Escada_Degrau"
+      ],
+      [
+        "SM_Kit_Grade_Piso_1x1",
+        "SM_Kit_Bandeja_Cabos_1m",
+        "SM_Kit_Bandeja_Cabos_Curva",
+        "SM_Kit_Corrimao_1m"
+      ],
+      [
+        "SM_Kit_Valvula",
+        "SM_Kit_Respiro",
+        "SM_Kit_Janela_Redonda",
+        "SM_Kit_Caixa_P",
+        "SM_Kit_Caixa_M",
+        "SM_Kit_Caixa_G"
+      ]
+    ]
+  }
+}

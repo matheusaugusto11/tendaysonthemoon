@@ -1,0 +1,466 @@
+{
+ "resumo": {
+  "blend": "c:\\GitHub\\tendaysonthemoon\\ArtSource\\EstacaoRoda\\Kit_Comum.blend",
+  "versao_arquivo": "5.2",
+  "perfil": "Estação-Roda (WebGL)",
+  "objetos": 29,
+  "malhas": 25,
+  "tris_total": 1760,
+  "texturas": 0,
+  "textura_mb_sem_compressao": 0.0,
+  "materiais": 9,
+  "erros": 0,
+  "avisos": 21
+ },
+ "objetos": {
+  "SM_Kit_Escotilha": {
+   "tris": 288,
+   "materiais": 4,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Escotilha_Porta": {
+   "tris": 186,
+   "materiais": 2,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Corrimao_1m": {
+   "tris": 48,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Escada_Vertical": {
+   "tris": 88,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Escada_Degrau": {
+   "tris": 148,
+   "materiais": 2,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Grade_Piso_1x1": {
+   "tris": 64,
+   "materiais": 2,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Bandeja_Cabos_1m": {
+   "tris": 40,
+   "materiais": 2,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Bandeja_Cabos_Curva": {
+   "tris": 80,
+   "materiais": 2,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Valvula": {
+   "tris": 136,
+   "materiais": 3,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Poste_Luz": {
+   "tris": 68,
+   "materiais": 3,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Poste_Luz_Glow": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Respiro": {
+   "tris": 58,
+   "materiais": 2,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Janela_Redonda": {
+   "tris": 64,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Janela_Redonda_Vidro": {
+   "tris": 8,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Janela_Retangular": {
+   "tris": 32,
+   "materiais": 2,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Janela_Retangular_Vidro": {
+   "tris": 2,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Armario": {
+   "tris": 96,
+   "materiais": 3,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Bancada": {
+   "tris": 90,
+   "materiais": 4,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Caixa_P": {
+   "tris": 68,
+   "materiais": 2,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Caixa_M": {
+   "tris": 68,
+   "materiais": 2,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Kit_Caixa_G": {
+   "tris": 68,
+   "materiais": 2,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.0
+    }
+   }
+  },
+  "SM_Teste_Boneco_A": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 67.5,
+     "espalhamento": 1.29,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Teste_Boneco_B": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 67.5,
+     "espalhamento": 1.29,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Teste_Boneco_C": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 67.5,
+     "espalhamento": 1.29,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Teste_Boneco_D": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 67.5,
+     "espalhamento": 1.29,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  }
+ },
+ "armaduras": {},
+ "achados": [
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Escotilha",
+   "msg": "UV0 \"UVMap\": 288 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Escotilha_Porta",
+   "msg": "UV0 \"UVMap\": 186 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Corrimao_1m",
+   "msg": "UV0 \"UVMap\": 48 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Escada_Vertical",
+   "msg": "UV0 \"UVMap\": 88 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Escada_Degrau",
+   "msg": "UV0 \"UVMap\": 148 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Grade_Piso_1x1",
+   "msg": "UV0 \"UVMap\": 64 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Bandeja_Cabos_1m",
+   "msg": "UV0 \"UVMap\": 40 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Bandeja_Cabos_Curva",
+   "msg": "UV0 \"UVMap\": 80 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Valvula",
+   "msg": "UV0 \"UVMap\": 136 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Poste_Luz",
+   "msg": "UV0 \"UVMap\": 68 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "INFO",
+   "area": "transformação",
+   "objeto": "SM_Kit_Poste_Luz_Glow",
+   "msg": "origem (pivô) fora da caixa da malha — confira se é proposital (porta gira na dobradiça, objeto pousa no chão)"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Poste_Luz_Glow",
+   "msg": "UV0 \"UVMap\": 12 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Respiro",
+   "msg": "UV0 \"UVMap\": 58 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Janela_Redonda",
+   "msg": "UV0 \"UVMap\": 64 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Janela_Redonda_Vidro",
+   "msg": "UV0 \"UVMap\": 8 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Janela_Retangular",
+   "msg": "UV0 \"UVMap\": 32 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Janela_Retangular_Vidro",
+   "msg": "UV0 \"UVMap\": 2 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Armario",
+   "msg": "UV0 \"UVMap\": 96 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Bancada",
+   "msg": "UV0 \"UVMap\": 90 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Caixa_P",
+   "msg": "UV0 \"UVMap\": 68 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Caixa_M",
+   "msg": "UV0 \"UVMap\": 68 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Kit_Caixa_G",
+   "msg": "UV0 \"UVMap\": 68 triângulo(s) com área zero no UV (colapsados) — pixel esticado no lugar"
+  },
+  {
+   "nivel": "INFO",
+   "area": "material",
+   "objeto": "MAT_Glass",
+   "msg": "transparência misturada — cara em celular (overdraw); prefira recorte (alpha clip) quando der"
+  }
+ ]
+}
