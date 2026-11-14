@@ -15625,9 +15625,9 @@ MonoBehaviour:
   suavizacaoRotacao: 12
   gravidade: -20
   forcaEmpurrar: 1.5
-  cameraTransform: {fileID: 0}
-  distancia: 6
-  altura: 1.5
+  cameraTransform: {fileID: 330585546}
+  distancia: 2.5
+  altura: 0.5
   sensibilidadeToque: 0.15
   sensibilidadeMouse: 3
   limitePitch: {x: -10, y: 70}
