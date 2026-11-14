@@ -4,7 +4,9 @@ Lista do que o jogo e a submissão precisam cumprir para ter mais chance no desa
 **Build a Junior Astronaut Mission Trainer** (NASA Space Apps Challenge 2026).
 
 É um resumo para consulta rápida durante o hackathon. O texto completo e traduzido do
-enunciado está em [DESAFIO.md](DESAFIO.md); as fontes de dados, em [DADOS-NASA.md](DADOS-NASA.md).
+enunciado está em [DESAFIO-2026-11-14.md](DESAFIO-2026-11-14.md); as fontes de dados, em [DADOS-NASA-2026-11-14.md](DADOS-NASA-2026-11-14.md).
+
+Atualizado em 14/11/2026, primeiro dia do hackathon. "Hoje", neste arquivo, é 14/11.
 
 **De onde vem cada regra**
 

@@ -3,11 +3,13 @@
 Referência do tema que o jogo precisa seguir, no NASA Space Apps Challenge 2026.
 Conteúdo traduzido e organizado a partir das páginas oficiais, lidas em 10/11/2026.
 As seções 6, 7.1, 7.3 e 8 foram atualizadas em **13/11/2026** com o que a NASA publicou
-nesse dia.
+nesse dia. A aba Resources foi conferida de novo em **14/11/2026** (primeiro dia do
+hackathon), sem acréscimos, e as decisões da seção 9 são de 14/11/2026.
 
 - Página oficial: https://www.spaceappschallenge.org/2026/challenges/junior-astronaut-mission-trainer/
 - Vídeo oficial do desafio: https://www.youtube.com/watch?v=_R0y4i3iY_M
-- Última publicação da página pela NASA: 13/11/2026, às 03:48 UTC (antes: 29/10/2026)
+- Última publicação da página pela NASA: 13/11/2026, às 03:48 UTC (antes: 29/10/2026).
+  Em 14/11/2026 continuava a mesma
 
 > **Como ler este documento.** As seções 1 a 7 são o que as páginas oficiais dizem.
 > A seção 8 confere o que faltava publicar. A seção 9 é interpretação nossa
@@ -200,7 +202,8 @@ O texto do desafio cita três fontes pelo nome:
 
 A página avisa: "NASA does not endorse any non-U.S. Government entity" e, em sites que não
 são do governo dos EUA, vale a regra de uso de dados de cada site. Também diz: "More
-resources may be added before the hackathon begins" (conferir de novo em 14/11).
+resources may be added before the hackathon begins". Conferido de novo em 14/11/2026,
+com o hackathon já aberto: a lista continua com os mesmos 7 recursos.
 
 | Recurso | Organização | Link | O que a página diz que ele oferece |
 | --- | --- | --- | --- |
@@ -212,7 +215,7 @@ resources may be added before the hackathon begins" (conferir de novo em 14/11).
 | Space resources for STEM and youth organizations | CSA (Canadá), agência parceira | https://www.asc-csa.gc.ca/eng/youth-educators/resources-stem-and-youth-organizations.asp | Atividades bilíngues gratuitas para educadores e grupos de jovens |
 | Food production on the moon and in remote areas | CSA (Canadá), agência parceira | https://www.asc-csa.gc.ca/eng/youth-educators/toolkits/food-production/ | Pacote didático sobre produção de comida no espaço e nutrição de astronautas |
 
-O que o jogo usa de cada fonte, com data de consulta, está em [DADOS-NASA.md](DADOS-NASA.md).
+O que o jogo usa de cada fonte, com data de consulta, está em [DADOS-NASA-2026-11-14.md](DADOS-NASA-2026-11-14.md).
 
 ---
 
@@ -274,7 +277,7 @@ o texto foi lido do conteúdo que a própria página entrega, sem login.
 - [x] **Recursos do desafio.** Publicados: 5 da NASA e 2 da CSA (seção 6.1).
 - [x] **Guia de submissão** (*Project Submission Guide*, 2026), seção 8.2.
 - [x] **Guia de julgamento e prêmios** (*Judging & Awards Guide*, 2026), seção 8.3.
-- [ ] **Global Offers.** Não conferido: a página não apareceu nas leituras de hoje.
+- [ ] **Global Offers.** Não conferido: a página não apareceu nas leituras de 13/11.
 - [ ] **Lista completa de guias em /resources/.** Essa página carrega a lista por uma
       consulta separada que não foi lida. Os dois guias foram abertos pelo endereço direto.
 
@@ -415,10 +418,11 @@ Todas lidas em 10/11/2026.
 - FAQ do participante: https://www.spaceappschallenge.org/resources/participant-faqs/
 - Termos e Condições: https://www.spaceappschallenge.org/legal/
 - Prêmios: https://www.spaceappschallenge.org/awards/
-- Guias do participante (atualizados em 13/11): https://www.spaceappschallenge.org/resources/
 
 Lidas em 13/11/2026:
 
+- Guias do participante (página /resources/, que a NASA indica como atualizada em 13/11;
+  a lista completa não foi lida, ver seção 8): https://www.spaceappschallenge.org/resources/
 - Página do desafio, aba Resources (publicada em 13/11/2026, 03:48 UTC): https://www.spaceappschallenge.org/2026/challenges/junior-astronaut-mission-trainer/
 - Guia de submissão 2026: https://www.spaceappschallenge.org/resources/project-submission-guide/
 - Guia de julgamento e prêmios 2026: https://www.spaceappschallenge.org/resources/judging-awards-guide/

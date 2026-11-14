@@ -15,7 +15,7 @@ Mantido pelo P.O. Consulta feita em **13/11/2026**, salvo indicação na linha.
 
 | # | Fonte | O que o jogo usa | Link | Uso e licença, segundo a fonte | Consulta |
 | --- | --- | --- | --- | --- | --- |
-| F1 | DONKI, catálogo de erupções solares (FLR), do CCMC/NASA Goddard | 20 erupções reais, embutidas como dado arquivado (seção 2) | https://ccmc.gsfc.nasa.gov/tools/DONKI/ | Dados "as is", sem garantia; o uso não implica endosso da NASA. O DONKI se declara "Experimental Research Information" de "prototyping quality"; a previsão oficial de clima espacial é da NOAA SWPC. Para agradecimento em publicação, a página remete à política do CCMC: https://ccmc.gsfc.nasa.gov/publication-policy/ (não lida hoje) | 13/11/2026 |
+| F1 | DONKI, catálogo de erupções solares (FLR), do CCMC/NASA Goddard | 20 erupções reais, embutidas como dado arquivado (seção 2) | https://ccmc.gsfc.nasa.gov/tools/DONKI/ | Dados "as is", sem garantia; o uso não implica endosso da NASA. O DONKI se declara "Experimental Research Information" de "prototyping quality"; a previsão oficial de clima espacial é da NOAA SWPC. Para agradecimento em publicação, a página remete à política do CCMC: https://ccmc.gsfc.nasa.gov/publication-policy/ (não lida em 13/11) | 13/11/2026 |
 | F2 | NASA SVS 4893, *Shadows near the Moon's South Pole* (01/04/2021) | Altura do Sol no polo (fato 1) | https://svs.gsfc.nasa.gov/4893 | Página pública da NASA. Termos de uso de imagem não conferidos: o jogo usa só o fato, não a imagem | 13/11/2026 |
 | F3 | NASA SVS 4944, *Earth and Sun from the Moon's South Pole* (16/10/2021) | Sol rente ao horizonte; Terra vista do polo (fatos 1, 2 e 3) | https://svs.gsfc.nasa.gov/4944 | Idem F2 | 13/11/2026 |
 | F4 | NASA Science, *9 Phenomena NASA Astronauts Will Encounter at Moon's South Pole* (11/09/2024, atualizada em 15/05/2025) | Sol baixo andando pelo horizonte, sombras longas, céu preto de dia, Terra perto do horizonte (fatos 2, 3, 4 e 5) | https://science.nasa.gov/solar-system/moon/phenomena-nasa-astronauts-will-encounter-at-moons-south-pole/ | Idem F2 | 13/11/2026 |
@@ -28,11 +28,11 @@ Mantido pelo P.O. Consulta feita em **13/11/2026**, salvo indicação na linha.
 
 ### Recursos oficiais do desafio que o jogo ainda não usa
 
-Publicados na aba Resources em 13/11/2026 (ver [DESAFIO.md](DESAFIO.md), seção 6).
+Publicados na aba Resources em 13/11/2026 (ver [DESAFIO-2026-11-14.md](DESAFIO-2026-11-14.md), seção 6).
 
 | Recurso | Situação no jogo |
 | --- | --- |
-| NASA Open APIs (https://api.nasa.gov/) | Não usado. O caminho do DONKI por essa porta devolveu erro 404 hoje (seção 2.1) |
+| NASA Open APIs (https://api.nasa.gov/) | Não usado. O caminho do DONKI por essa porta devolveu erro 404 em 13/11/2026 (seção 2.1) |
 | OSDR (https://osdr.nasa.gov/bio/repo/) | Previsto para os 2 cartões do GDD 8.2. Nenhum estudo escolhido ainda: **a conferir** |
 | RadLab, dosimetria da ISS na OSDR (https://visualization.osdr.nasa.gov/radlab/gui/data-api/) | Não usado. Opção para o cartão de radiação do GDD 8.2 (pergunta ao usuário no relatório) |
 | Mars Trek (https://trek.nasa.gov/mars/) | Não se aplica: a base fica na Lua |

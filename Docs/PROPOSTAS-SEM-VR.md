@@ -1,6 +1,6 @@
 # Propostas de jogo
 
-Três propostas para o desafio descrito em [DESAFIO.md](DESAFIO.md). Cada uma usa um dos
+Três propostas para o desafio descrito em [DESAFIO-2026-11-14.md](DESAFIO-2026-11-14.md). Cada uma usa um dos
 três formatos que o enunciado sugere (sobrevivência com recursos, narrativa de decisões e
 painel de controle), então são caminhos realmente diferentes, não variações do mesmo jogo.
 
@@ -16,9 +16,11 @@ Todas respeitam as mesmas regras de base:
 > **Sobre os números.** Valores de jogo (células de energia, turnos, pontos) são ponto de
 > partida para balancear, não dados reais. Fatos reais citados (eventos solares, atraso de
 > sinal, medições em Marte) vêm do meu conhecimento e precisam ser conferidos nos datasets
-> oficiais quando a lista de recursos sair, em 13/11.
+> oficiais. A lista de recursos saiu em 13/11/2026 (ver [DESAFIO-2026-11-14.md](DESAFIO-2026-11-14.md), seção 6.1)
+> e o que já foi conferido está em [DADOS-NASA-2026-11-14.md](DADOS-NASA-2026-11-14.md).
 
-Nomes são provisórios.
+Escrito em 10/11/2026, antes da decisão de 14/11/2026 pelo plano "Dez Dias na Lua"
+(sobrevivência por turnos no polo sul da Lua, próxima da Proposta A). Nomes são provisórios.
 
 ---
 
