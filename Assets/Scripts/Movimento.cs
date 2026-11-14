@@ -20,48 +20,78 @@ public class Movimento : MonoBehaviour
     public Transform cameraTransform;
     public float distancia = 6f;
     public float altura = 1.5f;
-    public float sensibilidadeMouse = 3f;
+    public float sensibilidadeToque = 0.15f;   // graus por pixel arrastado
+    public float sensibilidadeMouse = 3f;      // botão direito (só PC/editor)
     public Vector2 limitePitch = new Vector2(-10f, 70f);
 
-    [Header("Joystick")]
-    public VirtualJoystick joystick;
+    [Header("Controles de toque (criados automaticamente se vazios)")]
+    public VirtualJoystick joystick;        // analógico esquerdo: andar
+    public VirtualJoystick joystickCamera;  // analógico direito: câmera
+    public TouchLook look;                  // arrastar na metade direita (extra)
+    public float velocidadeCameraAnalogico = 140f; // graus por segundo com o analógico no máximo
 
     CharacterController _cc;
     float _yaw, _pitch = 20f, _velY;
+    bool _congelado;
+
+    /// <summary>Congela o personagem (fora da fase de Ação) e esconde os controles de toque.</summary>
+    public void Congelar(bool congelar)
+    {
+        _congelado = congelar;
+        if (joystick) joystick.transform.root.gameObject.SetActive(!congelar);
+    }
 
     void Start()
     {
         _cc = GetComponent<CharacterController>();
         if (!cameraTransform && Camera.main) cameraTransform = Camera.main.transform;
-        if (!joystick) joystick = VirtualJoystick.Create();
+        if (!joystick || !joystickCamera || !look) ControlesMobile.Criar(out joystick, out joystickCamera, out look);
         if (cameraTransform) _yaw = cameraTransform.eulerAngles.y;
+        Congelar(_congelado);
     }
 
     void Update()
     {
-        LerMouse();
+        if (_congelado) return;
+        LerCamera();
         Mover();
     }
 
-    void LateUpdate() => AtualizarCamera();
+    void LateUpdate() { AtualizarCamera(); }
 
-    void LerMouse()
+    void LerCamera()
     {
-        // Botão direito do mouse (ou esquerdo, se não estiver sobre o joystick) gira a câmera.
-        if (Input.GetMouseButton(1) || (Input.GetMouseButton(0) && !Joystick_Ativo()))
+        // Arrasto de dedo (ou mouse esquerdo) na metade direita da tela.
+        Vector2 d = look ? look.ConsumirDelta() : Vector2.zero;
+        _yaw += d.x * sensibilidadeToque;
+        _pitch -= d.y * sensibilidadeToque;
+
+        // Analógico direito: câmera contínua.
+        if (joystickCamera)
+        {
+            Vector2 a = joystickCamera.Valor;
+            _yaw += a.x * velocidadeCameraAnalogico * Time.deltaTime;
+            _pitch -= a.y * velocidadeCameraAnalogico * Time.deltaTime;
+        }
+
+        // Analógico direito do controle (gamepad).
+        Vector2 pad = Entrada.Camera;
+        _yaw += pad.x * velocidadeCameraAnalogico * Time.deltaTime;
+        _pitch -= pad.y * velocidadeCameraAnalogico * Time.deltaTime;
+
+        // Fallback PC: botão direito do mouse em qualquer lugar.
+        if (Input.GetMouseButton(1))
         {
             _yaw += Input.GetAxis("Mouse X") * sensibilidadeMouse;
             _pitch -= Input.GetAxis("Mouse Y") * sensibilidadeMouse;
-            _pitch = Mathf.Clamp(_pitch, limitePitch.x, limitePitch.y);
         }
+        _pitch = Mathf.Clamp(_pitch, limitePitch.x, limitePitch.y);
     }
-
-    bool Joystick_Ativo() => joystick && joystick.Value.sqrMagnitude > 0.0001f;
 
     void Mover()
     {
-        Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        if (joystick) input += joystick.Value;
+        Vector2 input = Entrada.Mover;
+        if (joystick) input += joystick.Valor;
         input = Vector2.ClampMagnitude(input, 1f);
 
         Quaternion yawRot = Quaternion.Euler(0, _yaw, 0);
