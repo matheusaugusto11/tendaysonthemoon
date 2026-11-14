@@ -19,6 +19,7 @@ public static class Minigames
             case "lixo": return new MinigameLixo(e.nome, "Lixo", 4, "COMPACTAR", "Arraste os lixos para o compactador e aperte COMPACTAR.");
             case "backup": return new MinigameLixo(e.nome, "Maleta", 4, "ENVIAR", "Arraste as maletas de pesquisa para a caixa e aperte ENVIAR.");
             case "vazamento": return new MinigameSegurar(e.nome);
+            case "airlock": return new MinigameSegurar("VOLTAR PARA A TERRA", "SEGURE o clique / toque / botão A para fechar a comporta e partir!", "AIRLOCK", 3f);
             default: return new MinigameProvisorio(e.nome);
         }
     }
@@ -479,9 +480,14 @@ public class MinigameSegurar : Minigame
 {
     float _prog;
     RectTransform _barra;
-    const float Tempo = 4f;
+    readonly float _tempo;
+    readonly string _texto;
 
-    public MinigameSegurar(string nome) { titulo = nome; instrucao = "SEGURE o clique / toque / botão A para selar o vazamento!"; }
+    public MinigameSegurar(string nome, string instr = null, string texto = "Tssshhhh...", float tempo = 4f)
+    {
+        titulo = nome; _tempo = tempo; _texto = texto;
+        instrucao = instr ?? "SEGURE o clique / toque / botão A para selar o vazamento!";
+    }
 
     protected override void Construir()
     {
@@ -489,12 +495,12 @@ public class MinigameSegurar : Minigame
         Retangulo(Vector2.zero, new Vector2(700, 60), new Color(0, 0, 0, 0.5f));
         var f = Retangulo(Vector2.zero, new Vector2(1, 50), new Color(0.4f, 0.85f, 1f));
         _barra = f.rectTransform; _barra.pivot = new Vector2(0, 0.5f); _barra.anchoredPosition = new Vector2(-345, 0);
-        Rotulo("Tssshhhh...", 50, new Vector2(0, 120), new Vector2(800, 80));
+        Rotulo(_texto, 50, new Vector2(0, 120), new Vector2(800, 80));
     }
 
     protected override void Atualizar()
     {
-        _prog = Mathf.Clamp01(_prog + (Ponteiro.Held ? 1f : -0.6f) * Time.deltaTime / Tempo);
+        _prog = Mathf.Clamp01(_prog + (Ponteiro.Held ? 1f : -0.6f) * Time.deltaTime / _tempo);
         _barra.sizeDelta = new Vector2(690f * _prog, 50f);
         if (_prog >= 1f) Vencer();
     }

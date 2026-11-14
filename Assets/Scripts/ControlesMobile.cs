@@ -27,8 +27,14 @@ public static class ControlesMobile
         var zonaDir = NovaZona(canvasGo.transform, "ZonaCamera", new Vector2(0.5f, 0), new Vector2(1, 1));
         look = zonaDir.gameObject.AddComponent<TouchLook>();
 
-        andar = NovoAnalogico(canvasGo.transform, "AnalogicoAndar", new Vector2(0, 0), new Vector2(280, 280));
-        camera = NovoAnalogico(canvasGo.transform, "AnalogicoCamera", new Vector2(1, 0), new Vector2(-280, 280));
+        // Analógicos dentro da área segura (entalhe/cantos do celular)
+        var seguro = new GameObject("AreaSegura", typeof(RectTransform), typeof(SafeArea));
+        seguro.transform.SetParent(canvasGo.transform, false);
+        var rs = (RectTransform)seguro.transform;
+        rs.anchorMin = Vector2.zero; rs.anchorMax = Vector2.one; rs.offsetMin = rs.offsetMax = Vector2.zero;
+
+        andar = NovoAnalogico(seguro.transform, "AnalogicoAndar", new Vector2(0, 0), new Vector2(280, 280));
+        camera = NovoAnalogico(seguro.transform, "AnalogicoCamera", new Vector2(1, 0), new Vector2(-280, 280));
     }
 
     static VirtualJoystick NovoAnalogico(Transform pai, string nome, Vector2 ancora, Vector2 pos)
