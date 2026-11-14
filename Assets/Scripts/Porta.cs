@@ -34,48 +34,58 @@ public class Porta : MonoBehaviour
     void OnEnable() { Preparar(); }
     void Start() { Preparar(); }
 
-    void Preparar()
+    /// <summary>Põe as folhas na pose fechada (quadro 1 do clipe de cada folha) e calcula o deslizamento.</summary>
+    public void Preparar()
     {
         if (folhas == null || folhas.Length == 0) return;
         _t01 = 0f; Aberta = false;
 
-        // 1) pose fechada (quadro 1 dos clipes): o FBX guarda as folhas numa pose "neutra" diferente.
-        if (raiz != null && clips != null) foreach (var c in clips) if (c != null) c.SampleAnimation(raiz, 0f);
+        // 1) pose fechada pela GEOMETRIA: cada folha gira em torno da sua dobradiça (o pivô) até apontar
+        //    para a dobradiça da outra folha, ficando no plano do vão. Não depende das rotações gravadas no FBX.
+        if (folhas.Length >= 2)
+            for (int i = 0; i < folhas.Length; i++)
+            {
+                var f = folhas[i]; var outra = folhas[i == 0 ? 1 : 0];
+                if (f == null || outra == null) continue;
+                var r = f.GetComponentInChildren<Renderer>();
+                if (r == null) continue;
+                Vector3 atual = r.bounds.center - f.position; atual.y = 0;      // para onde a folha aponta agora
+                Vector3 alvo = outra.position - f.position; alvo.y = 0;         // para onde deve apontar (fechada)
+                if (atual.sqrMagnitude < 1e-6f || alvo.sqrMagnitude < 1e-6f) continue;
+                float ang = Vector3.SignedAngle(atual, alvo, Vector3.up);
+                f.rotation = Quaternion.AngleAxis(ang, Vector3.up) * f.rotation;
+            }
 
-        // 2) centros e direção de deslizamento (ao longo da linha entre as duas folhas, horizontal)
-        var centros = new Vector3[folhas.Length]; var larguras = new float[folhas.Length];
+        // 2) as dobradiças (pivôs) ficam nas bordas externas do vão: a linha entre elas dá a direção de correr,
+        //    e cada folha corre a própria largura (metade da distância entre as dobradiças).
+        _fechadaLocal = new Vector3[folhas.Length]; _deslocLocal = new Vector3[folhas.Length];
         Vector3 media = Vector3.zero;
-        for (int i = 0; i < folhas.Length; i++)
-        {
-            if (folhas[i] == null) continue;
-            var r = folhas[i].GetComponentInChildren<Renderer>();
-            centros[i] = r != null ? r.bounds.center : folhas[i].position;
-            media += centros[i];
-        }
+        foreach (var f in folhas) if (f != null) media += f.position;
         media /= folhas.Length; _centro = media;
 
-        Vector3 d = folhas.Length >= 2 ? centros[0] - centros[1] : Vector3.right;
+        Vector3 d = folhas.Length >= 2 && folhas[0] != null && folhas[1] != null ? folhas[0].position - folhas[1].position : Vector3.right;
         d.y = 0;
-        if (d.sqrMagnitude < 0.0001f)
-        {   // folhas sobrepostas: desliza ao longo da largura da folha
-            var r0 = folhas[0].GetComponentInChildren<Renderer>();
-            d = r0 != null && r0.bounds.size.x >= r0.bounds.size.z ? Vector3.right : Vector3.forward;
-        }
+        float largura = folhas.Length >= 2 ? d.magnitude * 0.5f : 0.9f;
+        if (d.sqrMagnitude < 0.0001f) { d = Vector3.right; largura = 0.9f; }
         d.Normalize();
 
-        _fechadaLocal = new Vector3[folhas.Length]; _deslocLocal = new Vector3[folhas.Length];
         for (int i = 0; i < folhas.Length; i++)
         {
             var f = folhas[i]; if (f == null) continue;
-            var r = f.GetComponentInChildren<Renderer>();
-            float larg = r != null ? (r.bounds.extents.x * Mathf.Abs(d.x) + r.bounds.extents.z * Mathf.Abs(d.z)) * 2f : 0.9f;
-            float sinal = Vector3.Dot(centros[i] - media, d) >= 0f ? 1f : -1f; // cada folha vai para o seu lado
-            if (folhas.Length == 2 && i == 1) sinal = -Mathf.Sign(Vector3.Dot(centros[0] - media, d) >= 0f ? 1f : -1f);
-            Vector3 mundo = d * (sinal * larg * fracaoAbertura);
+            float sinal = i == 0 ? 1f : -1f; // folha 0 corre para um lado, a outra para o lado oposto
+            Vector3 mundo = d * (sinal * largura * fracaoAbertura);
             _fechadaLocal[i] = f.localPosition;
             _deslocLocal[i] = f.parent != null ? f.parent.InverseTransformVector(mundo) : mundo;
         }
         Aplicar(0f);
+    }
+
+    // O clipe de uma folha se chama "<nome da folha>_Abrir" (nas portas da Estufa, sem o "Estufa_").
+    AnimationClip ClipDaFolha(Transform folha)
+    {
+        string a = folha.name + "_Abrir", b = folha.name.Replace("Porta_Estufa_", "Porta_") + "_Abrir";
+        foreach (var c in clips) if (c != null && (c.name == a || c.name == b)) return c;
+        return null;
     }
 
     public void Abrir()
@@ -89,8 +99,12 @@ public class Porta : MonoBehaviour
 
     [ContextMenu("Teste: Alternar")] void TesteAlternar() { if (_deslocLocal == null) Preparar(); Alternar(); }
 
+    bool _poseGarantida;
+
     void Update()
     {
+        // Garante a pose fechada no 1º quadro (no editor, a pose do OnEnable pode ser sobrescrita pelo prefab ao carregar a cena).
+        if (!_poseGarantida) { _poseGarantida = true; Preparar(); }
         if (!Application.isPlaying || _deslocLocal == null) return;
         if (automatica)
         {

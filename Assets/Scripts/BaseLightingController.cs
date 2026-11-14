@@ -26,6 +26,7 @@ public class BaseLightingController : MonoBehaviour
     [Tooltip("Blender → Unity: intensidade do sol/terra = valor do preset × este fator")]
     public float fatorSol = 0.45f;
     [Tooltip("Luz da Terra (noite): mais fraca que o sol")] public float fatorTerra = 0.28f;
+    [Tooltip("Luz ambiente mínima (por canal). Evita preto total se uma luz ficar de fora, ex.: no celular.")] public float pisoAmbiente = 0.035f;
     public float pulsoHz = 1.5f;
     public PresetLuz presetInicial = PresetLuz.Dia;
     public float transicaoPadrao = 1.5f;
@@ -202,7 +203,8 @@ public class BaseLightingController : MonoBehaviour
         }
         AplicarEmergencia(e);
         RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-        RenderSettings.ambientLight = e.mundo.gamma;
+        var amb = e.mundo.gamma;
+        RenderSettings.ambientLight = new Color(Mathf.Max(amb.r, pisoAmbiente), Mathf.Max(amb.g, pisoAmbiente), Mathf.Max(amb.b, pisoAmbiente));
         if (_skyClone != null && _skyClone.HasProperty("_Tint")) _skyClone.SetColor("_Tint", e.tintCeu);
 
         if (_mpb == null) _mpb = new MaterialPropertyBlock();
