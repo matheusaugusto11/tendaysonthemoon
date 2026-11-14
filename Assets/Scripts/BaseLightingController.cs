@@ -25,6 +25,7 @@ public class BaseLightingController : MonoBehaviour
     [Header("Calibração")]
     [Tooltip("Blender → Unity: intensidade do sol/terra = valor do preset × este fator")]
     public float fatorSol = 0.45f;
+    [Tooltip("Luz da Terra (noite): mais fraca que o sol")] public float fatorTerra = 0.28f;
     public float pulsoHz = 1.5f;
     public PresetLuz presetInicial = PresetLuz.Dia;
     public float transicaoPadrao = 1.5f;
@@ -42,7 +43,7 @@ public class BaseLightingController : MonoBehaviour
 
     class Emissivo { public Renderer r; public int slot; public Color unidade; public float intensidadeBase; public bool lampada; }
 
-    PArquivo _dados;
+    [NonSerialized] PArquivo _dados;
     readonly List<LightGroup> _luzes = new List<LightGroup>();
     readonly List<Emissivo> _emissivos = new List<Emissivo>();
     Estado _atual, _de, _para;
@@ -152,7 +153,11 @@ public class BaseLightingController : MonoBehaviour
     /// <summary>Troca de cenário, com transição suave (segundos). 0 = imediato.</summary>
     public void SetPreset(PresetLuz p, float transicao = -1f)
     {
-        if (_dados == null) Preparar();
+        if (_dados == null || _dados.cenarios == null || _dados.cenarios.dia == null || _dados.cenarios.dia.sol_cor == null || _dados.cenarios.dia.sol_cor.Length < 3)
+        {
+            _dados = null;
+            Preparar();
+        }
         if (_dados == null) { Debug.LogWarning("[BaseLightingController] presetsJson não atribuído."); return; }
         if (transicao < 0f) transicao = transicaoPadrao;
         PresetAtual = p;
@@ -183,7 +188,7 @@ public class BaseLightingController : MonoBehaviour
     void Aplicar(Estado e)
     {
         if (sol != null) { sol.intensity = e.sol * fatorSol; sol.color = e.solCor.gamma; sol.transform.rotation = e.solRot; }
-        if (terra != null) terra.intensity = e.terra * fatorSol;
+        if (terra != null) terra.intensity = e.terra * fatorTerra;
         foreach (var g in _luzes)
         {
             if (g == null) continue;

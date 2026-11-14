@@ -4,6 +4,7 @@ using UnityEngine;
 /// Uma porta da base (duas folhas D/E). Toca os clipes "..._Abrir" do FBX amostrando-os por código.
 /// API: Abrir(), Fechar(), Alternar(). Abre sozinha quando o jogador chega perto (desligável).
 /// </summary>
+[ExecuteAlways]
 public class Porta : MonoBehaviour
 {
     public string idPorta;
@@ -24,6 +25,14 @@ public class Porta : MonoBehaviour
     float _t01;
     Vector3 _centro;
     Transform _jogador;
+
+    // Pose fechada também no editor: o FBX guarda as folhas numa pose "neutra" diferente do quadro 1 do clipe.
+    void OnEnable()
+    {
+        _centro = CalcularCentro();
+        _t01 = 0f;
+        Aplicar(0f);
+    }
 
     void Start()
     {
@@ -56,6 +65,7 @@ public class Porta : MonoBehaviour
 
     void Update()
     {
+        if (!Application.isPlaying) return;
         if (automatica)
         {
             if (_jogador == null) { var m = FindObjectOfType<Movimento>(); if (m != null) _jogador = m.transform; }

@@ -31,7 +31,15 @@ public class Estacao : MonoBehaviour
     /// <summary>Cria a parte visual (idempotente). Também chamado pelo editor para ficar salvo na cena.</summary>
     public void Montar()
     {
-        if (transform.Find("Visual") != null) { Achar(); return; }
+        var existente = transform.Find("Visual");
+        if (existente != null)
+        {
+            if (Achar()) return;
+            // Visual incompleto (parte faltando): descarta e refaz.
+            existente.name = "Visual_descartado";
+            existente.gameObject.SetActive(false);
+            if (Application.isPlaying) Destroy(existente.gameObject); else DestroyImmediate(existente.gameObject);
+        }
         var visual = new GameObject("Visual").transform;
         visual.SetParent(transform, false);
 
@@ -50,15 +58,21 @@ public class Estacao : MonoBehaviour
         tm.fontSize = 64;
         tm.characterSize = 0.08f;
         tm.color = Color.white;
-        Achar();
+        if (!Achar()) Debug.LogError("[Estacao] não consegui montar o visual de " + name);
     }
 
-    void Achar()
+    /// <summary>Liga as referências às partes do visual. Devolve false se alguma parte estiver faltando.</summary>
+    bool Achar()
     {
         var v = transform.Find("Visual");
+        if (v == null) return false;
         _marcador = v.Find("Marcador");
         var r = v.Find("Rotulo");
+        var baseT = v.Find("Base"); var maquinaT = v.Find("Maquina");
+        if (_marcador == null || r == null || baseT == null || maquinaT == null) return false;
         _rotulo = r.GetComponent<TextMesh>();
+        var rBase = baseT.GetComponent<Renderer>(); var rMaq = maquinaT.GetComponent<Renderer>(); var rMarc = _marcador.GetComponent<Renderer>();
+        if (_rotulo == null || r.GetComponent<MeshRenderer>() == null || rBase == null || rMaq == null || rMarc == null) return false;
         var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         if (font != null)
         {
@@ -66,12 +80,8 @@ public class Estacao : MonoBehaviour
             r.GetComponent<MeshRenderer>().sharedMaterial = font.material;
         }
         _rotulo.text = nome;
-        _corpos = new[]
-        {
-            v.Find("Base").GetComponent<Renderer>(),
-            v.Find("Maquina").GetComponent<Renderer>(),
-            _marcador.GetComponent<Renderer>(),
-        };
+        _corpos = new[] { rBase, rMaq, rMarc };
+        return true;
     }
 
     static GameObject Prim(PrimitiveType t, string n, Transform pai, Vector3 pos, Vector3 escala)
