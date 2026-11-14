@@ -1,0 +1,15 @@
+{
+  "nome": "Estação-Roda (WebGL)",
+  "observacoes": "Prioridade de aparelho: PC, depois celular, depois tablet. O orçamento segue o mais fraco da lista (celular) para o WebGL rodar nos três; o PC fica com folga. UV0 colapsada no atlas de paleta: densidade de texel não se aplica. Sem lightmap: luz direcional em tempo real com sombra.",
+  "fps_alvo": 60,
+  "tris_total": 120000,
+  "tris_por_objeto": 12000,
+  "materiais_por_objeto": 4,
+  "textura_max_px": 256,
+  "textura_px": 256,
+  "ossos_max": 24,
+  "influencias_max": 4,
+  "shape_keys_max": 0,
+  "exigir_uv2": false,
+  "nomes": { "MESH": "^(SM|SK|COL)_", "ARMATURE": "^RIG_", "CAMERA": "^CAM_" }
+}

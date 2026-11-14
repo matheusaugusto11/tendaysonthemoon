@@ -1,0 +1,1716 @@
+{
+ "resumo": {
+  "blend": "c:\\GitHub\\tendaysonthemoon\\ArtSource\\EstacaoRoda\\Personagens.blend",
+  "versao_arquivo": "5.2",
+  "perfil": "Estação-Roda (WebGL)",
+  "objetos": 116,
+  "malhas": 113,
+  "tris_total": 2704,
+  "texturas": 0,
+  "textura_mb_sem_compressao": 0.0,
+  "materiais": 13,
+  "erros": 0,
+  "avisos": 19
+ },
+ "objetos": {
+  "SM_Blk_Escala_Cubo_1m": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 64.0,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Escala_Porta_Batente_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Escala_Porta_Batente_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 139.7,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Escala_Porta_Verga": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 177.5,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Chao": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 9.2,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Bota_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 396.9,
+     "espalhamento": 1.61,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Canela_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 287.9,
+     "espalhamento": 1.71,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Coxa_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 271.7,
+     "espalhamento": 1.57,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_BracoSup_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 352.3,
+     "espalhamento": 1.65,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_BracoInf_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 382.5,
+     "espalhamento": 1.67,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Mao_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 1.1,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Acento_Ombro_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Bota_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 396.9,
+     "espalhamento": 1.61,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Canela_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 287.9,
+     "espalhamento": 1.71,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Coxa_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 271.7,
+     "espalhamento": 1.57,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_BracoSup_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 352.3,
+     "espalhamento": 1.65,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_BracoInf_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 382.5,
+     "espalhamento": 1.67,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Mao_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 1.1,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Acento_Ombro_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Pelve": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 224.0,
+     "espalhamento": 1.68,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Torso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 182.3,
+     "espalhamento": 1.25,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Peitoral": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 326.6,
+     "espalhamento": 2.83,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Mochila": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 153.1,
+     "espalhamento": 1.52,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Pescoco_Anel": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 213.3,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Capacete": {
+   "tris": 168,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 264.4,
+     "espalhamento": 1.63,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.871
+    }
+   }
+  },
+  "SM_Blk_Lia_Viseira": {
+   "tris": 100,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 435.2,
+     "espalhamento": 1.49,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.828
+    }
+   }
+  },
+  "SM_Blk_Lia_Cinto": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 172.3,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Chave_Inglesa": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 369.5,
+     "espalhamento": 1.1,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Lampada_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 1011.9,
+     "espalhamento": 1.26,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Lia_Lampada_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 1011.9,
+     "espalhamento": 1.26,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Bota_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 396.9,
+     "espalhamento": 1.61,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Canela_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 287.9,
+     "espalhamento": 1.71,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Coxa_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 271.7,
+     "espalhamento": 1.57,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_BracoSup_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 352.3,
+     "espalhamento": 1.65,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_BracoInf_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 382.5,
+     "espalhamento": 1.67,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Mao_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 1.1,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Acento_Ombro_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Bota_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 396.9,
+     "espalhamento": 1.61,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Canela_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 287.9,
+     "espalhamento": 1.71,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Coxa_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 271.7,
+     "espalhamento": 1.57,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_BracoSup_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 352.3,
+     "espalhamento": 1.65,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_BracoInf_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 382.5,
+     "espalhamento": 1.67,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Mao_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 1.1,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Acento_Ombro_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Pelve": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 224.0,
+     "espalhamento": 1.68,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Torso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 182.3,
+     "espalhamento": 1.25,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Peitoral": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 326.6,
+     "espalhamento": 2.83,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Mochila": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 153.1,
+     "espalhamento": 1.52,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Pescoco_Anel": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 213.3,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Teo_Capacete": {
+   "tris": 168,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 264.4,
+     "espalhamento": 1.63,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.871
+    }
+   }
+  },
+  "SM_Blk_Teo_Viseira": {
+   "tris": 100,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 435.2,
+     "espalhamento": 1.49,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.828
+    }
+   }
+  },
+  "SM_Blk_Teo_Maleta_Amostras": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 335.5,
+     "espalhamento": 1.36,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Bota_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 396.9,
+     "espalhamento": 1.61,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Canela_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 287.9,
+     "espalhamento": 1.71,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Coxa_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 271.7,
+     "espalhamento": 1.57,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_BracoSup_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 352.3,
+     "espalhamento": 1.65,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_BracoInf_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 382.5,
+     "espalhamento": 1.67,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Mao_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 1.1,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Acento_Ombro_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Bota_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 396.9,
+     "espalhamento": 1.61,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Canela_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 287.9,
+     "espalhamento": 1.71,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Coxa_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 271.7,
+     "espalhamento": 1.57,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_BracoSup_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 352.3,
+     "espalhamento": 1.65,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_BracoInf_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 382.5,
+     "espalhamento": 1.67,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Mao_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 1.1,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Acento_Ombro_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Pelve": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 224.0,
+     "espalhamento": 1.68,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Torso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 182.3,
+     "espalhamento": 1.25,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Peitoral": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 326.6,
+     "espalhamento": 2.83,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Mochila": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 153.1,
+     "espalhamento": 1.52,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Pescoco_Anel": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 213.3,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Capacete": {
+   "tris": 168,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 264.4,
+     "espalhamento": 1.63,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.871
+    }
+   }
+  },
+  "SM_Blk_Nina_Viseira": {
+   "tris": 100,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 435.2,
+     "espalhamento": 1.49,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.828
+    }
+   }
+  },
+  "SM_Blk_Nina_Mochila_Medica": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 213.3,
+     "espalhamento": 1.94,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Nina_Antena_Cruz": {
+   "tris": 24,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 1438.3,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.795
+    }
+   }
+  },
+  "SM_Blk_Kai_Bota_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 396.9,
+     "espalhamento": 1.61,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Canela_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 287.9,
+     "espalhamento": 1.71,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Coxa_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 271.7,
+     "espalhamento": 1.57,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_BracoSup_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 352.3,
+     "espalhamento": 1.65,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_BracoInf_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 382.5,
+     "espalhamento": 1.67,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Mao_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 1.1,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Acento_Ombro_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Bota_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 396.9,
+     "espalhamento": 1.61,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Canela_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 287.9,
+     "espalhamento": 1.71,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Coxa_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 271.7,
+     "espalhamento": 1.57,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_BracoSup_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 352.3,
+     "espalhamento": 1.65,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_BracoInf_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 382.5,
+     "espalhamento": 1.67,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Mao_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 1.1,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Acento_Ombro_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Pelve": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 224.0,
+     "espalhamento": 1.68,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Torso": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 182.3,
+     "espalhamento": 1.25,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Peitoral": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 326.6,
+     "espalhamento": 2.83,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Mochila": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 153.1,
+     "espalhamento": 1.52,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Pescoco_Anel": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 213.3,
+     "espalhamento": 2.45,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Capacete": {
+   "tris": 168,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 264.4,
+     "espalhamento": 1.63,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.871
+    }
+   }
+  },
+  "SM_Blk_Kai_Viseira": {
+   "tris": 100,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 435.2,
+     "espalhamento": 1.49,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.828
+    }
+   }
+  },
+  "SM_Blk_Kai_Tablet": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 270.4,
+     "espalhamento": 2.65,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Kai_Antena_Prato": {
+   "tris": 24,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 1438.3,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.795
+    }
+   }
+  },
+  "SM_Blk_Bip_Corpo": {
+   "tris": 252,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 170.0,
+     "espalhamento": 1.58,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.894
+    }
+   }
+  },
+  "SM_Blk_Bip_Esteira_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 152.6,
+     "espalhamento": 1.91,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bip_Esteira_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 152.6,
+     "espalhamento": 1.91,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bip_Tela": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 234.0,
+     "espalhamento": 2.71,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bip_Banda": {
+   "tris": 84,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 310.9,
+     "espalhamento": 1.52,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.746
+    }
+   }
+  },
+  "SM_Blk_Bip_BracoSup_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 482.4,
+     "espalhamento": 1.66,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bip_BracoInf_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 482.4,
+     "espalhamento": 1.66,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bip_Garra_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 715.5,
+     "espalhamento": 1.12,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bip_Ombro_L": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 1.83,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bip_BracoSup_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 482.4,
+     "espalhamento": 1.66,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bip_BracoInf_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 482.4,
+     "espalhamento": 1.66,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bip_Garra_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 715.5,
+     "espalhamento": 1.12,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bip_Ombro_R": {
+   "tris": 12,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 584.2,
+     "espalhamento": 1.83,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.369
+    }
+   }
+  },
+  "SM_Blk_Bip_Antena": {
+   "tris": 24,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 1741.9,
+     "espalhamento": 1.0,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.795
+    }
+   }
+  },
+  "SM_Blk_Bip_Antena_Ponta": {
+   "tris": 36,
+   "materiais": 1,
+   "uv": {
+    "UV0": {
+     "nome": "UVMap",
+     "fora_0_1": false,
+     "texel_px_m": 2389.9,
+     "espalhamento": 1.25,
+     "sobreposicao": 0.0,
+     "aproveitamento": 0.746
+    }
+   }
+  }
+ },
+ "armaduras": {},
+ "achados": [
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lia_Acento_Ombro_L",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lia_Acento_Ombro_R",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lia_Peitoral",
+   "msg": "UV0: densidade de texel varia 2.8x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lia_Pescoco_Anel",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Lia_Cinto",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Teo_Acento_Ombro_L",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Teo_Acento_Ombro_R",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Teo_Peitoral",
+   "msg": "UV0: densidade de texel varia 2.8x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Teo_Pescoco_Anel",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Nina_Acento_Ombro_L",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Nina_Acento_Ombro_R",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Nina_Peitoral",
+   "msg": "UV0: densidade de texel varia 2.8x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Nina_Pescoco_Anel",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Kai_Acento_Ombro_L",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Kai_Acento_Ombro_R",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Kai_Peitoral",
+   "msg": "UV0: densidade de texel varia 2.8x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Kai_Pescoco_Anel",
+   "msg": "UV0: densidade de texel varia 2.4x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Kai_Tablet",
+   "msg": "UV0: densidade de texel varia 2.6x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  },
+  {
+   "nivel": "AVISO",
+   "area": "uv",
+   "objeto": "SM_Blk_Bip_Tela",
+   "msg": "UV0: densidade de texel varia 2.7x entre as faces (10%–90%) — partes borradas ao lado de partes nítidas"
+  }
+ ]
+}
