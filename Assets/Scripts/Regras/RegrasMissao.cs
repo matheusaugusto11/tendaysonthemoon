@@ -21,12 +21,12 @@ namespace DezDias
 
         // ---------------- Partida (web: newGame) ----------------
 
-        public static Missao NovaPartida(Modo modo, IList<Erupcao> erupcoes, Random rng, bool tutorial)
+        public static Missao NovaPartida(Modo modo, IList<Erupcao> erupcoes, Random rng, bool tutorial, IList<Cme> cmes = null)
         {
             var M = ParametrosModo.De(modo);
             var m = new Missao
             {
-                Modo = modo, M = M, Tutorial = tutorial,
+                Modo = modo, M = M, Tutorial = tutorial, Rng = rng,
                 O2 = M.O2, Rad = 0, Comida = M.Comida, Crescimento = 0, Bateria = 1, Estrelas = 0,
             };
 
@@ -57,6 +57,8 @@ namespace DezDias
             }
 
             m.Tarefas.AddRange(SortearTarefas(modo, rng, tutorial));
+            // Depois das tarefas, para não mudar os sorteios de antes com a mesma semente.
+            Eventos.AgendarCme(m, cmes, rng);
             return m;
         }
 
@@ -102,12 +104,13 @@ namespace DezDias
             m.Hoje = new DiaMissao
             {
                 Fit = fit,
-                Luz = Math.Max(1, (m.EhSombra(m.Dia) ? m.M.Sombra : m.M.Luz) + fit),
+                Luz = Math.Max(1, (m.EhSombra(m.Dia) ? m.M.Sombra : m.M.Luz) + fit + m.AjusteDe(m.Dia)),
                 Tarefa = tarefa,
             };
+            Eventos.SortearDoDia(m);
         }
 
-        public static int CelulasTotais(Missao m) => Math.Max(0, m.Hoje.Luz + m.Hoje.Bonus - m.Hoje.Custo) + m.Bateria;
+        public static int CelulasTotais(Missao m) => Math.Max(0, m.Hoje.Luz + m.Hoje.Bonus - m.Hoje.Custo - m.Hoje.CustoEvento) + m.Bateria;
         public static int CelulasUsadas(Missao m) => m.Hoje.Aloc.Total;
         public static int CelulasLivres(Missao m) => CelulasTotais(m) - CelulasUsadas(m);
 
@@ -182,11 +185,14 @@ namespace DezDias
         {
             var a = m.Hoje.Aloc;
             var saida = new List<Txt>();
-            if (!m.Contato) { saida.Add(Textos.PreviaSemContato); return saida; }
+            if (!m.Contato || m.Hoje.SemContatoHoje) { saida.Add(Textos.PreviaSemContato); return saida; }
             int dO = DeltaAr(a[Modulo.Ar]) - (m.Vazamento && a[Modulo.Conserto] < 2 ? 1 : 0);
             saida.Add(dO == 0 ? Textos.PreviaO2Igual : dO > 0 ? Textos.PreviaO2Sobe.F(dO) : Textos.PreviaO2Cai.F(-dO));
             if (m.AlertaDe(m.Dia) != null)
-                saida.Add(a[Modulo.Abrigo] >= 2 ? Textos.PreviaAbrigo2 : a[Modulo.Abrigo] == 1 ? Textos.PreviaAbrigo1 : Textos.PreviaAbrigo0);
+            {
+                int ab = AbrigoEfetivo(m);
+                saida.Add(ab >= 2 ? Textos.PreviaAbrigo2 : ab == 1 ? Textos.PreviaAbrigo1 : Textos.PreviaAbrigo0);
+            }
             if (a[Modulo.Lab] > 0) saida.Add(Textos.PreviaCiencia.F(a[Modulo.Lab]));
             if (a[Modulo.Estufa] > 0 || m.Crescimento >= Missao.Crescer)
                 saida.Add(m.Crescimento + a[Modulo.Estufa] >= Missao.Crescer ? Textos.PreviaColheita
@@ -195,6 +201,15 @@ namespace DezDias
             saida.Add(Textos.PreviaGuardadas.F(a[Modulo.Bateria]));
             return saida;
         }
+
+        /// <summary>Células do Abrigo contando a preparação da CME: no dia da chegada, 1 célula vale como 2.</summary>
+        public static int AbrigoEfetivo(Missao m)
+        {
+            int ab = m.Hoje.Aloc[Modulo.Abrigo];
+            return ab >= 1 && AbrigoPreparadoHoje(m) ? 2 : ab;
+        }
+
+        public static bool AbrigoPreparadoHoje(Missao m) => m.AbrigoPreparado && m.CmeChegada == m.Dia;
 
         // ---------------- Resolução (web: resolve) ----------------
 
@@ -217,6 +232,9 @@ namespace DezDias
                 else { dO2 -= 1; Linha(Tom.Vermelho, Textos.VazamentoContinua); }
             }
 
+            // Evento do dia (menos partículas, que ficam no bloco da radiação). Antes da estufa: frio e fungo valem hoje.
+            Eventos.AplicarNoResultado(m, Linha, ref dO2, ref impacto, ref momento);
+
             m.Crescimento += a[Modulo.Estufa];
             if (m.Crescimento >= Missao.Crescer)
             {
@@ -225,8 +243,7 @@ namespace DezDias
                 dO2 += 1;
                 r.Colheita = true;
                 Linha(Tom.Verde, Textos.Colheita);
-                momento = Textos.MomentoColheita;
-                impacto = 2;
+                if (impacto <= 2) { momento = Textos.MomentoColheita; impacto = 2; }
             }
             else if (a[Modulo.Estufa] > 0) Linha(Tom.Verde, Textos.EstufaCresceu.F(Missao.Crescer - m.Crescimento));
 
@@ -244,18 +261,25 @@ namespace DezDias
                 {
                     r.Erupcao = al.Erupcao;
                     int cheia = Missao.Dose[Math.Max(0, Math.Min(2, al.Erupcao.Intensidade))];
-                    int abrigo = a[Modulo.Abrigo];
-                    dRad = abrigo >= 2 ? 0 : abrigo == 1 ? (cheia + 1) / 2 : cheia;
-                    Linha(Tom.Rad, dRad == 0 ? Textos.ErupcaoProtegeu : abrigo == 1 ? Textos.ErupcaoMeia.F(dRad) : Textos.ErupcaoSem.F(dRad));
-                    if (T.Fora) { dRad += 2; Linha(Tom.Rad, Textos.AstronautaFora); }
+                    // Dose da noite pelo Abrigo (com a preparação da CME, 1 célula basta) + exposição ao alarme de partículas.
+                    int abrigo = AbrigoEfetivo(m);
+                    int noite = abrigo >= 2 ? 0 : abrigo == 1 ? (cheia + 1) / 2 : cheia;
+                    bool valeuPreparo = noite == 0 && a[Modulo.Abrigo] < 2 && AbrigoPreparadoHoje(m);
+                    Linha(Tom.Rad, noite == 0 ? (valeuPreparo ? Eventos.PreparoValeu : Textos.ErupcaoProtegeu) : abrigo == 1 ? Textos.ErupcaoMeia.F(noite) : Textos.ErupcaoSem.F(noite));
+                    int exposicao = Eventos.Exposicao(m, al.Erupcao);
+                    if (T.Alarme != Alarme.Nenhum) Linha(Tom.Rad, Eventos.LinhaAlarme(m, true, exposicao));
+                    dRad = noite + exposicao;
                     if (dRad > 0)
                     {
-                        impacto = Math.Max(impacto, dRad + 2);
-                        momento = T.Fora && abrigo >= 2 ? Textos.MomentoFora.F(dRad) : Textos.MomentoAbrigoFraco.F(dRad);
+                        if (dRad + 2 >= impacto)
+                        {
+                            impacto = dRad + 2;
+                            momento = exposicao > 0 && noite == 0 ? Eventos.MomentoAlarme(m, exposicao) : Textos.MomentoAbrigoFraco.F(dRad);
+                        }
                     }
-                    else
+                    else if (impacto <= 2)
                     {
-                        impacto = Math.Max(impacto, 2);
+                        impacto = 2;
                         momento = Textos.MomentoAbrigoLigado;
                     }
                 }
@@ -263,6 +287,7 @@ namespace DezDias
                 {
                     r.FalsoAlarme = true;
                     Linha(Tom.Rad, a[Modulo.Abrigo] > 0 ? Textos.FalsoComAbrigo.F(a[Modulo.Abrigo]) : Textos.FalsoSemAbrigo);
+                    if (T.Alarme != Alarme.Nenhum) Linha(Tom.Rad, Eventos.LinhaAlarme(m, false, 0));
                 }
             }
 

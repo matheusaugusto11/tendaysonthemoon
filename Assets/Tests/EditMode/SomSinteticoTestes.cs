@@ -9,6 +9,7 @@ namespace DezDias.Testes
         {
             ("toque", SomSintetico.Toque(), 0.05f), ("acerto", SomSintetico.Acerto(), 0.13f),
             ("concluido", SomSintetico.Concluido(), 0.31f), ("naodeu", SomSintetico.NaoDeu(), 0.31f), ("painel", SomSintetico.Painel(), 0.09f),
+            ("alarme", SomSintetico.Alarme(), 0.8f),
         };
 
         [Test]

@@ -65,6 +65,13 @@ namespace DezDias
         public static float[] Concluido() => Sequencia(new[] { new Nota(523.25f, 0.10f), new Nota(659.25f, 0.10f), new Nota(783.99f, 0.10f) }, Onda.Seno, 0.34f);
 
         /// <summary>Fim com "Não deu": 330 e depois 262 Hz, triangular macia e mais grave, 300 ms. Nunca áspero.</summary>
+        /// <summary>Alarme de partículas: duas notas alternadas, três vezes. Firme, mas sem aspereza (onda triangular).</summary>
+        public static float[] Alarme() => Sequencia(new[]
+        {
+            new Nota(784f, 0.12f), new Nota(587.33f, 0.12f), new Nota(784f, 0.12f),
+            new Nota(587.33f, 0.12f), new Nota(784f, 0.12f), new Nota(587.33f, 0.16f),
+        }, Onda.Triangular, 0.30f, 0.006f, 0.05f);
+
         public static float[] NaoDeu() => Sequencia(new[] { new Nota(330f, 0.15f), new Nota(262f, 0.15f) }, Onda.Triangular, 0.26f, 0.008f, 0.09f);
 
         /// <summary>Painel entrando: ruído filtrado de 80 ms, bem baixo.</summary>

@@ -173,18 +173,6 @@ namespace DezDias.Testes
         }
 
         [Test]
-        public void AstronautaForaNaErupcao_MaisDois()
-        {
-            var m = Apoio.Controlada(Modo.Cadete, Tarefas.Amostra);
-            m.Alertas[m.Dia] = new Alerta { Erupcao = Apoio.M(), Forte = true };
-            m.Hoje.Fora = true;
-            Apoio.Alocar(m, ar: 2, abrigo: 2);
-            var r = RegrasMissao.Resolver(m);
-            Assert.AreEqual(2, m.Rad);
-            Assert.IsTrue(Apoio.TemLinha(r, Textos.AstronautaFora));
-        }
-
-        [Test]
         public void AlarmeFalso_AbrigoLigadoAToa()
         {
             var m = Apoio.Controlada();
