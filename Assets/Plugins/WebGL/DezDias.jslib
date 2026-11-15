@@ -5,6 +5,14 @@ mergeInto(LibraryManager.library, {
     try { return (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 1 : 0; }
     catch (e) { return 0; }
   },
+  // 1 quando a tela principal é de toque e não há mouse (celular, tablet, iPad que se diz Mac).
+  DD_TelaDeToque: function () {
+    try {
+      var grosso = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+      var semMouse = window.matchMedia && !window.matchMedia('(any-hover: hover)').matches;
+      return (grosso && (semMouse || navigator.maxTouchPoints > 1)) ? 1 : 0;
+    } catch (e) { return 0; }
+  },
   // 1 = navegador em português, 0 = outro idioma, -1 = não deu para ler.
   DD_LinguaNavegadorPt: function () {
     try {

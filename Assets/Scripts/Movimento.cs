@@ -38,10 +38,12 @@ public class Movimento : MonoBehaviour
     [Tooltip("Se a direção apertada mudar mais que isso (graus), a referência é retravada na câmera atual. Ex.: soltar o D e ficar só no W volta a ser 'para cima da tela'.")]
     [Range(5f, 90f)] public float anguloRetravar = 20f;
 
-    [Header("Controles de toque (criados automaticamente se vazios)")]
-    public VirtualJoystick joystick;        // analógico esquerdo: andar
-    public VirtualJoystick joystickCamera;  // analógico direito: câmera
-    public TouchLook look;                  // arrastar na metade direita (extra)
+    [Header("Controles de toque (só em celular/tablet; criados automaticamente se vazios)")]
+    [Tooltip("Automático: analógicos só em celular e tablet. Use SempreToque para testar no editor.")]
+    public ControlesMobile.Modo controlesDeToque = ControlesMobile.Modo.Automatico;
+    public VirtualJoystick joystick;        // metade esquerda da tela: andar
+    public VirtualJoystick joystickCamera;  // metade direita da tela: câmera
+    public TouchLook look;                  // opcional: arrastar para girar a câmera
     public float velocidadeCameraAnalogico = 140f; // graus por segundo com o analógico no máximo
 
     CharacterController _cc;
@@ -71,13 +73,15 @@ public class Movimento : MonoBehaviour
     {
         _congelado = congelar;
         if (joystick) joystick.transform.root.gameObject.SetActive(!congelar);
+        else if (joystickCamera) joystickCamera.transform.root.gameObject.SetActive(!congelar);
     }
 
     void Start()
     {
         _cc = GetComponent<CharacterController>();
         if (!cameraTransform && Camera.main) cameraTransform = Camera.main.transform;
-        if (!joystick || !joystickCamera || !look) ControlesMobile.Criar(out joystick, out joystickCamera, out look);
+        ControlesMobile.modo = controlesDeToque;
+        if (ControlesMobile.UsarToque && !joystick && !joystickCamera) ControlesMobile.Criar(out joystick, out joystickCamera);
         if (cameraTransform) _yaw = cameraTransform.eulerAngles.y;
         Congelar(_congelado);
     }
@@ -95,13 +99,13 @@ public class Movimento : MonoBehaviour
     {
         bool manual = false;
         float yawAntes = _yaw;
-        // Arrasto de dedo (ou mouse esquerdo) na metade direita da tela.
+        // Arrasto de dedo na zona opcional de arrastar (TouchLook).
         Vector2 d = look ? look.ConsumirDelta() : Vector2.zero;
         if (d.sqrMagnitude > 0.01f) manual = true;
         _yaw += d.x * sensibilidadeToque;
         _pitch -= d.y * sensibilidadeToque;
 
-        // Analógico direito: câmera contínua.
+        // Analógico da metade direita: câmera contínua.
         if (joystickCamera)
         {
             Vector2 a = joystickCamera.Valor;
@@ -118,7 +122,8 @@ public class Movimento : MonoBehaviour
 
         // Fallback PC: botão direito do mouse em qualquer lugar.
         // recentrar: R, R3 do controle ou toque duplo na metade direita da tela
-        if (Entrada.RecentrarDown || (look != null && look.ConsumirDuploToque())) _recentrando = true;
+        bool duplo = (look != null && look.ConsumirDuploToque()) | (joystickCamera != null && joystickCamera.ConsumirDuploToque());
+        if (Entrada.RecentrarDown || duplo) _recentrando = true;
         if (_recentrando)
         {
             float alvoYaw = transform.eulerAngles.y;

@@ -8,6 +8,7 @@ public static class Navegador
 #if UNITY_WEBGL && !UNITY_EDITOR
     [DllImport("__Internal")] static extern int DD_PrefereMenosMovimento();
     [DllImport("__Internal")] static extern int DD_LinguaNavegadorPt();
+    [DllImport("__Internal")] static extern int DD_TelaDeToque();
     [DllImport("__Internal")] static extern void DD_AbrirLinkNoProximoClique(string url);
 #endif
 
@@ -18,6 +19,19 @@ public static class Navegador
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             try { return DD_PrefereMenosMovimento() == 1; } catch { return false; }
+#else
+            return false;
+#endif
+        }
+    }
+
+    /// <summary>Na WebGL, a tela principal é de toque e não há mouse (pega o iPad, que se apresenta como Mac).</summary>
+    public static bool TelaDeToque
+    {
+        get
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            try { return DD_TelaDeToque() == 1; } catch { return false; }
 #else
             return false;
 #endif

@@ -3,14 +3,31 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// Cria o Canvas de controles de toque: analógico esquerdo (andar), analógico direito (câmera)
-/// e uma zona de arrasto na metade direita (alternativa para girar a câmera).
+/// Controles de toque, só em celular e tablet. A metade esquerda da tela anda e a metade direita gira a câmera.
+/// Os analógicos ficam escondidos: cada um aparece onde o dedo encostar e some ao soltar.
+/// No desktop nada disso é criado (teclado, mouse e controle cuidam).
 /// </summary>
 public static class ControlesMobile
 {
+    public enum Modo { Automatico, SempreToque, NuncaToque }
+
+    /// <summary>Para testar no editor: force o toque (SempreToque) ou o desktop (NuncaToque).</summary>
+    public static Modo modo = Modo.Automatico;
+
     static Sprite _circulo;
 
-    public static void Criar(out VirtualJoystick andar, out VirtualJoystick camera, out TouchLook look)
+    /// <summary>O jogo está num celular ou tablet (na WebGL, navegador de celular ou tela de toque sem mouse).</summary>
+    public static bool UsarToque
+    {
+        get
+        {
+            if (modo == Modo.SempreToque) return true;
+            if (modo == Modo.NuncaToque) return false;
+            return Application.isMobilePlatform || Navegador.TelaDeToque;
+        }
+    }
+
+    public static void Criar(out VirtualJoystick andar, out VirtualJoystick camera)
     {
         var canvasGo = new GameObject("ControlesCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
         var canvas = canvasGo.GetComponent<Canvas>();
@@ -23,47 +40,41 @@ public static class ControlesMobile
 
         Entrada.GarantirEventSystem();
 
-        // Arrastar na metade direita (por baixo dos analógicos)
-        var zonaDir = NovaZona(canvasGo.transform, "ZonaCamera", new Vector2(0.5f, 0), new Vector2(1, 1));
-        look = zonaDir.gameObject.AddComponent<TouchLook>();
-
-        // Analógicos dentro da área segura (entalhe/cantos do celular)
-        var seguro = new GameObject("AreaSegura", typeof(RectTransform), typeof(SafeArea));
-        seguro.transform.SetParent(canvasGo.transform, false);
-        var rs = (RectTransform)seguro.transform;
-        rs.anchorMin = Vector2.zero; rs.anchorMax = Vector2.one; rs.offsetMin = rs.offsetMax = Vector2.zero;
-
-        andar = NovoAnalogico(seguro.transform, "AnalogicoAndar", new Vector2(0, 0), new Vector2(280, 280));
-        camera = NovoAnalogico(seguro.transform, "AnalogicoCamera", new Vector2(1, 0), new Vector2(-280, 280));
+        andar = NovoAnalogico(canvasGo.transform, "ZonaAndar", new Vector2(0, 0), new Vector2(0.5f, 1));
+        camera = NovoAnalogico(canvasGo.transform, "ZonaCamera", new Vector2(0.5f, 0), new Vector2(1, 1));
     }
 
-    static VirtualJoystick NovoAnalogico(Transform pai, string nome, Vector2 ancora, Vector2 pos)
+    /// <summary>Área invisível (metade da tela) que recebe o toque, com o analógico escondido dentro.</summary>
+    static VirtualJoystick NovoAnalogico(Transform pai, string nome, Vector2 min, Vector2 max)
     {
-        var baseGo = new GameObject(nome, typeof(Image));
-        baseGo.transform.SetParent(pai, false);
+        var zona = NovaZona(pai, nome, min, max);
+
+        var baseGo = new GameObject("Analogico", typeof(Image));
+        baseGo.transform.SetParent(zona, false);
         var rb = (RectTransform)baseGo.transform;
-        rb.anchorMin = rb.anchorMax = ancora;
-        rb.pivot = new Vector2(0.5f, 0.5f);
-        rb.sizeDelta = new Vector2(340, 340);
-        rb.anchoredPosition = pos;
+        rb.anchorMin = rb.anchorMax = rb.pivot = new Vector2(0.5f, 0.5f);
+        rb.sizeDelta = new Vector2(300, 300);
         var ib = baseGo.GetComponent<Image>();
         ib.sprite = Circulo();
         ib.color = new Color(1, 1, 1, 0.22f);
-        ib.raycastTarget = true;
+        ib.raycastTarget = false;
 
         var knobGo = new GameObject("Botao", typeof(Image));
         knobGo.transform.SetParent(baseGo.transform, false);
         var rk = (RectTransform)knobGo.transform;
         rk.anchorMin = rk.anchorMax = rk.pivot = new Vector2(0.5f, 0.5f);
-        rk.sizeDelta = new Vector2(140, 140);
+        rk.sizeDelta = new Vector2(130, 130);
         var ik = knobGo.GetComponent<Image>();
         ik.sprite = Circulo();
         ik.color = new Color(1, 1, 1, 0.75f);
         ik.raycastTarget = false;
 
-        var joy = baseGo.AddComponent<VirtualJoystick>();
+        baseGo.SetActive(false);
+        var joy = zona.gameObject.AddComponent<VirtualJoystick>();
+        joy.fundo = rb;
         joy.botao = rk;
-        joy.raio = 120f;
+        joy.flutuante = true;
+        joy.raio = 110f;
         return joy;
     }
 
