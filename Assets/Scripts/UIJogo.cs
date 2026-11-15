@@ -49,6 +49,16 @@ public class UIJogo
     Image[] _setaPartes;
     Text _avisoTexto;
     float _avisoAte;
+    // Legenda de fala de um personagem (fila de frases que avança sozinha)
+    GameObject _fala;
+    Text _falaNome, _falaTexto;
+    // Apresentação: balão de fala sobre a Lia ou o Bip
+    RectTransform _apres, _balao, _balaoRabicho, _apresBotoes;
+    Text _balaoNome, _balaoTexto;
+    Txt _falaQuem;
+    Txt[] _falaFila;
+    int _falaI;
+    float _falaT;
     // Minigame (painel lateral do molde D9)
     RectTransform _miniPainel, _miniArea, _miniAreaFundo, _miniTempoTrilho, _miniTempoBarra, _miniProgTrilho, _miniProgBarra, _miniFaixa;
     FormaUI _miniTira, _miniProgForma, _miniFaixaFace;
@@ -91,6 +101,7 @@ public class UIJogo
         ConstruirHud();
         ConstruirFaixa();
         ConstruirTablet();
+        ConstruirApresentacao();
         ConstruirMinigame();
         ConstruirPausa();
     }
@@ -175,6 +186,8 @@ public class UIJogo
         _btnAcao.AjustarPara(400f);
         _btnAcao.navigation = new Navigation { mode = Navigation.Mode.None };
         _btnAcao.gameObject.SetActive(false);
+
+        ConstruirFala();
 
         // Seta guia
         var seta = new GameObject("Seta", typeof(RectTransform));
@@ -509,7 +522,7 @@ public class UIJogo
         || f == Fase.Minijogo || f == Fase.DecisaoVazamento || f == Fase.TarefaConcluida || f == Fase.AteHub
         || f == Fase.Distribuir || f == Fase.DiaAcontece || f == Fase.Resultado || f == Fase.Evento || f == Fase.CorridaAbrigo;
 
-    static bool FaseSemTablet(Fase f) => f == Fase.AteTarefa || f == Fase.AteHub || f == Fase.Minijogo || f == Fase.CorridaAbrigo;
+    static bool FaseSemTablet(Fase f) => f == Fase.AteTarefa || f == Fase.AteHub || f == Fase.Minijogo || f == Fase.CorridaAbrigo || f == Fase.Apresentacao;
     /// <summary>Fases com a faixa do deslocamento, a seta e o botão de ação.</summary>
     static bool FaseDeDeslocamento(Fase f) => f == Fase.AteTarefa || f == Fase.AteHub || f == Fase.CorridaAbrigo;
 
@@ -545,6 +558,8 @@ public class UIJogo
         TextosFixos();
         if (!FaseSemTablet(f)) MontarTablet(f);
         if (FaseDeDeslocamento(f)) MontarFaixa();
+        _apres.gameObject.SetActive(f == Fase.Apresentacao);
+        if (f == Fase.Apresentacao) MontarApresentacao();
         if (f == Fase.Minijogo && _minigameAtual != null)
         {
             TextosDoMinigame();
@@ -734,6 +749,80 @@ public class UIJogo
         voltar.interactable = i > 0;
         Secundario(Textos.Pular.ToString(), "pular", () => _gm.PularSlides());
         Principal((ultimo ? Textos.Comecar : Textos.Proximo).ToString(), () => _gm.SlideProximo());
+    }
+
+    // ---------------- Apresentação (Lia e Bip): balão de fala sobre a cena ----------------
+
+    void ConstruirApresentacao()
+    {
+        _apres = RT("Apresentacao", _raiz);
+        Esticar(_apres);
+        _apres.gameObject.AddComponent<SafeArea>();
+
+        _balao = Vertical(_apres, UiTema.E4, 0);
+        _balao.name = "Balao";
+        _balao.anchorMin = _balao.anchorMax = new Vector2(0.5f, 0.5f); _balao.pivot = new Vector2(0.5f, 0f);
+        _balao.sizeDelta = new Vector2(LarguraBalao, 0);
+        _balao.GetComponent<VerticalLayoutGroup>().padding = new RectOffset(UiTema.E32, UiTema.E32, UiTema.E16, UiTema.E24);
+        _balao.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        // Rabicho: um quadrado girado, metade para fora, embaixo do balão, apontando para quem fala.
+        var rab = new GameObject("Rabicho", typeof(Image));
+        rab.transform.SetParent(_balao, false);
+        rab.AddComponent<LayoutElement>().ignoreLayout = true;
+        _balaoRabicho = (RectTransform)rab.transform;
+        _balaoRabicho.anchorMin = _balaoRabicho.anchorMax = new Vector2(0.5f, 0f);
+        _balaoRabicho.sizeDelta = new Vector2(44, 44);
+        _balaoRabicho.localRotation = Quaternion.Euler(0, 0, 45);
+        var ri = rab.GetComponent<Image>(); ri.color = UiTema.Branco; ri.raycastTarget = false;
+        Fundo(_balao, UiTema.Branco, UiTema.ChanfroBotao, "SE SD IE ID", false);
+        _balaoNome = Rot(_balao, "", Papel.Rotulo, UiTema.Tinta, TextAnchor.UpperLeft, true);
+        _balaoTexto = Rot(_balao, "", Papel.Corpo, UiTema.Tinta);
+
+        _apresBotoes = Horizontal(_apres, UiTema.E16, false, 0, null, TextAnchor.MiddleRight);
+        _apresBotoes.anchorMin = _apresBotoes.anchorMax = new Vector2(1, 0); _apresBotoes.pivot = new Vector2(1, 0);
+        _apresBotoes.anchoredPosition = new Vector2(-MargemRodape, MargemRodapeBaixo);
+        _apresBotoes.sizeDelta = new Vector2(900, AlturaPrincipal);
+        _apres.gameObject.SetActive(false);
+    }
+
+    const float LarguraBalao = 660f;
+
+    /// <summary>Texto do balão e botões da fala atual. A posição é acertada a cada quadro (PosicionarBalao).</summary>
+    void MontarApresentacao()
+    {
+        var falas = Textos.Apresentacao;
+        int i = Mathf.Clamp(_gm.FalaApresentacao, 0, falas.Length - 1);
+        _balaoNome.text = UiTema.Caixa((falas[i].robo ? Textos.NomeRobo : Textos.NomeAstronauta).ToString());
+        _balaoTexto.text = falas[i].fala.ToString();
+        Limpar(_apresBotoes);
+        bool ultima = i >= falas.Length - 1;
+        if (!ultima)
+        {
+            var pular = BotaoFisico.Criar(_apresBotoes, BotaoFisico.Estilo.Secundario, Textos.Pular.ToString(), "pular", () => _gm.PularApresentacao());
+            ComTamanho(pular, 240f, 96f);
+        }
+        var prox = BotaoFisico.Criar(_apresBotoes, BotaoFisico.Estilo.Principal, (ultima ? Textos.ComecarMissao : Textos.Proximo).ToString(), "seta_tinta", () => _gm.ApresentacaoProxima());
+        ComTamanho(prox, ultima ? 520f : 400f, AlturaPrincipal);
+        Entrada.Selecionar(prox.gameObject);
+        PosicionarBalao();
+    }
+
+    /// <summary>Balão logo acima da cabeça de quem fala, sem sair da tela; o rabicho fica sobre o personagem.</summary>
+    void PosicionarBalao()
+    {
+        var cam = Camera.main;
+        if (cam == null || !_apres.gameObject.activeSelf) return;
+        Vector3 tela = cam.WorldToScreenPoint(_gm.TopoDoFalante());
+        if (tela.z <= 0f) tela = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 1f); // atrás da câmera: balão no meio
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(_apres, tela, null, out var p);
+        var area = _apres.rect;
+        float meia = LarguraBalao * 0.5f, alto = _balao.rect.height;
+        // O balão abre para o lado de fora (Bip à esquerda, Lia à direita), para não cobrir o outro personagem.
+        float lado = _gm.FalaDoRobo ? -1f : 1f;
+        float x = Mathf.Clamp(p.x + lado * 190f, area.xMin + meia + UiTema.E24, area.xMax - meia - UiTema.E24);
+        float y = Mathf.Clamp(p.y + 46f, area.yMin + AlturaPrincipal + MargemRodapeBaixo + UiTema.E48, area.yMax - alto - UiTema.E24);
+        _balao.anchoredPosition = new Vector2(x, y);
+        _balaoRabicho.anchoredPosition = new Vector2(Mathf.Clamp(p.x - x, -meia + 60f, meia - 60f), 0f);
     }
 
     // ---------------- Boletim ----------------
@@ -1320,6 +1409,52 @@ public class UIJogo
     }
 
     string TextoCorrida() => Textos.CorridaTitulo.ToString() + "  " + Textos.CorridaSegundos.F(Mathf.CeilToInt(_gm.ContagemCorrida)).ToString();
+    // ---------------- Fala de personagem (legenda) ----------------
+
+    void ConstruirFala()
+    {
+        var rt = Vertical(_hud.transform, UiTema.E4, 0, null, TextAnchor.UpperLeft);
+        rt.name = "Fala";
+        _fala = rt.gameObject;
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0); rt.pivot = new Vector2(0.5f, 0);
+        // Acima da linha do botão de ação, no meio: não cobre os joysticks nem o botão.
+        rt.anchoredPosition = new Vector2(0, MargemRodapeBaixo + AlturaPrincipal + UiTema.E24);
+        rt.sizeDelta = new Vector2(980, 0);
+        var v = rt.GetComponent<VerticalLayoutGroup>();
+        v.padding = new RectOffset(UiTema.E32, UiTema.E32, UiTema.E16, UiTema.E24);
+        rt.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        Fundo(rt, UiTema.Aco);
+        _falaNome = Rot(rt, "", Papel.Rotulo, UiTema.Ar);
+        _falaTexto = Rot(rt, "", Papel.Corpo, UiTema.Branco);
+        _fala.SetActive(false);
+    }
+
+    /// <summary>Mostra as frases em sequência, na legenda de baixo, só durante o deslocamento. Avança sozinha.</summary>
+    public void Falar(Txt quem, Txt[] frases)
+    {
+        _falaQuem = quem;
+        _falaFila = frases;
+        _falaI = 0;
+        _falaT = 0f;
+    }
+
+    /// <summary>Tempo de leitura de uma frase: cerca de 15 letras por segundo, entre 3,5 e 7 s.</summary>
+    static float DuracaoFala(string s) => Mathf.Clamp(1.5f + s.Length / 15f, 3.5f, 7f);
+
+    void AnimarFala()
+    {
+        bool deslocando = _gm.Fase == Fase.AteTarefa || _gm.Fase == Fase.AteHub;
+        bool ativa = _falaFila != null && _falaI < _falaFila.Length && deslocando && _hud.activeSelf;
+        if (_fala.activeSelf != ativa) _fala.SetActive(ativa);
+        if (_falaFila == null) return;
+        if (!deslocando) { _falaFila = null; return; } // saiu do deslocamento: a conversa acaba
+        if (!ativa) return;
+        string frase = _falaFila[_falaI].ToString(); // ToString a cada quadro: acompanha a troca de idioma
+        _falaNome.text = _falaQuem.ToString();
+        _falaTexto.text = frase;
+        _falaT += Time.deltaTime;
+        if (_falaT >= DuracaoFala(frase)) { _falaI++; _falaT = 0f; }
+    }
 
     void DicaTutorial(Txt t)
     {
@@ -1340,6 +1475,8 @@ public class UIJogo
         AnimarMinigame();
         if (_avisoTexto.text != "" && Time.time > _avisoAte) _avisoTexto.text = "";
         if (_gm.Fase == Fase.CorridaAbrigo && _faixa.activeSelf) _faixaTexto.text = TextoCorrida(); // contagem a cada quadro
+        AnimarFala();
+        PosicionarBalao();
         if (!_hud.activeSelf || _gm.Missao == null) return;
         var m = _gm.Missao;
         _hudDia.text = Textos.DiaDe.F(Mathf.Max(1, m.Dia), Missao.Dias).ToString();

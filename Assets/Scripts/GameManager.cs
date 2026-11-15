@@ -13,6 +13,8 @@ public enum Fase
     Evento,
     /// <summary>Corrida até o abrigo depois do alarme de partículas. Relógio correndo.</summary>
     CorridaAbrigo,
+    /// <summary>Lia e Bip se apresentam, logo depois de escolher Cadete ou Comandante.</summary>
+    Apresentacao,
 }
 
 /// <summary>
@@ -346,14 +348,33 @@ public class GameManager : MonoBehaviour
     {
         Teste = false;
         Missao = RegrasMissao.NovaPartida(modo, _erupcoes, _rng, TutorialLigado, _cmes);
+        IniciarDia(false);
+        FalaApresentacao = 0;
+        MudarFase(Fase.Apresentacao);
+    }
+
+    /// <summary>Índice da fala atual da apresentação (Textos.Apresentacao).</summary>
+    public int FalaApresentacao { get; private set; }
+
+    public void ApresentacaoProxima()
+    {
+        if (Fase != Fase.Apresentacao) return;
+        if (FalaApresentacao < Textos.Apresentacao.Length - 1) { FalaApresentacao++; _ui.Render(); }
+        else IniciarMissao();
+    }
+
+    public void PularApresentacao() { if (Fase == Fase.Apresentacao) IniciarMissao(); }
+
+    /// <summary>Depois da apresentação: os slides do tutorial (se ligado) e o Boletim do Dia 1.</summary>
+    void IniciarMissao()
+    {
         if (Missao.Tutorial)
         {
-            IniciarDia(false);
             Slide = 0;
             _retornoComoJogar = Fase.Boletim;
             MudarFase(Fase.ComoJogar);
         }
-        else IniciarDia(true);
+        else MudarFase(Fase.Boletim);
     }
 
     void IniciarDia(bool mostrar)
@@ -385,7 +406,14 @@ public class GameManager : MonoBehaviour
         Debug.Log("[GameManager] forcarEvento: Dia " + Missao.Dia + " com " + def.Id + (T.EventoNaIda ? " (ida)" : " (volta)"));
     }
 
-    public void SairDoBoletim() { if (Fase == Fase.Boletim) { _tempoNaIda = 0f; MudarFase(Fase.AteTarefa); } }
+    public void SairDoBoletim()
+    {
+        if (Fase != Fase.Boletim) return;
+        _tempoNaIda = 0f;
+        MudarFase(Fase.AteTarefa);
+        // Primeiro passo da missão: a astronauta fala enquanto a criança anda até a primeira tarefa.
+        if (Missao.Dia == 1 && !Teste) _ui.Falar(Textos.NomeAstronauta, Textos.FalasAbertura);
+    }
 
     // ---------------- Evento do dia e corrida até o abrigo (design D7) ----------------
 
@@ -651,6 +679,7 @@ public class GameManager : MonoBehaviour
         // O personagem só anda nas fases de deslocamento.
         if (jogador) jogador.Congelar(!FaseComMovimento(nova));
         Alvo = Proxima = null;
+        if (_robo != null && nova != Fase.Apresentacao && !_robo.enabled) _robo.enabled = true; // o Bip volta a seguir a Lia
         RefrescarEstacoes();
         AjustarCamera(nova);
         _ui.Render();
@@ -687,6 +716,9 @@ public class GameManager : MonoBehaviour
                 break;
             case Fase.ComoJogar: case Fase.Creditos: case Fase.Relatorio: case Fase.MenuMinijogos:
                 break;
+            case Fase.Apresentacao:
+                FocarNaApresentacao(cf);
+                break;
             default:
                 cf.Soltar();
                 break;
@@ -706,6 +738,59 @@ public class GameManager : MonoBehaviour
         if (e != null) { cf.FocarEstacao(e, jogador != null ? jogador.transform : null); return; }
         CameraFoco.PoseOlhando(AereaDe, AereaPara, AereaDeslocamento, out var pos, out var rot);
         cf.Focar(pos, rot, AereaFov);
+    }
+
+    // ---------------- Apresentação: Lia e Bip lado a lado, de frente para a câmera ----------------
+
+    RoboPet _robo;
+
+    /// <summary>Põe o Bip ao lado da Lia (parado enquanto durar a apresentação) e a câmera de frente para os dois.</summary>
+    void FocarNaApresentacao(CameraFoco cf)
+    {
+        if (jogador == null) return;
+        var lia = jogador.transform;
+        Vector3 frente = Vector3.ProjectOnPlane(lia.forward, Vector3.up).normalized;
+        if (frente.sqrMagnitude < 0.5f) frente = Vector3.forward;
+        Vector3 direita = Vector3.Cross(Vector3.up, frente);
+        if (_robo == null) _robo = FindObjectOfType<RoboPet>();
+        Vector3 meio = lia.position;
+        if (_robo != null)
+        {
+            _robo.enabled = false; // não anda atrás da Lia durante a conversa
+            var cc = _robo.GetComponent<CharacterController>();
+            if (cc) cc.enabled = false;
+            _robo.transform.position = new Vector3(lia.position.x, _robo.transform.position.y, lia.position.z) + direita * 1.3f;
+            _robo.transform.rotation = Quaternion.LookRotation(frente);
+            if (cc) cc.enabled = true;
+            meio = lia.position + direita * 0.65f;
+        }
+        Vector3 olhar = new Vector3(meio.x, lia.position.y + 0.55f, meio.z);
+        // Perto dos dois (3 m), para nenhuma parede do hub ficar entre a câmera e eles; se ainda houver, chega mais perto.
+        float dist = 3f;
+        if (Physics.Raycast(olhar, frente, out var bate, dist + 0.4f, ~0, QueryTriggerInteraction.Ignore)) dist = Mathf.Max(1.8f, bate.distance - 0.4f);
+        Vector3 pos = olhar + frente * dist + Vector3.up * 0.2f;
+        cf.Focar(pos, Quaternion.LookRotation(olhar - pos), 50f);
+    }
+
+    /// <summary>Quem fala agora na apresentação é o Bip (false: a Lia).</summary>
+    public bool FalaDoRobo => Textos.Apresentacao[Mathf.Clamp(FalaApresentacao, 0, Textos.Apresentacao.Length - 1)].robo;
+
+
+    /// <summary>Ponto do mundo logo acima da cabeça de quem fala agora na apresentação (para o balão).</summary>
+    public Vector3 TopoDoFalante()
+    {
+        bool robo = Textos.Apresentacao[Mathf.Clamp(FalaApresentacao, 0, Textos.Apresentacao.Length - 1)].robo;
+        Transform t = robo && _robo != null ? _robo.transform : jogador != null ? jogador.transform : null;
+        if (t == null) return Vector3.zero;
+        float topo = t.position.y + (robo ? 0.8f : 1.9f);
+        bool achou = false;
+        foreach (var r in t.GetComponentsInChildren<Renderer>())
+        {
+            if (r is ParticleSystemRenderer || r is TrailRenderer) continue;
+            topo = achou ? Mathf.Max(topo, r.bounds.max.y) : r.bounds.max.y;
+            achou = true;
+        }
+        return new Vector3(t.position.x, topo, t.position.z);
     }
 
     /// <summary>Estação registrada com o id (null se a cena não tiver). Para a sonda e as capturas.</summary>
