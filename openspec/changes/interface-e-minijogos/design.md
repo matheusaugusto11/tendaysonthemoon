@@ -72,14 +72,14 @@ Uma classe estática nova guarda todos os valores. `UIJogo` e os minijogos passa
 | Sombra dura | `#1A1C22`, deslocada 6 para baixo, sem desfoque | — |
 | Página opaca (Relatório) | `#05060C` | Céu do Art Bible |
 | Botão principal | face `#E6E4DF` (pintura branca), texto `#14161C` | Art Bible §6 |
-| Texto | tinta `#E6E4DF`, apoio `#A9ADB8`, discreto `#7A7F8C` | — |
+| Texto | tinta `#E6E4DF`, apoio `#A9ADB8`; discreto `#949AA7` só em controle desativado, sobre `#26282F` | ajustado na 2.1 para cumprir 4,5:1 |
 | Ar e água / O₂ | `#4DD0E1` | Art Bible e web |
 | Estufa | `#6BD425` | idem |
 | Abrigo / Radiação | `#C77DFF` | idem |
 | Laboratório | `#FF9F43` | idem |
 | Energia e Bateria | `#FFD23F` | idem |
 | Alerta | `#FF5D5D` | web |
-| "Não deu" | `#5C6E8C` (azul-Terra) | artifact |
+| "Não deu" | `#52638A` (azul-Terra) | artifact (`#5C6E8C`), escurecido na 2.1: creme sobre ele passou de 4,1:1 para 4,7:1 |
 
 Contrastes previstos: `#E6E4DF` sobre `#2E323B`, cerca de 11:1; `#14161C` sobre `#E6E4DF`, cerca
 de 15:1; `#A9ADB8` sobre `#2E323B`, cerca de 6:1. Conferir com uma calculadora na tarefa do tema.
@@ -111,6 +111,10 @@ Google Fonts, com Latin-1 completo. Os TTF ficam em `Assets/Resources/Fontes/` e
 carrega por papel (`UiTema.Fonte(Papel)`). `UIJogo` troca `_fonte` e o `FontStyle.Bold` sintético
 pelo arquivo do peso certo.
 
+**O que a implementação (2.2) mostrou:**
+- O Google Fonts só publica a Nunito variável (`Nunito[wght].ttf`), e o `Font` da Unity não escolhe o peso de uma fonte variável. O `Nunito-Bold.ttf` do projeto é a instância estática com `wght=700`, gerada com fontTools. O OFL da Nunito não reserva nome de fonte, então isso é permitido. Os dois OFL ficam em `Assets/Resources/Fontes/`.
+- Nenhuma das fontes tem `▲ ▼ →`, e a Barlow não tem o subscrito `₂`. O Editor completa o glifo com uma fonte do sistema, que **não existe no WebGL**, e por isso o `HasCharacter` engana. Regra: triângulos e setas são formas (`FormaUI`) ou ícones, e todo texto com `₂` usa a Nunito (`UiTema.Fonte(papel, texto)`). Todo caractere não ASCII dos textos atuais (acentos, `·`) existe nas duas famílias.
+
 *Por quê ainda `Text` e não TMP:* a troca de fonte em `Text` é uma mudança só nos helpers e cabe
 no prazo. Migrar para TMP mexe em todo helper, em todo minijogo e na geração dos atlas, e fica
 como P2.
@@ -127,7 +131,7 @@ Um `Graphic` novo (`OnPopulateMesh`) desenha, em qualquer tamanho e sem textura:
 - **Triângulo:** ponteiro e alerta;
 - **Faixa hachurada:** zona de alerta da barra de radiação e limite de carga.
 
-A sombra dura usa o componente `Shadow` do uGUI (deslocamento fixo, sem desfoque).
+A sombra dura é uma segunda forma, 6 unidades abaixo da face (não o componente `Shadow`, que não acompanha o afundar do botão). Cada forma tem uma franja de 1 unidade com alfa 0 nas bordas, porque o canvas em Overlay não tem MSAA e as diagonais dos chanfros serrilhariam. A faixa hachurada fica sem franja, de propósito.
 
 *Por quê:* o estilo low-poly é feito de faces planas e arestas vivas, que é exatamente o que uma
 malha 2D desenha bem. Sai nítido em qualquer resolução, dá para animar a cor e a escala, e não
@@ -159,6 +163,8 @@ junto. O foco desenha uma moldura tracejada clara por fora. Há três estilos:
 
 Desativado vira cinza-chumbo, com cadeado e o motivo.
 
+**O que a implementação (2.5) mostrou:** o `BotaoFisico` é uma subclasse de `Button`, então mouse, toque e controle passam pelos mesmos eventos e pelo `Entrada.Selecionar` atual. A área de toque é um `Image` invisível com `cullTransparentMesh = false` (sem isso o raio ignora a malha transparente), e a face e a sombra se movem dentro dela, então o layout não pula. A moldura de foco só aparece se a seleção não veio de um ponteiro: clicar com o mouse não a mostra, navegar com teclado ou controle mostra. O texto não usa o `resizeTextForBestFit`, porque ele ignora as tags `<size>` do texto rico e quebra a linha em vez de reduzir: o rótulo escolhe o maior tamanho fixo entre 40, 34, 30 e 24 que cabe numa linha.
+
 *Por quê:* o toque que afunda é o que mais dá "cara de jogo" por linha de código, e responde
 igual no mouse, no toque e no controle (o `Entrada.Selecionar` atual continua).
 
@@ -176,6 +182,13 @@ O painel tem cabeçalho fixo (tira de luz e título), corpo com rolagem e rodap�
 `BotaoPrincipal(texto, ação)` coloca a ação que avança, sempre no canto inferior direito. Com
 `ControlesMobile` ativo, o rodapé e o botão de ação do deslocamento sobem acima do joystick da
 câmera. O véu escuro de 45% sai; só a Pausa escurece a cena.
+
+**O que a implementação (grupo 3) mostrou:**
+- O rodapé **não fica dentro do painel**. Ele é ancorado no canto inferior direito da tela, e o painel ocupa a faixa livre acima dele. Dentro do painel o botão subia e descia a cada tela, porque a altura do painel muda; assim ele fica no mesmo ponto em toda fase, como a spec pede. O botão principal tem sempre 400 por 104: texto longo quebra em duas linhas em vez de alargar o botão.
+- `FormaUI` herda de `MaskableGraphic`, não de `Graphic`. Com `Graphic` o `RectMask2D` da rolagem cortava o texto e os ícones, mas não os fundos de painel, que vazavam por cima do rodapé.
+- O painel mantém a posição de rolagem quando a mesma fase é redesenhada (clicar em + ou −, trocar o idioma) e volta ao topo só ao mudar de fase.
+- A moldura de foco aparece só depois de teclado ou controle, e some quando o mouse ou o dedo se mexem. Como `Entrada.Selecionar` seleciona botões por código, a seleção sozinha não diz quem está jogando.
+- Na Distribuição, e no Resultado de um dia de erupção, o conteúdo ainda passa da altura da tela em alguns casos e rola. O cartão do dado real vem antes do "Por quê?" para a fonte da NASA ficar visível sem rolar. A lista vertical e o painel lateral do grupo 5 resolvem o resto.
 
 A Distribuição vira lista vertical (uma linha de cerca de 112 por módulo, até 6 linhas), com a
 reserva de células e "Começar o dia" no rodapé.

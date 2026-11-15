@@ -193,6 +193,7 @@ namespace DezDias
         public static readonly Txt ValeComo = T("No jogo ela vale como erupção {0}.", "In the game it counts as a {0} flare.");
         public static readonly Txt[] Intensidade = { T("fraca", "weak"), T("média", "medium"), T("forte", "strong") };
         public static readonly Txt FonteDonki = T("Fonte: NASA DONKI (CCMC). Dado arquivado, consultado em 13/11/2026. Não é dado ao vivo.", "Source: NASA DONKI (CCMC). Archived data, retrieved on 2026-11-13. Not live data.");
+        public static readonly Txt EtiquetaArquivado = T("Dado arquivado · não é ao vivo", "Archived data · not live");
         public static readonly Txt VerRegistro = T("Ver o registro", "See the record");
         public static readonly Txt ProximoDia = T("Próximo dia", "Next day");
         public static readonly Txt VerRelatorio = T("Ver o relatório da missão", "See the mission report");
@@ -223,6 +224,8 @@ namespace DezDias
         public static readonly Txt NumeroDeJogoTexto = T("Células de energia, pontos de oxigênio, de radiação e de comida, estrelas e dias de sombra são valores de jogo, não medições. Os alertas fortes e fracos e os alarmes falsos também são regra de jogo, não previsões reais. A classe da erupção (C, M, X) é a publicada pelo DONKI; tratar C como fraca, M como média e X como forte é escolha nossa.", "Energy cells, oxygen, radiation and food points, stars and shadow days are game values, not measurements. Strong and weak alerts and false alarms are also game rules, not real forecasts. The flare class (C, M, X) is the one DONKI publishes; treating C as weak, M as medium and X as strong is our own choice.");
         public static readonly Txt UsoDeIA = T("Uso de IA", "Use of AI");
         public static readonly Txt UsoDeIATexto = T("O código e a arte deste jogo foram feitos com ajuda de IA. Este jogo não é um produto da NASA e não tem o endosso dela.", "The code and art of this game were made with AI assistance. This game is not a NASA product and is not endorsed by NASA.");
+        public static readonly Txt Tipografia = T("Fontes de texto", "Typefaces");
+        public static readonly Txt TipografiaTexto = T("Barlow Semi Condensed (The Barlow Project Authors) e Nunito (The Nunito Project Authors), usadas com a licença SIL Open Font License 1.1.", "Barlow Semi Condensed (The Barlow Project Authors) and Nunito (The Nunito Project Authors), used under the SIL Open Font License 1.1.");
 
         /// <summary>Fontes da NASA cujos fatos aparecem no jogo (nome, link, o que se usa).</summary>
         public static readonly (string nome, string url, Txt uso)[] FontesNasa =

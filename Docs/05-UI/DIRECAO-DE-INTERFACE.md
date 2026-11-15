@@ -32,17 +32,21 @@ porque o Art Bible v3 trocou o estilo para low-poly estruturado.
 | Página opaca (Relatório, Créditos) | `#05060C` |
 | Botão principal (pintura branca) e texto | `#E6E4DF` |
 | Texto sobre botão branco (tinta) | `#14161C` |
-| Texto de apoio / discreto | `#A9ADB8` / `#7A7F8C` |
+| Texto de apoio / discreto (só em controle desativado, sobre `#26282F`) | `#A9ADB8` / `#949AA7` |
 | Ar e água, Oxigênio | `#4DD0E1` |
 | Estufa | `#6BD425` |
 | Abrigo, Radiação | `#C77DFF` |
 | Laboratório | `#FF9F43` |
 | Energia, Bateria | `#FFD23F` |
 | Alerta (só zona de perigo) | `#FF5D5D` |
-| "Não deu desta vez" (azul-Terra) | `#5C6E8C` |
+| "Não deu desta vez" (azul-Terra) | `#52638A` |
 
 Contrastes medidos: creme sobre aço 10,1:1; apoio sobre aço 5,7:1; tinta sobre branco 14,2:1;
-energia sobre aço 8,9:1. Ciano e vermelho só carregam forma, nunca texto.
+energia sobre aço 8,9:1; creme sobre azul-Terra 4,7:1. Ciano e vermelho só carregam forma, nunca
+texto. Os testes EditMode (`ApresentacaoTestes`) conferem todos os pares.
+
+Dois valores diferem do artifact "Direção de Interface" aprovado, porque os pares originais ficavam
+abaixo de 4,5:1: o discreto (`#7A7F8C`, 3,2:1) e o azul-Terra (`#5C6E8C`, 4,1:1).
 
 ## 3. Tipografia (Canvas 1920 por 1080)
 

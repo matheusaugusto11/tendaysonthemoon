@@ -43,6 +43,8 @@ public static class VerificacaoRemota
         if (File.Exists("Temp/pedido_refresh.txt")) { File.Delete("Temp/pedido_refresh.txt"); AssetDatabase.Refresh(); return; }
         if (File.Exists("Temp/pedido_testes.txt")) { File.Delete("Temp/pedido_testes.txt"); RodarTestes(); }
         if (File.Exists("Temp/pedido_build_webgl.txt")) { File.Delete("Temp/pedido_build_webgl.txt"); BuildWebGL(); }
+        if (File.Exists("Temp/pedido_resolucao.txt")) ResolucaoGameView.Pedido("Temp/pedido_resolucao.txt");
+        if (File.Exists("Temp/pedido_prancha_formas.txt")) { File.Delete("Temp/pedido_prancha_formas.txt"); PranchaFormas.Gerar(); File.WriteAllText("Temp/prancha_formas_pronta.txt", "1"); }
     }
 
     /// <summary>Build WebGL das cenas do Build Settings em Builds/WebGL (pasta ignorada pelo git). Resultado em Temp/resultado_build.txt.</summary>

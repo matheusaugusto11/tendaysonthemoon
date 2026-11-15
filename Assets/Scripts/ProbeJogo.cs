@@ -176,6 +176,17 @@ public class ProbeJogo : MonoBehaviour
         yield return new WaitForSeconds(_gm.duracaoAnimacao);
         Checar(_gm.Fase == Fase.Resultado, "resultado depois da animação");
         yield return Foto("14_resultado_dia1");
+        // Cenário "Oxigênio caiu": com o O2 de antes 2 acima do de agora, a linha mostra a pílula com o triângulo para baixo e o 2.
+        var res = _gm.Missao.Hoje.Res;
+        int o2Antes = res.O2Antes;
+        res.O2Antes = Mathf.Max(0, _gm.Missao.O2) + 2;
+        Idioma.Definir(Lingua.En); Idioma.Definir(Lingua.Pt); // redesenha a tela atual
+        yield return null;
+        bool triBaixo = false;
+        foreach (var f in FindObjectsOfType<FormaUI>()) if (f.modo == FormaUI.Modo.Triangulo && Mathf.Abs(f.rotacao - 180f) < 0.1f) triBaixo = true;
+        Checar(triBaixo, "oxigênio caiu 2: a pílula do Resultado mostra o triângulo para baixo");
+        yield return Foto("14b_resultado_o2_caiu");
+        res.O2Antes = o2Antes;
         _gm.Proximo();
         yield return null;
         Checar(_gm.Fase == Fase.Boletim && _gm.Missao.Dia == 2, "Dia 2 começa no Boletim");
@@ -256,6 +267,14 @@ public class ProbeJogo : MonoBehaviour
                 bool achou = false;
                 foreach (var b in FindObjectsOfType<BotaoLink>()) if (b.url == r.Erupcao.Url) achou = true;
                 Checar(achou, "cartão da erupção tem o link do registro certo: " + r.Erupcao.Url);
+                bool etiqueta = false, fonte = false;
+                foreach (var t in FindObjectsOfType<UnityEngine.UI.Text>())
+                {
+                    if (t.text == Textos.EtiquetaArquivado.ToString().ToUpperInvariant()) etiqueta = true;
+                    if (t.text == Textos.FonteDonki.ToString()) fonte = true;
+                }
+                Checar(etiqueta, "cartão da erupção mostra a etiqueta de dado arquivado");
+                Checar(fonte, "cartão da erupção mostra a fonte NASA DONKI com a data da consulta");
             }
             _gm.Proximo();
             yield return null;
@@ -265,6 +284,10 @@ public class ProbeJogo : MonoBehaviour
         _gm.AbrirCreditos();
         yield return null;
         Checar(_gm.Fase == Fase.Creditos, "créditos e fontes");
+        bool licenca = false;
+        foreach (var t in FindObjectsOfType<UnityEngine.UI.Text>())
+            if (t.text.Contains("SIL Open Font License 1.1") && t.text.Contains("Barlow Semi Condensed") && t.text.Contains("Nunito")) licenca = true;
+        Checar(licenca, "créditos citam as duas fontes (Barlow Semi Condensed e Nunito) e a licença OFL 1.1");
         yield return Foto("21_creditos");
         _gm.FecharCreditos();
         yield return null;
