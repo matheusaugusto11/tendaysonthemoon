@@ -243,6 +243,13 @@ segundo, fov, deslocamento)` e `Soltar()`. Ele roda depois do `Movimento` (ordem
 Falta para o grupo 7 só `Focar(Estacao)`, o `pontoCamera` e o close em Escolha, Decisão do
 vazamento e minijogo. Movimento reduzido: a câmera corta, e a órbita do Início fica parada.
 
+**O que a implementação (grupo 7) mostrou:**
+- `FocarEstacao(estacao, personagem)` calcula a pose: a câmera fica no `pontoCamera` (só a posição conta) e gira para a direita o bastante para a estação cair no meio da faixa livre à esquerda do painel (`CameraFoco.FracaoLivre`, que a `UIJogo` atualiza com a largura real do painel). Campo de visão do close: 50. Pedir a mesma pose de novo não refaz a transição, então Escolha, cartão, minijogo e Tarefa concluída ficam no mesmo close; a `TarefaConcluida` também chama o foco e as fases seguintes soltam a câmera.
+- No close, todo o `Visual` provisório da estação some (marcador, rótulo, base e máquina). Se o personagem tapar a estação, os renderers dele que estavam ligados ficam escondidos e só esses voltam depois (o personagem tem uma cápsula desligada de propósito, que reaparecia se todos fossem religados).
+- Os 8 `pontoCamera` são gerados por "Dez Dias/Pontos de câmera das estações" (`EstacoesCamera`): a 3,2 m e 1,7 m de altura, na direção sem parede no caminho nem na linha de visão até a estação, longe do corpo provisório das outras estações e, entre as boas, a mais voltada ao hub. Um filho `PontoCamera_manual` não é sobrescrito. O primeiro gerador só testava o caminho da esfera e pôs a câmera do filtro atrás de um painel; a linha de visão corrigiu.
+- A cena não tem tanques nem esteira como objetos separados perto das estações (o interior dos módulos é uma malha só). O close enquadra o ambiente do módulo, como previsto em Riscos.
+- Sem estação na cena, o menu de teste usa a vista aérea do Resultado; na missão, a tarefa sem estação abre no console do hub e o close é nele.
+
 ### D9. Molde comum do minijogo
 
 `Minigame` passa a montar o painel inteiro (D7, modo Lateral): cabeçalho (ícone e título da
@@ -267,6 +274,16 @@ Cada mecânica é reposicionada para a `Area` nova e redesenhada com `FormaUI`:
 | Segurar | Vazamento | Parede com jato de vapor (partículas de `FormaUI`); botão redondo grande com anel de progresso | Anel enche; o vapor diminui com o progresso |
 
 Os alvos de cada área de gesto respeitam o mínimo de 88 (spec).
+
+**O que a implementação (grupo 7) mostrou:**
+- O painel do minijogo ocupa o lugar do Lateral (840 de largura, do HUD até a margem de baixo), sem véu. A Area guarda 760 por 560 e só encolhe por escala quando a altura não dá (celular deitado de 20:9: cerca de 0,82, com as peças dos canos em cerca de 107). A instrução usa o papel de rótulo (24, em frase), para caber em duas ou três linhas; com o corpo (30) a Area não cabia em 16:9 com o HUD.
+- "?" e "Sair" ficam no rodapé do painel, à direita da barra de progresso. Como a instrução fica sempre visível, o "?" mostra de novo a mão fantasma por 3 s, sem parar o relógio (o cartão de primeira vez diz que o aviso "fica no botão ?").
+- O resultado é aplicado na hora em que o minijogo termina (`Tarefas.Fazer`), para a faixa mostrar a nota e o efeito. A faixa fica 1,6 s e só então o jogo segue. "Sair" também passa pela faixa.
+- A barra de progresso lê `ProgressoVisivel`, que nos canos é o trecho molhado sem o fator 0,79 e nos disjuntores é a carga liberada para o sistema pedido, para andar de forma contínua sem mostrar a nota de corte. A nota continua a mesma.
+- A zona alvo da esteira continua verde, porque a instrução diz "zona verde"; a cor do sistema vai na tira por cima do trilho. Zona com 15% da largura e ponteiro a 0,65 larguras por segundo, como antes.
+- Raspadinha: 6 por 4 células de 120, com raio na mesma proporção. O esforço por célula passou de 350 para 640 e passou a ser medido em unidades da Area, não em pixels: numa simulação de vaivém (900 a 2000 por segundo, 3 a 8 s), a nota nova fica a até 4 pontos da antiga (com 350 ficaria até 32 acima). O Segurar usa a mesma fórmula de antes.
+- A sobrecarga dos disjuntores devolve a alavanca, deixa a faixa hachurada do limite amarela e mostra "Sobrecarga" por 1,2 s, com o som grave e suave. As cores de arte (painel solar, filtro, regolito, pedra) entraram na `Paleta`.
+- A mão fantasma (`DemoGesto`) serve ao cartão de primeira vez (com cenário próprio, numa caixa de 560 por 230) e ao Dia 1 (por cima do minijogo, nos pontos que ele indica). No Dia 1 com tutorial, os toques durante os 3 s não contam e o relógio só começa depois.
 
 *Por quê:* o molde comum garante que todo minijogo tenha a mesma leitura (spec "Painel do
 minijogo"). Redesenhar sobre a mesma lógica de nota mantém as regras e os testes da

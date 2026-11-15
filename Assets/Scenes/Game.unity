@@ -520,6 +520,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1612288069}
+  - {fileID: 202036427}
   m_Father: {fileID: 283324066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &24173177
@@ -538,8 +539,8 @@ MonoBehaviour:
   nome: "Reciclador de \xC1gua"
   cor: {r: 0.3, g: 0.6, b: 1, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 202036427}
 --- !u!1 &28243787
 GameObject:
   m_ObjectHideFlags: 0
@@ -1116,6 +1117,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.9146407, y: 0.19999997, z: 2.383609}
   m_Center: {x: 0.45732036, y: 0, z: 0}
+--- !u!1 &77209528
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 77209529}
+  m_Layer: 0
+  m_Name: PontoCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &77209529
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 77209528}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.040930003, y: 0.89302415, z: -0.08299785, w: -0.4403907}
+  m_LocalPosition: {x: 2.495247, y: 1.6897233, z: 1.914671}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2138381843}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &88760505
 GameObject:
   m_ObjectHideFlags: 0
@@ -1165,8 +1197,8 @@ MonoBehaviour:
   nome: Painel Solar
   cor: {r: 1, g: 0.9, b: 0.2, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &91740700
 GameObject:
   m_ObjectHideFlags: 0
@@ -1833,6 +1865,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1695560163}
+  - {fileID: 1440266730}
   m_Father: {fileID: 283324066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &136704676
@@ -1851,8 +1884,8 @@ MonoBehaviour:
   nome: Quadro de Disjuntores
   cor: {r: 1, g: 0.6, b: 0.1, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 1440266730}
 --- !u!1 &137835519
 GameObject:
   m_ObjectHideFlags: 0
@@ -2377,6 +2410,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 200239630}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &202036426
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 202036427}
+  m_Layer: 0
+  m_Name: PontoCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &202036427
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 202036426}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.040930003, y: 0.89302415, z: -0.08299785, w: 0.4403907}
+  m_LocalPosition: {x: -2.495247, y: 1.6897233, z: 1.914671}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 24173176}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &223337703
 GameObject:
   m_ObjectHideFlags: 0
@@ -3229,8 +3293,8 @@ MonoBehaviour:
   nome: Antena
   cor: {r: 0.8, g: 0.4, b: 1, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &321833822
 GameObject:
   m_ObjectHideFlags: 0
@@ -4165,6 +4229,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 899590332}
+  - {fileID: 430511958}
   m_Father: {fileID: 283324066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &377683779
@@ -4183,8 +4248,8 @@ MonoBehaviour:
   nome: Airlock
   cor: {r: 0.9, g: 0.3, b: 0.3, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 430511958}
 --- !u!1 &382302657
 GameObject:
   m_ObjectHideFlags: 0
@@ -4702,6 +4767,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 63231288}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &408948086
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 408948087}
+  m_Layer: 0
+  m_Name: PontoCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &408948087
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 408948086}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.046270687, y: 0.8623091, z: -0.08014317, w: -0.49785447}
+  m_LocalPosition: {x: 2.723816, y: 1.6897234, z: 1.5725956}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 617200862}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -4903,6 +4999,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 411271834}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &430511957
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 430511958}
+  m_Layer: 0
+  m_Name: PontoCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &430511958
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 430511957}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.09234321, y: -0.06512252, z: 0.006052498, w: 0.99357694}
+  m_LocalPosition: {x: 0.41053018, y: 1.6897233, z: -3.1182842}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 377683778}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &431346009
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5382,6 +5509,68 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1260852883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &470395360
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 470395361}
+  m_Layer: 0
+  m_Name: PontoCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &470395361
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470395360}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.09174969, y: -0.12996611, z: 0.012079078, w: 0.9871904}
+  m_LocalPosition: {x: 0.8140354, y: 1.6897235, z: -3.038021}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 959502585}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &479011667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 479011668}
+  m_Layer: 0
+  m_Name: PontoCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &479011668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 479011667}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.012079073, y: 0.9871904, z: -0.09174966, w: -0.12996611}
+  m_LocalPosition: {x: 0.8140354, y: 1.6897233, z: 3.038021}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 535729013}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &482515789
 GameObject:
@@ -5929,6 +6118,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1401330873}
+  - {fileID: 479011668}
   m_Father: {fileID: 283324066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &535729014
@@ -5947,8 +6137,8 @@ MonoBehaviour:
   nome: Estufa
   cor: {r: 0.3, g: 0.9, b: 0.3, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 479011668}
 --- !u!1001 &550662485
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7862,6 +8052,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1478849199}
+  - {fileID: 408948087}
   m_Father: {fileID: 283324066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &617200863
@@ -7880,8 +8071,8 @@ MonoBehaviour:
   nome: Backup de Dados
   cor: {r: 0.2, g: 1, b: 0.9, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 408948087}
 --- !u!1 &625178410
 GameObject:
   m_ObjectHideFlags: 0
@@ -7931,8 +8122,8 @@ MonoBehaviour:
   nome: Painel Solar
   cor: {r: 1, g: 0.9, b: 0.2, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &628619905
 GameObject:
   m_ObjectHideFlags: 0
@@ -10420,11 +10611,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0731add0d72b842c28bbe8c406463e08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dias: []
   jogador: {fileID: 0}
-  ResumoComida: 0
-  ResumoOxigenio: 0
-  ResumoEnergiaRestante: 0
+  duracaoDia: 300
+  duracaoAnimacao: 3.6
+  posicaoConsole: {x: 0, y: 0, z: 0}
+  raioConsole: 3.5
+  abrirMenuMinijogos: 0
 --- !u!4 &831392960
 Transform:
   m_ObjectHideFlags: 0
@@ -12026,6 +12218,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1451372043}
+  - {fileID: 470395361}
   m_Father: {fileID: 283324066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &959502586
@@ -12044,8 +12237,8 @@ MonoBehaviour:
   nome: Filtro de Ar
   cor: {r: 0.8, g: 0.8, b: 0.9, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 470395361}
 --- !u!1 &960717230
 GameObject:
   m_ObjectHideFlags: 0
@@ -12311,8 +12504,8 @@ MonoBehaviour:
   nome: Airlock
   cor: {r: 0.9, g: 0.3, b: 0.3, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &1003119934
 GameObject:
   m_ObjectHideFlags: 0
@@ -13460,8 +13653,8 @@ MonoBehaviour:
   nome: Compactador de Lixo
   cor: {r: 0.7, g: 0.5, b: 0.3, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &1074723286
 GameObject:
   m_ObjectHideFlags: 0
@@ -14630,8 +14823,8 @@ MonoBehaviour:
   nome: Cama
   cor: {r: 0.9, g: 0.9, b: 1, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!65 &1188359645
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15240,8 +15433,8 @@ MonoBehaviour:
   nome: Compactador de Lixo
   cor: {r: 0.7, g: 0.5, b: 0.3, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &1211099649
 GameObject:
   m_ObjectHideFlags: 0
@@ -16738,6 +16931,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 223337704}
+  - {fileID: 2122173911}
   m_Father: {fileID: 283324066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1297523920
@@ -16756,8 +16950,8 @@ MonoBehaviour:
   nome: Vazamento
   cor: {r: 1, g: 0.2, b: 0.2, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 2122173911}
 --- !u!1 &1318296693
 GameObject:
   m_ObjectHideFlags: 0
@@ -17078,8 +17272,8 @@ MonoBehaviour:
   nome: Esteira
   cor: {r: 1, g: 0.5, b: 0.5, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &1362801482
 GameObject:
   m_ObjectHideFlags: 0
@@ -18218,6 +18412,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.9146407, y: 0.19999997, z: 2.383609}
   m_Center: {x: -0.45732036, y: 0, z: 0}
+--- !u!1 &1440266729
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1440266730}
+  m_Layer: 0
+  m_Name: PontoCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1440266730
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1440266729}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.07694537, y: -0.55318624, z: 0.051413257, w: 0.82790166}
+  m_LocalPosition: {x: 2.905777, y: 1.6897234, z: -1.2036123}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 136704675}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1441525375
 GameObject:
   m_ObjectHideFlags: 0
@@ -19385,8 +19610,8 @@ MonoBehaviour:
   nome: "Reciclador de \xC1gua"
   cor: {r: 0.3, g: 0.6, b: 1, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!65 &1577892491
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20102,8 +20327,8 @@ MonoBehaviour:
   nome: Filtro de Ar
   cor: {r: 0.8, g: 0.8, b: 0.9, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &1651248687
 GameObject:
   m_ObjectHideFlags: 0
@@ -20696,8 +20921,8 @@ MonoBehaviour:
   nome: Estufa
   cor: {r: 0.3, g: 0.9, b: 0.3, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &1748473214
 GameObject:
   m_ObjectHideFlags: 0
@@ -22391,8 +22616,8 @@ MonoBehaviour:
   nome: Backup de Dados
   cor: {r: 0.2, g: 1, b: 0.9, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &1913113483
 GameObject:
   m_ObjectHideFlags: 0
@@ -22608,8 +22833,8 @@ MonoBehaviour:
   nome: Quadro de Disjuntores
   cor: {r: 1, g: 0.6, b: 0.1, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &1921112693
 GameObject:
   m_ObjectHideFlags: 0
@@ -23483,6 +23708,8 @@ MonoBehaviour:
   tintCeuDia: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   tintCeuErupcao: {r: 0.85, g: 0.3, b: 0.3, a: 1}
   tintCeuNoite: {r: 0.4, g: 0.42, b: 0.5, a: 1}
+  maxLuzesAtivas: 24
+  velocidadeFade: 4
 --- !u!1 &1999142823
 GameObject:
   m_ObjectHideFlags: 0
@@ -24702,8 +24929,8 @@ MonoBehaviour:
   nome: Cama
   cor: {r: 0.9, g: 0.9, b: 1, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!65 &2116414541
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24808,6 +25035,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2119307530}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2122173910
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2122173911}
+  m_Layer: 0
+  m_Name: PontoCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2122173911
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122173910}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.08549707, y: 0.38104114, z: -0.035414033, w: 0.9199151}
+  m_LocalPosition: {x: -2.2239854, y: 1.6897233, z: -2.2239864}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1297523919}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2130737019
 GameObject:
   m_ObjectHideFlags: 0
@@ -24857,8 +25115,8 @@ MonoBehaviour:
   nome: Vazamento
   cor: {r: 1, g: 0.2, b: 0.2, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &2133940009
 GameObject:
   m_ObjectHideFlags: 0
@@ -24908,8 +25166,8 @@ MonoBehaviour:
   nome: Antena
   cor: {r: 0.8, g: 0.4, b: 1, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 0}
 --- !u!1 &2138381842
 GameObject:
   m_ObjectHideFlags: 0
@@ -24941,6 +25199,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2078725287}
+  - {fileID: 77209529}
   m_Father: {fileID: 283324066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2138381844
@@ -24959,8 +25218,8 @@ MonoBehaviour:
   nome: Esteira
   cor: {r: 1, g: 0.5, b: 0.5, a: 1}
   raio: 3.2
-  custoEnergia: 10
-  custoTempo: 15
+  semMaquina: 0
+  pontoCamera: {fileID: 77209529}
 --- !u!4 &18782767539486135
 Transform:
   m_ObjectHideFlags: 0

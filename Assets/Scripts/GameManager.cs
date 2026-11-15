@@ -301,7 +301,7 @@ public class GameManager : MonoBehaviour
         if (Fase != Fase.Escolha || !Tarefas.PodeFazer(Missao)) return;
         var id = Missao.Hoje.Tarefa;
         if (!Teste && !_vistos.Contains(id)) MudarFase(Fase.MinijogoInfo);
-        else IniciarMinijogo(Teste || !_vistos.Contains(id));
+        else IniciarMinijogo();
     }
 
     public void EscolherFicar()
@@ -317,16 +317,21 @@ public class GameManager : MonoBehaviour
         if (Fase != Fase.MinijogoInfo) return;
         _vistos.Add(Missao.Hoje.Tarefa);
         SalvarPreferencias();
-        IniciarMinijogo(false);
+        IniciarMinijogo();
     }
 
-    void IniciarMinijogo(bool mostrarInstrucao)
+    void IniciarMinijogo()
     {
         var id = Missao.Hoje.Tarefa;
         _minigame = Minigames.Criar(id, Tarefas.LimiteReal(Missao, id));
+        // Dia 1 com tutorial: a mão fantasma mostra o gesto por 3 s antes de o relógio começar (tarefa 7.8).
+        _minigame.demo = TutorialAtivo ? Minigame.DuracaoDemo : 0f;
         MudarFase(Fase.Minijogo);
-        _ui.AbrirMinigame(_minigame, mostrarInstrucao, AoTerminarMinijogo);
+        _ui.AbrirMinigame(_minigame, AoResultadoMinijogo, AoFecharMinijogo);
     }
+
+    /// <summary>Minijogo aberto agora (null fora dele). Para a sonda.</summary>
+    public Minigame MinigameAtual => _minigame;
 
     /// <summary>SAIR / B: termina o minijogo com o progresso atual.</summary>
     public void CancelarMinijogo()
@@ -334,11 +339,18 @@ public class GameManager : MonoBehaviour
         if (Fase == Fase.Minijogo) _minigame?.Cancelar();
     }
 
-    void AoTerminarMinijogo(ResultadoMinijogo r)
+    /// <summary>Fim do minijogo: aplica o resultado na hora e devolve o efeito, que a faixa de resultado mostra com a nota.</summary>
+    Txt AoResultadoMinijogo(ResultadoMinijogo r)
+    {
+        Tarefas.Fazer(Missao, r);
+        return Missao.Hoje.Tarefa == Tarefas.Vazamento ? Missao.Hoje.MsgVazamento : Missao.Hoje.MsgTarefa;
+    }
+
+    /// <summary>A faixa de resultado saiu: segue para a decisão do vazamento ou para a tarefa concluída.</summary>
+    void AoFecharMinijogo()
     {
         _minigame = null;
         _ui.FecharMinigame();
-        Tarefas.Fazer(Missao, r);
         if (Missao.Hoje.Tarefa == Tarefas.Vazamento && !Missao.Hoje.TarefaResolvida) MudarFase(Fase.DecisaoVazamento);
         else MudarFase(Fase.TarefaConcluida);
     }
@@ -460,7 +472,7 @@ public class GameManager : MonoBehaviour
         RegrasMissao.IniciarDia(Missao);
         Missao.Hoje.Tarefa = id;
         Missao.O2 = Missao.MaxO2;
-        IniciarMinijogo(true);
+        IniciarMinijogo();
     }
 
     public void TestarDeNovo() { if (!string.IsNullOrEmpty(_tarefaTeste)) TestarMinijogo(_tarefaTeste); }
@@ -519,6 +531,11 @@ public class GameManager : MonoBehaviour
             case Fase.Inicio:
                 cf.Orbitar(AereaPara, 70f, 75f, 3f, 55f, 52f);
                 break;
+            // Close na estação da tarefa (design D8): começa na escolha e fica o mesmo até sair da tarefa concluída,
+            // sem a câmera ir e voltar entre a escolha, o cartão, o minijogo e a tela de concluída.
+            case Fase.Escolha: case Fase.DecisaoVazamento: case Fase.MinijogoInfo: case Fase.Minijogo: case Fase.TarefaConcluida:
+                FocarNaTarefa(cf);
+                break;
             case Fase.ComoJogar: case Fase.Creditos: case Fase.Relatorio: case Fase.MenuMinijogos:
                 break;
             default:
@@ -526,6 +543,24 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+
+    /// <summary>
+    /// Câmera na estação da tarefa de hoje. No menu de teste, sem a estação na cena, a câmera mostra a base de cima
+    /// (vista geral); na missão, sem a estação, a tarefa abre no console do hub e o close é nele.
+    /// </summary>
+    void FocarNaTarefa(CameraFoco cf)
+    {
+        var d = Missao != null ? Tarefas.Def(Missao.Hoje.Tarefa) : null;
+        Estacao e = null;
+        if (d != null) _estacoes.TryGetValue(d.Estacao, out e);
+        if (e == null && !Teste) e = _console;
+        if (e != null) { cf.FocarEstacao(e, jogador != null ? jogador.transform : null); return; }
+        CameraFoco.PoseOlhando(AereaDe, AereaPara, AereaDeslocamento, out var pos, out var rot);
+        cf.Focar(pos, rot, AereaFov);
+    }
+
+    /// <summary>Estação registrada com o id (null se a cena não tiver). Para a sonda e as capturas.</summary>
+    public Estacao EstacaoPorId(string id) => id != null && _estacoes.TryGetValue(id, out var e) ? e : null;
 
     void DefinirLuz(PresetLuz p)
     {

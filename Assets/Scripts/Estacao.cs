@@ -12,14 +12,29 @@ public class Estacao : MonoBehaviour
     public float raio = 3.2f;       // distância para poder interagir
     [Tooltip("Só marcador e rótulo, sem a base e a máquina provisórias (ex.: console sobre a mesa do hub).")]
     public bool semMaquina;
+    [Tooltip("De onde a câmera olha a estação no close do minijogo (design D8). Só a posição conta: a câmera olha para a " +
+             "estação e a põe na metade esquerda da tela. Vazio: 3,2 m da estação, do lado do hub.")]
+    public Transform pontoCamera;
 
     public bool Ativa { get; private set; }
     public bool Concluida { get; private set; }
+    /// <summary>A câmera está no close desta estação: marcador, rótulo e máquina provisória ficam escondidos.</summary>
+    public bool EmClose { get; private set; }
 
-    Transform _marcador;
+    Transform _marcador, _visual;
     TextMesh _rotulo;
     Renderer[] _corpos;
     float _fase;
+
+    /// <summary>Ponto que a câmera enquadra no close: a altura de uma bancada.</summary>
+    public Vector3 PontoDeFoco => transform.position + Vector3.up * 1.1f;
+
+    /// <summary>Close do minijogo: esconde todo o visual provisório (marcador, rótulo, base e máquina). Ao sair, volta como estava.</summary>
+    public void DefinirClose(bool close)
+    {
+        EmClose = close;
+        if (_visual != null) _visual.gameObject.SetActive(!close);
+    }
 
     void Awake()
     {
@@ -68,6 +83,7 @@ public class Estacao : MonoBehaviour
     {
         var v = transform.Find("Visual");
         if (v == null) return false;
+        _visual = v;
         _marcador = v.Find("Marcador");
         var r = v.Find("Rotulo");
         if (_marcador == null || r == null) return false;

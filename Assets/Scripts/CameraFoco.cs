@@ -62,11 +62,101 @@ public class CameraFoco : MonoBehaviour
         pos = de + rot * Vector3.right * deslocamentoLateral;
     }
 
+    // ---------- Close na estação (tarefa 7.1) ----------
+
+    /// <summary>Campo de visão do close: um pouco mais fechado que o da câmera de seguir, para não pegar parede de lado.</summary>
+    public const float FovClose = 50f;
+    /// <summary>Sem pontoCamera: distância e altura da câmera em relação à estação, do lado do hub.</summary>
+    public const float DistanciaClose = 3.2f, AlturaClose = 1.7f;
+    static readonly Vector3 Hub = new Vector3(2f, 0f, 2f);
+
+    /// <summary>Estação no close agora (o visual provisório dela fica escondido até soltar ou focar outra coisa).</summary>
+    public Estacao EstacaoEmClose { get; private set; }
+    Renderer[] _escondidos;
+
+    /// <summary>
+    /// Fração da largura da tela, a partir da esquerda, que o painel lateral deixa livre. A estação vai para o meio dela.
+    /// Definida pela interface (UIJogo); o padrão é o do referencial 1920 por 1080 (painel de 840 com margem de 48).
+    /// </summary>
+    public static float FracaoLivre = (1920f - 840f - 48f) / 1920f;
+
+    /// <summary>
+    /// Pose do close: a câmera fica no pontoCamera da estação (ou a 3,2 m, 1,7 m de altura, do lado do hub) e gira para a
+    /// direita o bastante para a estação cair no centro da faixa livre à esquerda do painel.
+    /// </summary>
+    public static void PoseDoClose(Estacao e, float aspecto, out Vector3 pos, out Quaternion rot)
+    {
+        Vector3 alvo = e.PontoDeFoco;
+        if (e.pontoCamera != null) pos = e.pontoCamera.position;
+        else
+        {
+            Vector3 paraHub = Hub - e.transform.position; paraHub.y = 0f;
+            if (paraHub.sqrMagnitude < 0.01f) paraHub = Vector3.back;
+            pos = e.transform.position + paraHub.normalized * DistanciaClose + Vector3.up * AlturaClose;
+        }
+        Quaternion olhar = Quaternion.LookRotation(alvo - pos, Vector3.up);
+        // Um ponto a θ graus à esquerda do centro aparece em x = −tan θ / tan(meio campo horizontal), em NDC.
+        float ndc = 1f - 2f * Mathf.Clamp(FracaoLivre * 0.5f, 0.15f, 0.5f);
+        float tanH = Mathf.Tan(FovClose * 0.5f * Mathf.Deg2Rad) * Mathf.Max(0.5f, aspecto);
+        float giro = Mathf.Atan(ndc * tanH) * Mathf.Rad2Deg;
+        rot = Quaternion.Euler(0f, giro, 0f) * olhar;
+    }
+
+    /// <summary>Close na estação: esconde o visual provisório dela e, se o personagem tapar a vista, esconde o personagem.</summary>
+    public void FocarEstacao(Estacao e, Transform personagem, float duracao = 0.8f)
+    {
+        if (e == null) return;
+        PoseDoClose(e, _cam.aspect, out var pos, out var rot);
+        if (EstacaoEmClose != e) LiberarEstacao();
+        EstacaoEmClose = e;
+        e.DefinirClose(true);
+        EsconderSeTapar(personagem, pos, e.PontoDeFoco);
+        Focar(pos, rot, FovClose, duracao);
+    }
+
+    void EsconderSeTapar(Transform personagem, Vector3 de, Vector3 para)
+    {
+        MostrarPersonagem();
+        if (personagem == null) return;
+        Vector3 c = personagem.position + Vector3.up * 1f;
+        Vector3 seg = para - de;
+        float t = Mathf.Clamp01(Vector3.Dot(c - de, seg) / Mathf.Max(0.0001f, seg.sqrMagnitude));
+        bool tapa = Vector3.Distance(c, de + seg * t) < 0.8f || Vector3.Distance(c, de) < 1.2f;
+        if (!tapa) return;
+        // Só os que estão ligados: ao voltar, religa exatamente esses (o personagem tem peças desligadas de propósito).
+        var lista = new System.Collections.Generic.List<Renderer>();
+        foreach (var r in personagem.GetComponentsInChildren<Renderer>()) if (r && r.enabled) { r.enabled = false; lista.Add(r); }
+        _escondidos = lista.ToArray();
+    }
+
+    void MostrarPersonagem()
+    {
+        if (_escondidos == null) return;
+        foreach (var r in _escondidos) if (r) r.enabled = true;
+        _escondidos = null;
+    }
+
+    void LiberarEstacao()
+    {
+        if (EstacaoEmClose != null) EstacaoEmClose.DefinirClose(false);
+        EstacaoEmClose = null;
+        MostrarPersonagem();
+    }
+
     // ---------- Comandos ----------
 
-    /// <summary>Vai até a pose e fica nela.</summary>
+    /// <summary>Vai até a pose e fica nela. Pedir de novo a pose em que já está (ou para onde já vai) não refaz a transição.</summary>
     public void Focar(Vector3 pos, Quaternion rot, float fov, float duracao = 0.8f)
     {
+        bool mesma = Ativo && !Orbitando && (_alvoPos - pos).sqrMagnitude < 0.0025f && Quaternion.Angle(_alvoRot, rot) < 0.5f
+                     && Mathf.Abs(_alvoFov - fov) < 0.1f;
+        if (mesma) return;
+        if (EstacaoEmClose != null)
+        {
+            // Outra pose que não o close desta estação: devolve o visual dela.
+            PoseDoClose(EstacaoEmClose, _cam.aspect, out var pc, out _);
+            if ((pc - pos).sqrMagnitude > 0.0025f) LiberarEstacao();
+        }
         Orbitando = false;
         Comecar(pos, rot, fov, duracao);
     }
@@ -75,6 +165,7 @@ public class CameraFoco : MonoBehaviour
     public void Orbitar(Vector3 centro, float raio, float altura, float grausPorSegundo, float fov, float deslocamentoLateral, float duracao = 1.2f)
     {
         bool jaOrbitava = Orbitando && EstadoAtual != Estado.Voltando;
+        LiberarEstacao();
         _centro = centro; _raio = raio; _altura = altura; _grausPorS = grausPorSegundo; _deslocamento = deslocamentoLateral;
         if (!jaOrbitava) _angulo = 200f; // começa vendo a base de frente
         Orbitando = true;
@@ -85,6 +176,7 @@ public class CameraFoco : MonoBehaviour
     /// <summary>Devolve a câmera ao personagem com uma transição suave.</summary>
     public void Soltar(float duracao = 0.6f)
     {
+        LiberarEstacao();
         if (EstadoAtual == Estado.Livre || EstadoAtual == Estado.Voltando) return;
         Orbitando = false;
         _dePos = transform.position; _deRot = transform.rotation; _deFov = _cam.fieldOfView;

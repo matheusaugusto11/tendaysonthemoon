@@ -116,6 +116,23 @@ namespace DezDias
         public static readonly Txt Concluido = T("Concluído!", "Done!");
         public static readonly Txt TempoEsgotado = T("Tempo esgotado!", "Time's up!");
         public static readonly Txt Nota = T("Nota: {0}%", "Score: {0}%");
+        // Faixa de resultado do minijogo (spec apresentacao-dos-minijogos, "Fim sem punição")
+        public static readonly Txt Otimo = T("Ótimo!", "Great!");
+        public static readonly Txt Bom = T("Bom!", "Good!");
+        public static readonly Txt NaoDeu = T("Não deu desta vez", "Not this time");
+        public static readonly Txt NotaCurta = T("Nota {0}%", "Score {0}%");
+        public static readonly Txt Sobrecarga = T("Sobrecarga", "Overload");
+        public static readonly Txt Carga = T("Carga {0} de {1}", "Load {0} of {1}");
+        public static readonly Txt XDeY = T("{0} de {1}", "{0} of {1}");
+        public static readonly Txt LigarEste = T("Ligar este", "Switch on");
+        // Gesto de cada minijogo (cartão de primeira vez e mão fantasma)
+        public static readonly Txt GestoArrastar = T("Arraste", "Drag");
+        public static readonly Txt GestoEsfregar = T("Esfregue", "Scrub");
+        public static readonly Txt GestoRitmo = T("Toque no ritmo", "Tap in rhythm");
+        public static readonly Txt GestoSegurar = T("Segure", "Hold");
+        public static readonly Txt GestoGirar = T("Toque para girar", "Tap to turn");
+        public static readonly Txt GestoLigar = T("Arraste para ligar", "Drag to switch on");
+        public static readonly Txt OlheComoFaz = T("Olhe como se faz", "Watch how it is done");
 
         // ---------- Distribuição ----------
         public static readonly Txt Distribuir = T("Distribuir energia", "Share out the energy");

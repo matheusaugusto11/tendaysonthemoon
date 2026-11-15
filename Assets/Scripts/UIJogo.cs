@@ -48,13 +48,15 @@ public class UIJogo
     Image[] _setaPartes;
     Text _avisoTexto;
     float _avisoAte;
-    // Minigame
-    Text _miniTitulo, _miniInstrucao, _miniTempo, _miniMsg;
-    BotaoFisico _btnMiniSair;
-    RectTransform _miniArea, _miniBarra;
-    Image _miniCursor, _miniBarraImg;
+    // Minigame (painel lateral do molde D9)
+    RectTransform _miniPainel, _miniArea, _miniAreaFundo, _miniTempoTrilho, _miniTempoBarra, _miniProgTrilho, _miniProgBarra, _miniFaixa;
+    FormaUI _miniTira, _miniProgForma, _miniFaixaFace;
+    Text _miniTitulo, _miniInstrucao, _miniTempo, _miniFaixaTitulo, _miniFaixaTexto;
+    Image _miniIcone, _miniCursor, _miniFaixaIcone, _miniTempoIcone, _miniProgIcone;
+    BotaoFisico _btnMiniSair, _btnMiniAjuda;
+    CanvasGroup _miniFaixaGrupo;
     Minigame _minigameAtual;
-    bool _miniInstrucaoVisivel;
+    float _miniProgAlvo, _miniProgVis, _miniFaixaInicio = -10f;
     // Pausa
     BotaoFisico _btnContinuar, _btnReiniciar, _btnSom, _btnSimVoltar, _btnNaoVoltar;
     Text _pausaTitulo, _pausaAjuda, _pausaPergunta;
@@ -258,43 +260,183 @@ public class UIJogo
         _scroll.scrollSensitivity = 40f;
     }
 
+    /// <summary>Filho de <paramref name="pai"/> preso no canto superior esquerdo (posição em y para baixo, como num texto).</summary>
+    static RectTransform NoTopo(string nome, Transform pai)
+    {
+        var rt = RT(nome, pai);
+        rt.anchorMin = rt.anchorMax = new Vector2(0, 1); rt.pivot = new Vector2(0, 1);
+        return rt;
+    }
+
+    static void Colocar(RectTransform rt, float x, float y, float w, float h)
+    {
+        rt.sizeDelta = new Vector2(w, h); rt.anchoredPosition = new Vector2(x, -y);
+    }
+
+    /// <summary>
+    /// Painel do minijogo (design D9): no lugar do painel lateral (D7), à direita, com a estação em close à esquerda.
+    /// De cima para baixo: ícone e título da tarefa, instrução em uma frase, relógio (ícone, segundos e barra que
+    /// esvazia), a Area de 760 por 560 e o rodapé com a barra de progresso, "?" e "Sair". Sem véu sobre a cena.
+    /// </summary>
     void ConstruirMinigame()
     {
-        var veu = UiTema.Pagina; veu.a = 0.75f;
-        _painelMinigame = Painel("Minigame", veu);
-        var cm = Caixa(_painelMinigame.transform, new Vector2(1500, 860));
-        _miniTitulo = Texto(cm, "", 58, new Vector2(0.5f, 0.93f), new Vector2(1250, 100));
-        _miniInstrucao = Texto(cm, "", 30, new Vector2(0.5f, 0.835f), new Vector2(1300, 90));
-        _miniInstrucao.color = UiTema.Apoio;
-        var areaGo = new GameObject("Area", typeof(RectTransform));
-        areaGo.transform.SetParent(cm, false);
-        _miniArea = (RectTransform)areaGo.transform;
-        _miniArea.anchorMin = _miniArea.anchorMax = new Vector2(0.5f, 0.45f);
-        _miniArea.sizeDelta = new Vector2(1400, 520);
-        _miniArea.anchoredPosition = Vector2.zero;
-        var fundoTempo = Retangulo(cm, new Vector2(0, 232), new Vector2(1300, 18), UiTema.Vazio);
-        var preencheT = Retangulo(fundoTempo.transform, Vector2.zero, new Vector2(1292, 12), UiTema.Branco);
-        _miniBarra = preencheT.rectTransform;
-        _miniBarraImg = preencheT;
-        _miniBarra.pivot = new Vector2(0, 0.5f);
-        _miniBarra.anchoredPosition = new Vector2(-646, 0);
-        _miniTempo = Texto(cm, "", 44, new Vector2(0.93f, 0.93f), new Vector2(200, 70));
-        _miniMsg = Texto(cm, "", 64, new Vector2(0.5f, 0.5f), new Vector2(1300, 160));
-        _miniMsg.color = UiTema.Branco;
-        _miniMsg.gameObject.AddComponent<Shadow>().effectDistance = new Vector2(3, -3);
-        _btnMiniSair = Sec(cm, "", null, () => _gm.CancelarMinijogo(), 300, UiTema.AlvoMinimo);
-        Ancorar(_btnMiniSair, new Vector2(0.14f, 0.07f));
-        var ajuda = Sec(cm, "?", null, () =>
+        _painelMinigame = new GameObject("Minigame", typeof(RectTransform));
+        _painelMinigame.transform.SetParent(_raiz, false);
+        Esticar((RectTransform)_painelMinigame.transform);
+
+        _miniPainel = RT("PainelMinijogo", _painelMinigame.transform);
+        _miniPainel.anchorMin = new Vector2(1, 0); _miniPainel.anchorMax = new Vector2(1, 1); _miniPainel.pivot = new Vector2(1, 0.5f);
+        Fundo(_miniPainel, UiTema.Aco);
+        var tiraRt = RT("Tira", _miniPainel);
+        tiraRt.anchorMin = new Vector2(0, 1); tiraRt.anchorMax = new Vector2(1, 1); tiraRt.pivot = new Vector2(0.5f, 1);
+        tiraRt.offsetMin = new Vector2(UiTema.ChanfroPainel - 2f, -8f); tiraRt.offsetMax = Vector2.zero;
+        _miniTira = tiraRt.gameObject.AddComponent<FormaUI>();
+        _miniTira.chanfro = 0; _miniTira.cantoSE = _miniTira.cantoID = false; _miniTira.raycastTarget = false;
+
+        // Cabeçalho: ícone e título da tarefa.
+        var ic = NoTopo("Icone", _miniPainel);
+        _miniIcone = ic.gameObject.AddComponent<Image>(); _miniIcone.preserveAspect = true; _miniIcone.raycastTarget = false;
+        _miniTitulo = Rot(_miniPainel, "", Papel.TituloPainel, UiTema.Branco, TextAnchor.MiddleLeft);
+        _miniTitulo.name = "TituloMinijogo";
+        Topo(_miniTitulo.rectTransform);
+        // Instrução em uma frase.
+        _miniInstrucao = Rot(_miniPainel, "", Papel.Rotulo, UiTema.Branco, TextAnchor.UpperLeft);
+        _miniInstrucao.name = "Instrucao";
+        Topo(_miniInstrucao.rectTransform);
+        // Relógio: ícone, segundos e barra que esvazia. Nunca fica vermelho, não pulsa nem toca som.
+        var ri = NoTopo("RelogioIcone", _miniPainel);
+        _miniTempoIcone = ri.gameObject.AddComponent<Image>(); _miniTempoIcone.sprite = UiTema.Icone("relogio"); _miniTempoIcone.preserveAspect = true; _miniTempoIcone.raycastTarget = false;
+        _miniTempo = Rot(_miniPainel, "", Papel.Numero, UiTema.Branco, TextAnchor.MiddleLeft);
+        _miniTempo.name = "RelogioMinijogo";
+        Topo(_miniTempo.rectTransform);
+        _miniTempoTrilho = NoTopo("RelogioTrilho", _miniPainel);
+        FormaUI.Chanfrado(_miniTempoTrilho, UiTema.Vazio, 4f, "SE ID", "Trilho");
+        _miniTempoBarra = RT("Barra", _miniTempoTrilho);
+        _miniTempoBarra.anchorMin = Vector2.zero; _miniTempoBarra.anchorMax = new Vector2(1, 1); _miniTempoBarra.pivot = new Vector2(0, 0.5f);
+        _miniTempoBarra.offsetMin = Vector2.zero; _miniTempoBarra.offsetMax = Vector2.zero;
+        FormaUI.Chanfrado(_miniTempoBarra, UiTema.Branco, 4f, "SE ID", "Face");
+
+        // Área do gesto: tela escura chanfrada, com a Area (760 por 560) por cima, na escala que couber.
+        _miniAreaFundo = RT("AreaFundo", _miniPainel);
+        _miniAreaFundo.anchorMin = _miniAreaFundo.anchorMax = new Vector2(0, 1); _miniAreaFundo.pivot = new Vector2(0.5f, 0.5f);
+        FormaUI.Chanfrado(_miniAreaFundo, UiTema.Vazio, UiTema.ChanfroBotao, "SE ID", "Fundo");
+        _miniArea = RT("Area", _miniPainel);
+        _miniArea.anchorMin = _miniArea.anchorMax = new Vector2(0, 1); _miniArea.pivot = new Vector2(0.5f, 0.5f);
+        _miniArea.sizeDelta = Minigame.TamanhoArea;
+
+        // Rodapé: barra de progresso contínua (sem nota de corte), "?" e "Sair".
+        var pi = NoTopo("ProgressoIcone", _miniPainel);
+        _miniProgIcone = pi.gameObject.AddComponent<Image>(); _miniProgIcone.sprite = UiTema.Icone("check"); _miniProgIcone.preserveAspect = true; _miniProgIcone.raycastTarget = false;
+        _miniProgTrilho = NoTopo("ProgressoTrilho", _miniPainel);
+        FormaUI.Chanfrado(_miniProgTrilho, UiTema.Vazio, 4f, "SE ID", "Trilho");
+        _miniProgBarra = RT("Barra", _miniProgTrilho);
+        _miniProgBarra.anchorMin = Vector2.zero; _miniProgBarra.anchorMax = new Vector2(0, 1); _miniProgBarra.pivot = new Vector2(0, 0.5f);
+        _miniProgBarra.offsetMin = Vector2.zero; _miniProgBarra.offsetMax = Vector2.zero;
+        _miniProgForma = FormaUI.Chanfrado(_miniProgBarra, UiTema.Ar, 4f, "SE ID", "Face");
+        _btnMiniAjuda = Sec(_miniPainel, "?", null, () => { _minigameAtual?.MostrarDemo(); Entrada.Selecionar(null); }, UiTema.AlvoMinimo, UiTema.AlvoMinimo);
+        _btnMiniAjuda.Rotulo.alignment = TextAnchor.MiddleCenter;
+        _btnMiniAjuda.name = "BotaoAjuda";
+        _btnMiniSair = Sec(_miniPainel, "", null, () => _gm.CancelarMinijogo(), 240, UiTema.AlvoMinimo);
+        _btnMiniSair.name = "BotaoSair";
+        foreach (var b in new[] { _btnMiniAjuda, _btnMiniSair })
         {
-            _miniInstrucaoVisivel = !_miniInstrucaoVisivel;
-            _miniInstrucao.gameObject.SetActive(_miniInstrucaoVisivel);
-        }, UiTema.AlvoMinimo, UiTema.AlvoMinimo);
-        ajuda.Rotulo.alignment = TextAnchor.MiddleCenter;
-        Ancorar(ajuda, new Vector2(0.06f, 0.93f));
+            var r = (RectTransform)b.transform;
+            r.anchorMin = r.anchorMax = new Vector2(0, 1); r.pivot = new Vector2(0, 1);
+            b.navigation = new Navigation { mode = Navigation.Mode.None };
+        }
+
+        // Faixa de resultado: "Ótimo!", "Bom!" ou "Não deu desta vez", com a nota e o efeito, por cima da área.
+        _miniFaixa = RT("FaixaResultado", _miniPainel);
+        _miniFaixa.anchorMin = _miniFaixa.anchorMax = new Vector2(0, 1); _miniFaixa.pivot = new Vector2(0.5f, 0.5f);
+        _miniFaixaGrupo = _miniFaixa.gameObject.AddComponent<CanvasGroup>();
+        _miniFaixaGrupo.blocksRaycasts = false;
+        _miniFaixaFace = Fundo(_miniFaixa, UiTema.Branco);
+        var fi = RT("Icone", _miniFaixa);
+        fi.anchorMin = fi.anchorMax = new Vector2(0, 0.5f); fi.pivot = new Vector2(0, 0.5f);
+        fi.sizeDelta = new Vector2(72, 72); fi.anchoredPosition = new Vector2(UiTema.E32, 0);
+        _miniFaixaIcone = fi.gameObject.AddComponent<Image>(); _miniFaixaIcone.preserveAspect = true; _miniFaixaIcone.raycastTarget = false;
+        _miniFaixaTitulo = Rot(_miniFaixa, "", Papel.TituloTela, UiTema.Tinta, TextAnchor.LowerLeft);
+        _miniFaixaTitulo.name = "FaixaTitulo";
+        Topo(_miniFaixaTitulo.rectTransform);
+        _miniFaixaTexto = Rot(_miniFaixa, "", Papel.Corpo, UiTema.Tinta, TextAnchor.UpperLeft);
+        _miniFaixaTexto.name = "FaixaTexto";
+        Topo(_miniFaixaTexto.rectTransform);
+        _miniFaixa.gameObject.SetActive(false);
+
         _miniCursor = Retangulo(_painelMinigame.transform, Vector2.zero, new Vector2(48, 48), UiTema.Energia);
         _miniCursor.sprite = ControlesMobile.Circulo();
         _miniCursor.gameObject.SetActive(false);
         _painelMinigame.SetActive(false);
+    }
+
+    static void Topo(RectTransform rt) { rt.anchorMin = rt.anchorMax = new Vector2(0, 1); rt.pivot = new Vector2(0, 1); }
+
+    /// <summary>
+    /// Posiciona o painel do minijogo no lugar do lateral e distribui as partes de cima para baixo. A Area guarda o
+    /// tamanho de 760 por 560 e só encolhe (escala) se a tela não tiver altura para ela, como num celular deitado.
+    /// </summary>
+    void PosicionarMinigame()
+    {
+        if (_minigameAtual == null) return;
+        var tam = TamanhoReferencia();
+        float topo = _hud.activeSelf ? 128f : 40f, baixo = 40f;
+        float W = Mathf.Min(840f, tam.x - 96f), H = tam.y - topo - baixo;
+        _miniPainel.sizeDelta = new Vector2(W, -(topo + baixo));
+        _miniPainel.anchoredPosition = new Vector2(-MargemRodape, (baixo - topo) * 0.5f);
+        float pad = 30f, wi = W - 2f * pad;
+
+        float y = 26f;
+        Colocar((RectTransform)_miniIcone.transform, pad, y, 56, 56);
+        Colocar(_miniTitulo.rectTransform, pad + 72f, y, wi - 72f, 56);
+        y += 56f + 10f;
+        Colocar(_miniInstrucao.rectTransform, pad, y, wi, 10);
+        float hi = Mathf.Ceil(_miniInstrucao.preferredHeight) + 2f;
+        _miniInstrucao.rectTransform.sizeDelta = new Vector2(wi, hi);
+        y += hi + 12f;
+        Colocar((RectTransform)_miniTempoIcone.transform, pad, y, 40, 40);
+        Colocar(_miniTempo.rectTransform, pad + 50f, y, 90, 40);
+        Colocar(_miniTempoTrilho, pad + 150f, y + 14f, wi - 150f, 12);
+        y += 40f + 12f;
+
+        const float rodape = 88f;
+        float livre = H - y - 12f - rodape - 20f;
+        float s = Mathf.Clamp(livre / Minigame.TamanhoArea.y, 0.5f, 1f);
+        s = Mathf.Min(s, wi / Minigame.TamanhoArea.x);
+        float cy = y + Mathf.Max(Minigame.TamanhoArea.y * s, livre) * 0.5f;
+        _miniArea.localScale = new Vector3(s, s, 1f);
+        _miniArea.anchoredPosition = new Vector2(W * 0.5f, -cy);
+        _miniAreaFundo.sizeDelta = Minigame.TamanhoArea * s;
+        _miniAreaFundo.anchoredPosition = _miniArea.anchoredPosition;
+
+        float yr = H - 20f - rodape;
+        float xAjuda = W - pad - 240f - UiTema.E12 - UiTema.AlvoMinimo;
+        Colocar((RectTransform)_miniProgIcone.transform, pad, yr + 24f, 40, 40);
+        Colocar(_miniProgTrilho, pad + 52f, yr + 34f, xAjuda - UiTema.E24 - (pad + 52f), 20);
+        ((RectTransform)_btnMiniAjuda.transform).anchoredPosition = new Vector2(xAjuda, -yr);
+        ((RectTransform)_btnMiniSair.transform).anchoredPosition = new Vector2(W - pad - 240f, -yr);
+
+        _miniFaixa.sizeDelta = new Vector2(wi, _miniFaixa.sizeDelta.y < 1f ? 190f : _miniFaixa.sizeDelta.y);
+        _miniFaixa.anchoredPosition = _miniArea.anchoredPosition;
+        _miniPainel.ForceUpdateRectTransforms();
+        // A estação vai para o meio da faixa livre à esquerda do painel.
+        CameraFoco.FracaoLivre = Mathf.Clamp01((tam.x - W - MargemRodape) / tam.x);
+    }
+
+    /// <summary>Animação do painel do minijogo: a barra de progresso anda contínua e a faixa entra em 300 ms.</summary>
+    void AnimarMinigame()
+    {
+        if (!_painelMinigame.activeSelf) return;
+        float dt = Time.unscaledDeltaTime;
+        _miniProgVis = Mathf.MoveTowards(_miniProgVis, _miniProgAlvo, dt * 1.5f);
+        _miniProgBarra.anchorMax = new Vector2(Mathf.Clamp01(_miniProgVis), 1f);
+        _miniProgBarra.gameObject.SetActive(_miniProgVis > 0.001f);
+        if (_miniFaixa.gameObject.activeSelf)
+        {
+            float k = Mathf.Clamp01((Time.unscaledTime - _miniFaixaInicio) / UiTema.TempoFaixa);
+            float e = 1f - (1f - k) * (1f - k) * (1f - k);
+            _miniFaixaGrupo.alpha = e;
+            _miniFaixa.localScale = Vector3.one * (UiTema.MovimentoReduzido ? 1f : Mathf.Lerp(0.92f, 1f, e));
+        }
     }
 
     void ConstruirPausa()
@@ -399,8 +541,8 @@ public class UIJogo
         if (f == Fase.AteTarefa || f == Fase.AteHub) MontarFaixa();
         if (f == Fase.Minijogo && _minigameAtual != null)
         {
-            _miniTitulo.text = _minigameAtual.titulo.ToString();
-            _miniInstrucao.text = _minigameAtual.instrucao.ToString();
+            TextosDoMinigame();
+            PosicionarMinigame();
         }
         AtualizarHud();
     }
@@ -638,11 +780,25 @@ public class UIJogo
 
     void TelaMinijogoInfo()
     {
+        // Cartão de primeira vez (tarefa 7.7): ícone e título da tarefa, a instrução e a ilustração do gesto, com a câmera
+        // já no close da estação, à esquerda.
         var d = Tarefas.Def(_gm.Missao.Hoje.Tarefa);
         if (d.Id == Tarefas.Amostra) DicaTutorial(Textos.DicaTutMinijogo);
-        Rot(_conteudo, d.MiniTitulo.ToString(), Papel.TituloPainel, UiTema.Branco, TextAnchor.MiddleCenter);
-        Rot(_conteudo, d.MiniInstrucao.ToString(), Papel.Corpo, UiTema.Apoio, TextAnchor.MiddleCenter);
-        Rot(_conteudo, Textos.PrimeiraVez.ToString(), Papel.Rotulo, UiTema.Apoio, TextAnchor.MiddleCenter);
+        var cab = Horizontal(_conteudo, UiTema.E16, false, 0, null, TextAnchor.MiddleLeft);
+        Icone(cab, UiTema.IconeDaTarefa(d.Id), 64);
+        Rot(cab, d.MiniTitulo.ToString(), Papel.TituloPainel, UiTema.Branco, TextAnchor.MiddleLeft);
+        Rot(_conteudo, d.MiniInstrucao.ToString(), Papel.Corpo, UiTema.Apoio);
+        var ilu = RT("Ilustracao", _conteudo);
+        Tam(ilu, -1, 230);
+        Fundo(ilu, UiTema.Vazio, UiTema.ChanfroBotao, "SE ID", false);
+        var palco = RT("Palco", ilu);
+        palco.anchorMin = palco.anchorMax = palco.pivot = new Vector2(0.5f, 0.5f);
+        palco.sizeDelta = new Vector2(560, 230);
+        DemoGesto.Criar(palco, d.Mec, Vector2.zero, Vector2.zero, true, UiTema.CorDaTarefa(d.Id));
+        var leg = Horizontal(_conteudo, UiTema.E8, false, 0, null, TextAnchor.MiddleCenter);
+        Icone(leg, "mao", 36);
+        Rot(leg, DemoGesto.Legenda(d.Mec).ToString(), Papel.Rotulo, UiTema.Branco, TextAnchor.MiddleLeft, true);
+        Rot(_conteudo, Textos.PrimeiraVez.ToString(), Papel.Rotulo, UiTema.Apoio);
         Principal(Textos.Comecar.ToString(), () => _gm.ComecarMinijogo());
     }
 
@@ -1079,6 +1235,7 @@ public class UIJogo
     {
         VerificarTamanhoDaTela();
         AnimarPainel();
+        AnimarMinigame();
         if (_avisoTexto.text != "" && Time.time > _avisoAte) _avisoTexto.text = "";
         if (!_hud.activeSelf || _gm.Missao == null) return;
         var m = _gm.Missao;
@@ -1145,33 +1302,91 @@ public class UIJogo
 
     // ---------------- Minigame ----------------
 
-    public void AbrirMinigame(Minigame m, bool mostrarInstrucao, Action<ResultadoMinijogo> aoTerminar)
+    /// <summary>Abre o minijogo no painel lateral. O resultado passa por <paramref name="aoResultado"/> (que devolve o efeito, para a faixa) e o jogo segue em <paramref name="aoFechar"/>.</summary>
+    public void AbrirMinigame(Minigame m, Func<ResultadoMinijogo, Txt> aoResultado, Action aoFechar)
     {
         _minigameAtual = m;
-        _miniTitulo.text = m.titulo.ToString();
-        _miniInstrucao.text = m.instrucao.ToString();
-        _miniInstrucaoVisivel = mostrarInstrucao;
-        _miniInstrucao.gameObject.SetActive(mostrarInstrucao);
-        _miniMsg.text = "";
-        m.Abrir(this, _miniArea, aoTerminar);
+        _painelMinigame.SetActive(true);
+        _miniFaixa.gameObject.SetActive(false);
+        TextosDoMinigame();
+        PosicionarMinigame();
+        _miniProgVis = _miniProgAlvo = 0f;
+        m.Abrir(this, _miniArea, aoResultado, aoFechar);
         Entrada.Selecionar(m.PrimeiroBotao != null ? m.PrimeiroBotao.gameObject : null);
     }
 
-    public void FecharMinigame() { _minigameAtual = null; _miniCursor.gameObject.SetActive(false); }
+    void TextosDoMinigame()
+    {
+        var m = _minigameAtual;
+        if (m == null) return;
+        _miniTitulo.text = m.titulo.ToString();
+        _miniTitulo.font = UiTema.Fonte(Papel.TituloPainel, _miniTitulo.text);
+        _miniInstrucao.text = m.instrucao.ToString();
+        _miniInstrucao.font = UiTema.Fonte(Papel.Rotulo, _miniInstrucao.text);
+        _miniIcone.sprite = UiTema.Icone(UiTema.IconeDaTarefa(m.tarefa));
+        _miniIcone.enabled = _miniIcone.sprite != null;
+        var cor = UiTema.CorDaTarefa(m.tarefa);
+        _miniTira.color = cor; _miniTira.Redesenhar();
+        _miniProgForma.color = cor;
+        _btnMiniSair.Texto(Textos.Sair.ToString());
+    }
+
+    public void FecharMinigame()
+    {
+        _minigameAtual = null;
+        _miniCursor.gameObject.SetActive(false);
+        _miniFaixa.gameObject.SetActive(false);
+    }
+
+    /// <summary>Minijogo aberto agora (para a sonda).</summary>
+    public Minigame MinigameAtual => _minigameAtual;
 
     public void LimparArea()
     {
-        foreach (Transform filho in _miniArea) UnityEngine.Object.Destroy(filho.gameObject);
-        foreach (Transform filho in _miniArea) filho.gameObject.SetActive(false);
+        foreach (Transform filho in _miniArea) { filho.gameObject.SetActive(false); UnityEngine.Object.Destroy(filho.gameObject); }
     }
 
-    public void Mensagem(string txt) => _miniMsg.text = txt;
-
+    /// <summary>Relógio do minijogo: segundos e barra que esvazia. Sempre na mesma cor, sem pulso e sem som.</summary>
     public void Tempo(float fracao, float segundos)
     {
-        _miniBarra.sizeDelta = new Vector2(1292f * Mathf.Clamp01(fracao), 12f);
-        _miniBarraImg.color = UiTema.Branco; // o relógio nunca fica vermelho nem pulsa
+        _miniTempoBarra.anchorMax = new Vector2(Mathf.Clamp01(fracao), 1f);
         _miniTempo.text = Mathf.CeilToInt(segundos) + " s";
+        _miniTempo.color = UiTema.Branco;
+    }
+
+    /// <summary>Progresso do objetivo (0 a 1). A barra anda até ele de forma contínua; <paramref name="saltar"/> põe direto.</summary>
+    public void Progresso(float valor, bool saltar)
+    {
+        _miniProgAlvo = Mathf.Clamp01(valor);
+        if (saltar) _miniProgVis = _miniProgAlvo;
+    }
+
+    /// <summary>Faixa de resultado no painel: "Ótimo!" e "Bom!" em pintura branca; "Não deu desta vez" no azul-Terra calmo.</summary>
+    public void FaixaResultado(FaixaNota faixa, float nota, Txt efeito)
+    {
+        bool naoDeu = faixa == FaixaNota.NaoDeu;
+        var corTexto = naoDeu ? UiTema.Branco : UiTema.Tinta;
+        _miniFaixaFace.color = naoDeu ? UiTema.Terra : UiTema.Branco;
+        _miniFaixaTitulo.text = (faixa == FaixaNota.Otimo ? Textos.Otimo : faixa == FaixaNota.Bom ? Textos.Bom : Textos.NaoDeu).ToString();
+        _miniFaixaTitulo.color = corTexto;
+        string detalhe = Textos.NotaCurta.F(Mathf.RoundToInt(nota * 100f)).ToString();
+        if (!efeito.Vazio) detalhe += "  ·  " + efeito;
+        _miniFaixaTexto.text = detalhe;
+        _miniFaixaTexto.font = UiTema.Fonte(Papel.Corpo, detalhe);
+        _miniFaixaTexto.color = corTexto;
+        _miniFaixaIcone.sprite = UiTema.Icone(faixa == FaixaNota.Otimo ? "estrela" : faixa == FaixaNota.Bom ? "check_tinta" : "terra");
+        _miniFaixaIcone.enabled = _miniFaixaIcone.sprite != null;
+
+        float w = _miniFaixa.sizeDelta.x, xTexto = UiTema.E32 + 72f + UiTema.E24, wt = w - xTexto - UiTema.E32;
+        Colocar(_miniFaixaTitulo.rectTransform, xTexto, UiTema.E24, wt, 70);
+        Colocar(_miniFaixaTexto.rectTransform, xTexto, UiTema.E24 + 70f, wt, 10);
+        float ht = Mathf.Ceil(_miniFaixaTexto.preferredHeight) + 2f;
+        _miniFaixaTexto.rectTransform.sizeDelta = new Vector2(wt, ht);
+        _miniFaixa.sizeDelta = new Vector2(w, Mathf.Max(170f, UiTema.E24 * 2f + 70f + ht));
+        _miniFaixa.gameObject.SetActive(true);
+        _miniFaixa.SetAsLastSibling();
+        _miniFaixaInicio = Time.unscaledTime;
+        AnimarMinigame();
     }
 
     public void Cursor(bool visivel, Vector2 posTela)

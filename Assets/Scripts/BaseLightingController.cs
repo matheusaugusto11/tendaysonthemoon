@@ -34,6 +34,12 @@ public class BaseLightingController : MonoBehaviour
     public Color tintCeuErupcao = new Color(0.85f, 0.3f, 0.3f);
     public Color tintCeuNoite = new Color(0.4f, 0.42f, 0.5f);
 
+    [Header("Orçamento de luzes")]
+    [Tooltip("Máximo de luzes pontuais/spot ligadas ao mesmo tempo (as mais próximas da câmera). Na WebGL e no celular o URP só " +
+             "aceita 32 luzes adicionais visíveis e descarta o resto, o que faz luzes apagarem e acenderem ao andar (ex.: corredor da estufa).")]
+    public int maxLuzesAtivas = 24;
+    [Tooltip("Velocidade do fade quando uma luz entra ou sai do orçamento (1/segundos)")] public float velocidadeFade = 4f;
+
     class Estado
     {
         public float sol, terra, @int, ext, emerg;
@@ -46,6 +52,11 @@ public class BaseLightingController : MonoBehaviour
 
     [NonSerialized] PArquivo _dados;
     readonly List<LightGroup> _luzes = new List<LightGroup>();
+    float[] _alvo, _fade;                              // intensidade do preset e fator do orçamento, por luz de _luzes
+    readonly List<int> _candidatas = new List<int>();
+    float[] _dist;
+    Comparison<int> _porDistancia;
+    Camera _cam;
     readonly List<Emissivo> _emissivos = new List<Emissivo>();
     Estado _atual, _de, _para;
     float _t = 1f, _duracao;
@@ -70,6 +81,7 @@ public class BaseLightingController : MonoBehaviour
         }
         _luzes.Clear();
         _luzes.AddRange(transform.root.GetComponentsInChildren<LightGroup>(true));
+        _alvo = null; GarantirVetores();
         ColetarEmissivos();
         if (Application.isPlaying && _skyClone == null && RenderSettings.skybox != null)
         {
@@ -186,20 +198,68 @@ public class BaseLightingController : MonoBehaviour
         else if (_atual.emerg > 0.001f) AplicarEmergencia(_atual); // pulsa a cada frame
     }
 
+    // Depois do Movimento e do CameraFoco (LateUpdate), com a câmera já no lugar deste quadro.
+    void LateUpdate()
+    {
+        if (_atual == null || !Application.isPlaying) return;
+        Orcamento(Time.unscaledDeltaTime);
+    }
+
+    /// <summary>
+    /// Liga só as <see cref="maxLuzesAtivas"/> luzes (int/ext/emerg com intensidade) mais próximas da câmera, com fade.
+    /// As paredes não bloqueiam a culling de luz do Unity: do corredor da estufa a câmera "vê" 35 a 52 esferas de luz,
+    /// e acima de 32 (WebGL/celular) o URP descarta luzes de forma instável entre quadros.
+    /// </summary>
+    void Orcamento(float dt)
+    {
+        if (_alvo == null || _alvo.Length != _luzes.Count) return;
+        if (_cam == null) _cam = Camera.main;
+        Vector3 c = _cam != null ? _cam.transform.position : Vector3.zero;
+        _candidatas.Clear();
+        for (int i = 0; i < _luzes.Count; i++)
+        {
+            var g = _luzes[i];
+            if (g == null || g.Luz.type == LightType.Directional || _alvo[i] <= 0.001f) continue;
+            // distância ao centro (não à borda do alcance: dentro do hub muitas esferas empatariam em 0 e a ordem pularia)
+            _dist[i] = (c - g.transform.position).sqrMagnitude;
+            _candidatas.Add(i);
+        }
+        if (_porDistancia == null) _porDistancia = (a, b) => { int r = _dist[a].CompareTo(_dist[b]); return r != 0 ? r : a.CompareTo(b); };
+        _candidatas.Sort(_porDistancia);
+        float passo = velocidadeFade * dt;
+        for (int k = 0; k < _candidatas.Count; k++)
+        {
+            int i = _candidatas[k];
+            _fade[i] = Mathf.MoveTowards(_fade[i], k < maxLuzesAtivas ? 1f : 0f, passo);
+        }
+        for (int i = 0; i < _luzes.Count; i++)
+        {
+            var g = _luzes[i];
+            if (g == null || g.Luz.type == LightType.Directional) continue;
+            float inten = _alvo[i] * _fade[i];
+            g.Luz.intensity = inten;
+            g.Luz.enabled = inten > 0.001f;
+        }
+    }
+
     void Aplicar(Estado e)
     {
         if (sol != null) { sol.intensity = e.sol * fatorSol; sol.color = e.solCor.gamma; sol.transform.rotation = e.solRot; }
         if (terra != null) terra.intensity = e.terra * fatorTerra;
-        foreach (var g in _luzes)
+        GarantirVetores();
+        for (int i = 0; i < _luzes.Count; i++)
         {
+            var g = _luzes[i];
             if (g == null) continue;
             switch (g.grupo)
             {
-                case "int": g.Luz.intensity = g.energiaBase * e.@int; break;
-                case "ext": g.Luz.intensity = g.energiaBase * e.ext; break;
-                case "emerg": break; // tratado em AplicarEmergencia
+                case "int": _alvo[i] = g.energiaBase * e.@int; break;
+                case "ext": _alvo[i] = g.energiaBase * e.ext; break;
+                case "emerg": continue; // tratado em AplicarEmergencia
+                default: g.Luz.enabled = g.Luz.intensity > 0.001f; continue; // sol/terra: intensidade já definida acima
             }
-            g.Luz.enabled = g.Luz.intensity > 0.001f || g.grupo == "emerg";
+            g.Luz.intensity = _alvo[i] * Fade(i);
+            g.Luz.enabled = g.Luz.intensity > 0.001f;
         }
         AplicarEmergencia(e);
         RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
@@ -223,13 +283,25 @@ public class BaseLightingController : MonoBehaviour
     void AplicarEmergencia(Estado e)
     {
         float pulso = Application.isPlaying ? 0.25f + 0.75f * (0.5f + 0.5f * Mathf.Sin(2f * Mathf.PI * pulsoHz * Time.time)) : 1f;
-        foreach (var g in _luzes)
-            if (g != null && g.grupo == "emerg")
-            {
-                g.Luz.intensity = g.energiaBase * e.emerg * pulso;
-                g.Luz.enabled = e.emerg > 0.001f;
-            }
+        for (int i = 0; i < _luzes.Count; i++)
+        {
+            var g = _luzes[i];
+            if (g == null || g.grupo != "emerg") continue;
+            _alvo[i] = e.emerg > 0.001f ? g.energiaBase * e.emerg * pulso : 0f;
+            g.Luz.intensity = _alvo[i] * Fade(i);
+            g.Luz.enabled = g.Luz.intensity > 0.001f;
+        }
     }
+
+    void GarantirVetores()
+    {
+        if (_alvo != null && _alvo.Length == _luzes.Count) return;
+        _alvo = new float[_luzes.Count]; _fade = new float[_luzes.Count]; _dist = new float[_luzes.Count];
+        for (int i = 0; i < _fade.Length; i++) _fade[i] = 1f;
+    }
+
+    // Fora do Play não há orçamento: tudo aceso (capturas do editor).
+    float Fade(int i) => Application.isPlaying && _fade != null && i < _fade.Length ? _fade[i] : 1f;
 
     // Testes no editor (menu de contexto do componente)
     [ContextMenu("Preset: Dia")] void TesteDia() => AplicarImediato(PresetLuz.Dia);

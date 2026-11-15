@@ -322,6 +322,408 @@ public class ProbeJogo : MonoBehaviour
         Checar(b.center.x > Screen.width * 0.5f && b.xMax <= Screen.width, "o botão de ação fica no lado direito da tela");
     }
 
+    // =====================================================================
+    // Minijogos na cena (grupo 7 da mudança interface-e-minijogos)
+    // =====================================================================
+
+    /// <summary>SAIR: o minijogo mostra a faixa de resultado e só depois o jogo segue.</summary>
+    IEnumerator SairDoMinijogo()
+    {
+        _gm.CancelarMinijogo();
+        float ate = Time.realtimeSinceStartup + Minigame.DuracaoFaixa + 2f;
+        while (_gm.Fase == Fase.Minijogo && Time.realtimeSinceStartup < ate) yield return null;
+        yield return null;
+    }
+
+    IEnumerator EsperarFimDoMinijogo(float max)
+    {
+        float ate = Time.realtimeSinceStartup + max;
+        while (_gm.Fase == Fase.Minijogo && Time.realtimeSinceStartup < ate) yield return null;
+        yield return null;
+    }
+
+    static readonly string[] EstacoesDeTarefa = { "airlock", "estufa", "reciclador", "filtro", "backup", "esteira", "vazamento", "disjuntores" };
+
+    static string TarefaDaEstacao(string est)
+    {
+        switch (est)
+        {
+            case "airlock": return Tarefas.Poeira;
+            case "estufa": return Tarefas.Estufa;
+            case "reciclador": return Tarefas.Agua;
+            case "filtro": return Tarefas.Filtros;
+            case "backup": return Tarefas.Upload;
+            case "esteira": return Tarefas.Exercicio;
+            case "vazamento": return Tarefas.Vazamento;
+            default: return Tarefas.Antena;
+        }
+    }
+
+    static bool ColisorDeCena(Collider c) => c != null && c.GetComponentInParent<Movimento>() == null;
+
+    /// <summary>Retângulo, em pixels, do painel à direita que está aberto (o do minijogo ou o lateral das telas).</summary>
+    static Rect PainelDireito()
+    {
+        var go = GameObject.Find("PainelMinijogo");
+        if (go == null || !go.activeInHierarchy) go = GameObject.Find("Tablet");
+        return go != null ? MundoRect((RectTransform)go.transform) : new Rect(Screen.width, 0, 0, 0);
+    }
+
+    /// <summary>Close na estação: a câmera presa nela, a estação na faixa livre à esquerda do painel, sem parede no caminho.</summary>
+    void ConferirClose(Estacao e, string nome)
+    {
+        var cf = CameraFoco.Instancia; var cam = Camera.main;
+        Checar(e != null && cf != null && cf.Ativo && cf.EstacaoEmClose == e, $"{nome}: câmera no close da estação {(e != null ? e.id : "null")}");
+        if (e == null) return;
+        Vector3 v = cam.WorldToViewportPoint(e.PontoDeFoco);
+        float livre = PainelDireito().xMin / Screen.width;
+        Checar(v.z > 0f && v.x > 0.05f && v.x < livre - 0.03f && v.y > 0.12f && v.y < 0.88f,
+            $"{nome}: a estação {e.id} aparece à esquerda do painel (x {v.x:0.00}, y {v.y:0.00}; o painel começa em {livre:0.00})");
+        bool dentro = false;
+        foreach (var c in Physics.OverlapSphere(cam.transform.position, 0.25f, ~0, QueryTriggerInteraction.Ignore)) if (ColisorDeCena(c)) dentro = true;
+        Checar(!dentro, $"{nome}: a câmera não está dentro de parede ({e.id})");
+        float d = Vector3.Distance(cam.transform.position, e.PontoDeFoco);
+        string bate = null;
+        foreach (var h in Physics.RaycastAll(cam.transform.position, (e.PontoDeFoco - cam.transform.position).normalized, d - 0.6f, ~0, QueryTriggerInteraction.Ignore))
+            if (ColisorDeCena(h.collider)) bate = h.collider.name;
+        Checar(bate == null, $"{nome}: nada entre a câmera e a estação {e.id}" + (bate != null ? " (bate em " + bate + ")" : ""));
+        var vis = e.transform.Find("Visual");
+        Checar(e.EmClose && vis != null && !vis.gameObject.activeSelf, $"{nome}: marcador, rótulo e máquina provisória escondidos no close");
+    }
+
+    /// <summary>Painel do minijogo: à direita, sem véu, com título, instrução, relógio, área, progresso, "?" e "Sair" de cima para baixo.</summary>
+    void ConferirPainelMinijogo(string nome)
+    {
+        var painel = GameObject.Find("PainelMinijogo");
+        Checar(painel != null && painel.activeInHierarchy, $"{nome}: painel do minijogo aberto");
+        if (painel == null) return;
+        Rect r = MundoRect((RectTransform)painel.transform);
+        float W = Screen.width, H = Screen.height;
+        Checar(r.xMin >= W * 0.5f && r.xMax <= W + 0.5f && Mathf.Abs(r.width / W - 840f / 1920f) < 0.02f,
+            $"{nome}: painel lateral à direita com {r.width / W:0.000} da largura");
+        bool veu = false;
+        foreach (var im in FindObjectsOfType<UnityEngine.UI.Image>())
+        {
+            if (!im.isActiveAndEnabled || im.color.a < 0.3f) continue;
+            var rr = MundoRect(im.rectTransform);
+            if (rr.width >= W * 0.95f && rr.height >= H * 0.95f) veu = true;
+        }
+        Checar(!veu, $"{nome}: sem véu escuro sobre a cena");
+        float Y(string n) { var t = painel.transform.Find(n); return t != null ? MundoRect((RectTransform)t).center.y : float.NaN; }
+        float yt = Y("TituloMinijogo"), yi = Y("Instrucao"), yr = Y("RelogioMinijogo"), ya = Y("Area"), yp = Y("ProgressoTrilho"), yq = Y("BotaoAjuda"), ys = Y("BotaoSair");
+        Checar(yt > yi && yi > yr && yr > ya && ya > yp && Mathf.Abs(yq - ys) < 2f && yq < ya,
+            $"{nome}: de cima para baixo título ({yt:0}), instrução ({yi:0}), relógio ({yr:0}), área ({ya:0}), progresso ({yp:0}), \"?\" e \"Sair\" ({yq:0})");
+        var canvas = GameObject.Find("UI_Jogo").GetComponent<Canvas>();
+        var area = painel.transform.Find("Area");
+        float ha = MundoRect((RectTransform)area).height / canvas.scaleFactor;
+        Checar(ha >= 500f, $"{nome}: a área do gesto tem {ha:0} de altura no referencial (760 por 560, encolhe só sem espaço)");
+        var tempo = painel.transform.Find("RelogioMinijogo").GetComponent<UnityEngine.UI.Text>();
+        Checar(tempo.color == UiTema.Branco, $"{nome}: o relógio do minijogo é branco");
+        Checar(!string.IsNullOrEmpty(painel.transform.Find("Instrucao").GetComponent<UnityEngine.UI.Text>().text), $"{nome}: a instrução aparece no painel");
+    }
+
+    /// <summary>Cartão de primeira vez: ícone da tarefa, ilustração do gesto e "Começar", com a câmera no close.</summary>
+    void ConferirCartao(Mecanica mec, string nome)
+    {
+        DemoGesto d = null;
+        foreach (var x in FindObjectsOfType<DemoGesto>()) if (x.ComCenario) d = x;
+        Checar(d != null && d.Mecanica == mec, $"{nome}: o cartão mostra a ilustração do gesto ({DemoGesto.Legenda(mec).Pt})");
+        var icone = UiTema.Icone(UiTema.IconeDaTarefa(_gm.Missao.Hoje.Tarefa));
+        bool achou = false;
+        foreach (var im in GameObject.Find("Tablet").GetComponentsInChildren<UnityEngine.UI.Image>()) if (im.sprite == icone && im.isActiveAndEnabled) achou = true;
+        Checar(achou, $"{nome}: o cartão mostra o ícone da tarefa");
+        Checar(AchaBotao(Textos.Comecar.ToString()) != null || AchaTexto(Textos.Comecar.ToString()) != null, $"{nome}: \"Começar\" como botão principal");
+        var cf = CameraFoco.Instancia;
+        Checar(cf != null && cf.Ativo && cf.EstacaoEmClose != null, $"{nome}: com o cartão aberto, a câmera já está no close da estação");
+    }
+
+    IEnumerator FotoDocs(string pasta, string nome)
+    {
+        yield return new WaitForEndOfFrame();
+        var tex = ScreenCapture.CaptureScreenshotAsTexture();
+        File.WriteAllBytes(Path.Combine(pasta, nome + ".jpg"), tex.EncodeToJPG(85));
+        File.WriteAllBytes(Path.Combine(_pasta, "40_" + nome + ".png"), tex.EncodeToPNG());
+        Destroy(tex);
+        yield return null;
+    }
+
+    static T Campo<T>(object o, string nome)
+    {
+        var t = o.GetType();
+        while (t != null)
+        {
+            var f = t.GetField(nome, BindingFlags.NonPublic | BindingFlags.Instance);
+            if (f != null) return (T)f.GetValue(o);
+            t = t.BaseType;
+        }
+        return default;
+    }
+
+    static void DefinirCampo(object o, string nome, object v)
+    {
+        var t = o.GetType();
+        while (t != null)
+        {
+            var f = t.GetField(nome, BindingFlags.NonPublic | BindingFlags.Instance);
+            if (f != null) { f.SetValue(o, v); return; }
+            t = t.BaseType;
+        }
+    }
+
+    bool TemCor(Transform raiz, Color c)
+    {
+        foreach (var g in raiz.GetComponentsInChildren<UnityEngine.UI.Graphic>())
+            if (g.isActiveAndEnabled && Mathf.Abs(g.color.r - c.r) < 0.02f && Mathf.Abs(g.color.g - c.g) < 0.02f && Mathf.Abs(g.color.b - c.b) < 0.02f && g.color.a > 0.05f) return true;
+        return false;
+    }
+
+    IEnumerator TestarMinijogosNovos()
+    {
+        Idioma.Definir(Lingua.Pt);
+        string pastaDocs = Path.Combine(_raiz, "Docs/05-UI/capturas-minijogos");
+        Directory.CreateDirectory(pastaDocs);
+        _gm.AbrirMenuMinijogos();
+        _gm.DefinirModoTeste(Modo.Cadete);
+        yield return null;
+
+        // ---- 7.1 e 7.2: close em cada uma das 8 estações, com o painel aberto, e uma captura de cada ----
+        foreach (var est in EstacoesDeTarefa)
+        {
+            string id = TarefaDaEstacao(est);
+            _gm.TestarMinijogo(id);
+            yield return new WaitForSecondsRealtime(1.2f);
+            var e = _gm.EstacaoPorId(est);
+            ConferirClose(e, "close " + est);
+            ConferirPainelMinijogo("painel " + id);
+            yield return FotoDocs(pastaDocs, est);
+            yield return SairDoMinijogo();
+            if (_gm.Fase == Fase.DecisaoVazamento) { _gm.VazamentoReforcar(); yield return null; }
+        }
+
+        // ---- Menu de teste sem a estação na cena: vista geral da base ----
+        {
+            var dic = Campo<System.Collections.Generic.Dictionary<string, Estacao>>(_gm, "_estacoes");
+            var rec = dic["reciclador"];
+            dic.Remove("reciclador");
+            _gm.TestarMinijogo(Tarefas.Agua);
+            yield return new WaitForSecondsRealtime(1.3f);
+            Checar(_gm.Fase == Fase.Minijogo && CameraFoco.Instancia.EstacaoEmClose == null && Camera.main.transform.position.y > 50f,
+                $"menu de teste sem a estação na cena: o minijogo abre no mesmo painel, com a vista geral da base (câmera a {Camera.main.transform.position.y:0} m)");
+            ConferirPainelMinijogo("teste sem estação");
+            yield return Foto("41_teste_sem_estacao", 0f);
+            dic["reciclador"] = rec;
+            yield return SairDoMinijogo();
+        }
+
+        // ---- Leitura do painel e sobrecarga (disjuntores da estufa) ----
+        _gm.TestarMinijogo(Tarefas.Estufa);
+        yield return new WaitForSecondsRealtime(1.2f);
+        ConferirPainelMinijogo("disjuntores");
+        Checar(AchaTextoContendo(UiTema.Caixa(Textos.Carga.F(0, 0).Pt.Split(' ')[0])) != null, "disjuntores: a barra de carga aparece no painel");
+        {
+            var dj = (MinigameDisjuntores)_gm.MinigameAtual;
+            var areaRt = (RectTransform)GameObject.Find("PainelMinijogo").transform.Find("Area");
+            Vector2 posArea = areaRt.anchoredPosition;
+            dj.Soltar(dj.Alvo, true); // 75 ligados + 30 da estufa passa de 80
+            yield return null;
+            Checar(!dj.Ligada(dj.Alvo) && dj.EmSobrecarga, "sobrecarga: a alavanca volta e a estufa não liga");
+            var aviso = AchaTexto(UiTema.Caixa(Textos.Sobrecarga.ToString()));
+            Checar(aviso != null && aviso.isActiveAndEnabled && aviso.color == UiTema.Energia, "sobrecarga: o texto \"Sobrecarga\" aparece em amarelo");
+            bool hachura = false;
+            foreach (var f in areaRt.GetComponentsInChildren<FormaUI>()) if (f.modo == FormaUI.Modo.Hachurada && f.color == UiTema.Energia) hachura = true;
+            Checar(hachura, "sobrecarga: a faixa do limite da barra de carga fica amarela");
+            Checar(!TemCor(areaRt, UiTema.Alerta), "sobrecarga: nada vermelho no minijogo");
+            Checar(SonsUI.Ultimo == "naodeu", "sobrecarga: só o som grave e suave (" + SonsUI.Ultimo + ")");
+            yield return Foto("42_sobrecarga", 0.15f);
+            Checar(areaRt.anchoredPosition == posArea, "sobrecarga: sem tremor (a área não se mexe)");
+            dj.Soltar(3, false);
+            dj.Soltar(dj.Alvo, true);
+            yield return null;
+            var mg = _gm.MinigameAtual;
+            Checar(mg != null && mg.Faixa == FaixaNota.Otimo, "disjuntores resolvidos rápido: faixa \"Ótimo!\"");
+            Checar(AchaTexto(Textos.Otimo.ToString()) != null && SonsUI.Ultimo == "concluido", "faixa \"Ótimo!\" com o som de concluído");
+            yield return Foto("43_faixa_otimo", 0.45f);
+            yield return EsperarFimDoMinijogo(3f);
+            Checar(_gm.Fase == Fase.TarefaConcluida, "depois da faixa, o jogo segue para a tarefa concluída");
+        }
+
+        // ---- Antena no Cadete: resolvida dentro do limite rápido, custa 1 célula ----
+        _gm.DefinirModoTeste(Modo.Cadete);
+        _gm.TestarMinijogo(Tarefas.Antena);
+        yield return new WaitForSecondsRealtime(0.4f);
+        {
+            var an = (MinigameDisjuntores)_gm.MinigameAtual;
+            an.Soltar(0, false);
+            an.Soltar(an.Alvo, true);
+            yield return null;
+            Checar(_gm.Missao.Hoje.Custo == 1, $"antena no Cadete resolvida rápido: custa 1 célula (custo {_gm.Missao.Hoje.Custo})");
+            yield return EsperarFimDoMinijogo(3f);
+        }
+
+        // ---- Acerto no ritmo (exercício), nos dois modos ----
+        foreach (var modo in new[] { Modo.Cadete, Modo.Comandante })
+        {
+            _gm.DefinirModoTeste(modo);
+            _gm.TestarMinijogo(Tarefas.Exercicio);
+            yield return new WaitForSecondsRealtime(0.5f);
+            var es = (MinigameEsteira)_gm.MinigameAtual;
+            es.PorNaZona();
+            es.Tocar();
+            yield return new WaitForSecondsRealtime(0.05f);
+            var pip = es.Pip(0);
+            Checar(es.Acertos == 1 && pip.color == UiTema.CorDaTarefa(Tarefas.Exercicio), $"acerto no ritmo ({modo}): o pip acende na cor do sistema");
+            Checar(pip.transform.localScale.x > 1.01f, $"acerto no ritmo ({modo}): o pip pulsa em até 150 ms (escala {pip.transform.localScale.x:0.000})");
+            Checar(SonsUI.Ultimo == "acerto", $"acerto no ritmo ({modo}): toca o som de acerto");
+            yield return new WaitForSecondsRealtime(0.5f);
+            var barra = GameObject.Find("PainelMinijogo").transform.Find("ProgressoTrilho/Barra") as RectTransform;
+            Checar(barra != null && barra.anchorMax.x > 0.1f, $"acerto no ritmo ({modo}): a barra de progresso avança ({(barra != null ? barra.anchorMax.x : -1):0.00})");
+            yield return Foto("44_ritmo_" + modo, 0f);
+            yield return SairDoMinijogo();
+        }
+
+        // ---- Arte: poeira nos painéis, canos e alvos de 88 ----
+        var canvas = GameObject.Find("UI_Jogo").GetComponent<Canvas>();
+        foreach (var modo in new[] { Modo.Cadete, Modo.Comandante })
+        {
+            _gm.DefinirModoTeste(modo);
+            _gm.TestarMinijogo(Tarefas.Poeira);
+            yield return new WaitForSecondsRealtime(0.5f);
+            var areaRt = GameObject.Find("PainelMinijogo").transform.Find("Area");
+            int celulas = 0, manchas = 0, retangulos = 0;
+            foreach (var f in areaRt.GetComponentsInChildren<FormaUI>())
+            {
+                if (f.color == UiTema.PainelSolar) celulas++;
+                if (f.modo == FormaUI.Modo.Poligono && Mathf.Abs(f.color.r - UiTema.Regolito.r) < 0.02f && Mathf.Abs(f.color.g - UiTema.Regolito.g) < 0.02f) manchas++;
+            }
+            foreach (var im in areaRt.GetComponentsInChildren<UnityEngine.UI.Image>()) if (im.sprite == null) retangulos++;
+            Checar(celulas >= 24 && manchas >= 24 && retangulos == 0, $"poeira nos painéis ({modo}): painel solar azul ({celulas} células) com manchas de regolito irregulares ({manchas}), sem quadrados lisos ({retangulos})");
+            yield return Foto("45_poeira_" + modo, 0f);
+            yield return SairDoMinijogo();
+        }
+
+        _gm.DefinirModoTeste(Modo.Cadete);
+        _gm.TestarMinijogo(Tarefas.Agua);
+        yield return new WaitForSecondsRealtime(0.5f);
+        {
+            var areaRt = GameObject.Find("PainelMinijogo").transform.Find("Area");
+            float menor = float.MaxValue; int pecas = 0;
+            foreach (Transform t in areaRt) if (t.name == "Peca") { pecas++; var r = MundoRect((RectTransform)t); menor = Mathf.Min(menor, Mathf.Min(r.width, r.height) / canvas.scaleFactor); }
+            Checar(pecas == 9 && menor >= 88f, $"canos no celular: as 9 peças têm pelo menos 88 de lado ({menor:0})");
+            Checar(TemCor(areaRt, UiTema.AguaUsada), "canos: o tanque de água usada é mostarda");
+            Checar(Tarefas.Def(Tarefas.Agua).MiniInstrucao.Pt.Contains("mostarda") && Tarefas.Def(Tarefas.Agua).MiniInstrucao.En.Contains("mustard"), "canos: a instrução fala do tanque mostarda (PT e EN)");
+
+            // Últimos segundos: mesma cor, sem pulso e sem som.
+            var mg = _gm.MinigameAtual;
+            DefinirCampo(mg, "_t", mg.duracao - 3.2f);
+            yield return new WaitForSecondsRealtime(0.3f);
+            var tempo = GameObject.Find("PainelMinijogo").transform.Find("RelogioMinijogo").GetComponent<UnityEngine.UI.Text>();
+            int tocados = SonsUI.Tocados;
+            Checar(tempo.text == "3 s" && tempo.color == UiTema.Branco, $"faltando 3 s: o relógio mostra \"{tempo.text}\" na mesma cor");
+            yield return new WaitForSecondsRealtime(0.8f);
+            Checar(tempo.color == UiTema.Branco && tempo.transform.localScale == Vector3.one && SonsUI.Tocados == tocados, "últimos segundos: o relógio não muda de cor, não pulsa e não toca som");
+
+            // Tempo acabou com 30% do caminho molhado: "Não deu desta vez", azul-Terra, som grave, segue para a concluída.
+            int tam = Campo<int>(mg, "_tamCaminho");
+            DefinirCampo(mg, "_molhados", Mathf.RoundToInt(tam * 0.3f));
+            float ate = Time.realtimeSinceStartup + 3f;
+            while (mg.Faixa == null && Time.realtimeSinceStartup < ate) yield return null;
+            Checar(mg.Faixa == FaixaNota.NaoDeu, $"tempo acabou com pouco progresso: \"Não deu desta vez\" (nota {mg.Resultado.Nota * 100f:0}%)");
+            var faixa = GameObject.Find("PainelMinijogo").transform.Find("FaixaResultado");
+            var face = faixa.Find("Fundo").GetComponent<FormaUI>();
+            Checar(face.color == UiTema.Terra && AchaTexto(Textos.NaoDeu.ToString()) != null, "não deu: a faixa é azul-Terra, sem vermelho");
+            Checar(AchaTextoContendo(Textos.NotaCurta.F(Mathf.RoundToInt(mg.Resultado.Nota * 100f)).Pt) != null, "não deu: a faixa mostra a nota");
+            Checar(SonsUI.Ultimo == "naodeu", "não deu: toca o som grave e suave");
+            Checar(faixa.localPosition == faixa.localPosition && !TemCor(faixa, UiTema.Alerta), "não deu: sem vermelho na faixa");
+            yield return Foto("46_nao_deu", 0.35f);
+            yield return EsperarFimDoMinijogo(3f);
+            Checar(_gm.Fase == Fase.TarefaConcluida, "não deu: o jogo segue para a tarefa concluída");
+        }
+
+        // ---- Arrastar: pedras e caixa com pelo menos 88 ----
+        _gm.TestarMinijogo(Tarefas.Amostra);
+        yield return new WaitForSecondsRealtime(0.5f);
+        {
+            var areaRt = GameObject.Find("PainelMinijogo").transform.Find("Area");
+            float menor = float.MaxValue;
+            foreach (Transform t in areaRt) if (t.name == "Pedra" || t.name == "Caixa" || t.name == "Botao") { var r = MundoRect((RectTransform)t); menor = Mathf.Min(menor, Mathf.Min(r.width, r.height) / canvas.scaleFactor); }
+            Checar(menor >= 88f, $"arrastar: pedras, caixa e botão com pelo menos 88 ({menor:0})");
+            yield return SairDoMinijogo();
+        }
+
+        // ---- Movimento reduzido: o close corta direto ----
+        UiTema.ForcarMovimentoReduzido = true;
+        _gm.TestarMinijogo(Tarefas.Estufa);
+        yield return null;
+        Checar(CameraFoco.Instancia.EstadoAtual == CameraFoco.Estado.Preso, "movimento reduzido: a câmera corta direto para o close");
+        yield return SairDoMinijogo();
+        UiTema.ForcarMovimentoReduzido = false;
+
+        // ---- Primeira vez nos canos (tdm_seen apagado) e a segunda abertura sem o cartão ----
+        string vistosAntes = PlayerPrefs.GetString("tdm_seen", "");
+        PlayerPrefs.DeleteKey("tdm_seen");
+        Campo<System.Collections.Generic.HashSet<string>>(_gm, "_vistos").Clear();
+        for (int vez = 0; vez < 2; vez++)
+        {
+            _gm.JogarDeNovo();
+            yield return null;
+            _gm.Comecar(Modo.Comandante);
+            yield return null;
+            if (_gm.Fase == Fase.ComoJogar) { _gm.PularSlides(); yield return null; }
+            _gm.Missao.Hoje.Tarefa = Tarefas.Agua;
+            _gm.SairDoBoletim();
+            yield return null;
+            yield return Teleportar(_gm.Alvo);
+            yield return new WaitForSeconds(0.2f);
+            _gm.Interagir();
+            yield return null;
+            _gm.EscolherFazer();
+            yield return new WaitForSecondsRealtime(1.3f);
+            if (vez == 0)
+            {
+                Checar(_gm.Fase == Fase.MinijogoInfo, "primeira vez nos canos: abre o cartão");
+                ConferirCartao(Mecanica.Canos, "primeira vez nos canos");
+                ConferirClose(_gm.EstacaoPorId("reciclador"), "cartão dos canos");
+                yield return Foto("47_primeira_vez_canos", 0f);
+                _gm.ComecarMinijogo();
+                yield return new WaitForSecondsRealtime(0.5f);
+                Checar(_gm.Fase == Fase.Minijogo && _gm.MinigameAtual != null && !_gm.MinigameAtual.EmDemonstracao && _gm.MinigameAtual.Tempo > 0f,
+                    "sem o tutorial, o minijogo começa com o relógio na hora");
+                yield return SairDoMinijogo();
+            }
+            else
+            {
+                Checar(_gm.Fase == Fase.Minijogo, "segunda abertura dos canos: começa sem o cartão");
+                yield return SairDoMinijogo();
+            }
+        }
+        Checar(PlayerPrefs.GetString("tdm_seen", "").Contains(Tarefas.Agua), "os canos ficam marcados como vistos em tdm_seen");
+        // Cartão de primeira vez de cada mecânica: a ilustração do gesto cabe no cartão (captura de cada um).
+        {
+            var mudar = typeof(GameManager).GetMethod("MudarFase", BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var id in new[] { Tarefas.Amostra, Tarefas.Poeira, Tarefas.Exercicio, Tarefas.Vazamento, Tarefas.Agua, Tarefas.Estufa })
+            {
+                _gm.Missao.Hoje.Tarefa = id;
+                mudar.Invoke(_gm, new object[] { Fase.MinijogoInfo });
+                yield return new WaitForSecondsRealtime(0.9f);
+                ConferirCartao(Tarefas.Def(id).Mec, "cartão " + id);
+                yield return Foto("48_cartao_" + Tarefas.Def(id).Mec, 0f);
+            }
+            _gm.JogarDeNovo();
+            yield return null;
+        }
+        // Devolve os vistos de antes (a coleta de pedras), que as conferências seguintes usam.
+        var vistos = Campo<System.Collections.Generic.HashSet<string>>(_gm, "_vistos");
+        foreach (var v in vistosAntes.Split(',')) if (v.Length > 0) vistos.Add(v);
+        PlayerPrefs.SetString("tdm_seen", string.Join(",", vistos));
+        PlayerPrefs.Save();
+    }
+
+    UnityEngine.UI.Text AchaTextoContendo(string trecho)
+    {
+        foreach (var t in FindObjectsOfType<UnityEngine.UI.Text>()) if (t.isActiveAndEnabled && t.text.Contains(trecho)) return t;
+        return null;
+    }
+
     IEnumerator Start()
     {
         _raiz = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
@@ -365,6 +767,7 @@ public class ProbeJogo : MonoBehaviour
         yield return Teleportar(alvo);
         yield return new WaitForSeconds(0.2f);
         Checar(_gm.Proxima == alvo, "botão de ação perto da estação");
+        var rotAntesDoClose = Camera.main.transform.rotation;
         yield return null;
         ConferirBotaoDeAcao();
         yield return Foto("05_perto_da_estacao");
@@ -373,28 +776,59 @@ public class ProbeJogo : MonoBehaviour
         Checar(_gm.Fase == Fase.Escolha, "escolha da tarefa");
         Checar(Congelado(), "personagem parado na escolha");
         yield return Foto("06_escolha");
+        // Close na estação (tarefa 7.1): a câmera enquadra a eclusa à esquerda do painel e fica no mesmo close até a
+        // tarefa concluída.
+        ConferirClose(alvo, "escolha");
+        Vector3 poseClose = Camera.main.transform.position;
         _gm.EscolherFazer();
         yield return null;
         Checar(_gm.Fase == Fase.MinijogoInfo, "cartão de primeira vez do minijogo");
         yield return Foto("07_minijogo_info");
+        ConferirCartao(Mecanica.Lixo, "coleta de pedras");
+        Checar(Vector3.Distance(Camera.main.transform.position, poseClose) < 0.05f, "cartão de primeira vez: a câmera fica no mesmo close da escolha");
         _gm.ComecarMinijogo();
         yield return new WaitForSeconds(0.8f);
         Checar(_gm.Fase == Fase.Minijogo, "minijogo aberto");
+        Checar(Vector3.Distance(Camera.main.transform.position, poseClose) < 0.05f, "minijogo: a câmera fica no mesmo close, sem ir e voltar");
+        // Mão fantasma no Dia 1 com tutorial (tarefa 7.8): 3 s de gesto antes de o relógio começar.
+        {
+            var mg = _gm.MinigameAtual;
+            Checar(mg != null && mg.EmDemonstracao && mg.DemoAtual != null && mg.DemoAtual.Mecanica == Mecanica.Lixo,
+                "Dia 1 com tutorial: a mão fantasma mostra o gesto de arrastar a pedra");
+            Checar(mg != null && mg.Tempo == 0f, "Dia 1: o relógio do minijogo ainda não começou durante a mão fantasma");
+            yield return Foto("08a_mao_fantasma", 0.4f);
+            yield return new WaitForSeconds(Minigame.DuracaoDemo - 1.0f);
+            Checar(Minigame.DuracaoDemo / DemoGesto.CicloDe(Mecanica.Lixo) >= 2f, "Dia 1: em 3 s a mão fantasma leva a pedra até a caixa duas vezes");
+            Checar(mg != null && !mg.EmDemonstracao && mg.Tempo > 0f, $"Dia 1: depois de 3 s a mão some e o relógio começa (tempo {(mg != null ? mg.Tempo : -1):0.00} s)");
+            ConferirPainelMinijogo("coleta de pedras");
+        }
         float tr = _gm.TempoRestante;
         yield return new WaitForSeconds(0.5f);
         Checar(Mathf.Approximately(tr, _gm.TempoRestante), "relógio do dia parado no minijogo");
         yield return Foto("08_minijogo_pedras");
         int o2 = _gm.Missao.O2;
-        _gm.CancelarMinijogo();
-        yield return null;
+        yield return SairDoMinijogo();
         Checar(_gm.Fase == Fase.TarefaConcluida, "sair do minijogo conclui a tarefa");
+        Checar(Vector3.Distance(Camera.main.transform.position, poseClose) < 0.05f, "tarefa concluída: a câmera fica no mesmo close");
+        Checar(alvo.EmClose && !alvo.transform.Find("Visual").gameObject.activeSelf, "no close, o marcador, o rótulo e a máquina provisória da estação ficam escondidos");
         Checar(_gm.Missao.O2 < o2 && _gm.Missao.Hoje.Fora, "sair da coleta cobrou oxigênio e o astronauta saiu da base");
         Log("   msg: " + _gm.Missao.Hoje.MsgTarefa.Pt);
         yield return Foto("09_concluida");
         _gm.VoltarAoHub();
         yield return null;
         Checar(_gm.Fase == Fase.AteHub, "volta ao hub");
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSecondsRealtime(0.25f);
+        Checar(CameraFoco.Instancia.EstadoAtual == CameraFoco.Estado.Voltando, "fim do minijogo: a câmera volta ao personagem com transição, sem corte seco");
+        yield return new WaitForSecondsRealtime(0.6f);
+        {
+            var cf = CameraFoco.Instancia;
+            var mov = FindObjectOfType<Movimento>();
+            float dist = Vector3.Distance(Camera.main.transform.position, mov.transform.position);
+            float ang = Quaternion.Angle(Camera.main.transform.rotation, rotAntesDoClose);
+            Checar(cf.EstadoAtual == CameraFoco.Estado.Livre && dist < 10f, $"fim do minijogo: a câmera voltou para trás do personagem (distância {dist:0.0} m)");
+            Checar(ang < 1f, $"fim do minijogo: a câmera voltou ao ângulo de antes ({ang:0.0} graus de diferença)");
+            Checar(!alvo.EmClose && alvo.transform.Find("Visual").gameObject.activeSelf, "fim do close: o visual da estação volta");
+        }
         Checar(_gm.Alvo != null && _gm.Alvo.id == "console", "seta aponta o console do hub");
         yield return Teleportar(_gm.Alvo);
         yield return new WaitForSeconds(0.2f);
@@ -520,9 +954,9 @@ public class ProbeJogo : MonoBehaviour
                 yield return null;
                 if (_gm.Fase == Fase.MinijogoInfo) { yield return Foto("16_vazamento_info"); _gm.ComecarMinijogo(); }
                 yield return new WaitForSeconds(0.5f);
-                _gm.CancelarMinijogo();
-                yield return null;
+                yield return SairDoMinijogo();
                 Checar(_gm.Fase == Fase.DecisaoVazamento, "vazamento: decisão depois do minijogo");
+                Checar(CameraFoco.Instancia.EstacaoEmClose != null && CameraFoco.Instancia.EstacaoEmClose.id == "vazamento", "decisão do vazamento: a câmera continua no close da estação");
                 yield return Foto("17_decisao_vazamento");
                 _gm.VazamentoDepois();
                 yield return null;
@@ -601,14 +1035,15 @@ public class ProbeJogo : MonoBehaviour
             _gm.TestarMinijogo(id);
             yield return new WaitForSeconds(0.7f);
             Checar(_gm.Fase == Fase.Minijogo, "minijogo de teste aberto: " + id);
+            Checar(_gm.MinigameAtual != null && !_gm.MinigameAtual.EmDemonstracao, "menu de teste: sem mão fantasma, o relógio começa na hora: " + id);
             yield return Foto("24_mini_" + id);
-            _gm.CancelarMinijogo();
-            yield return null;
+            yield return SairDoMinijogo();
             if (_gm.Fase == Fase.DecisaoVazamento) _gm.VazamentoReforcar();
             yield return null;
             Checar(_gm.Fase == Fase.TarefaConcluida, "minijogo de teste termina: " + id);
             Log("   " + id + ": " + _gm.Missao.Hoje.MsgTarefa.Pt);
         }
+        yield return TestarMinijogosNovos();
         _gm.JogarDeNovo();
         yield return null;
         yield return Extras();
@@ -768,7 +1203,7 @@ public class ProbeJogo : MonoBehaviour
         _gm.AbrirMenuMinijogos();
         _gm.DefinirModoTeste(Modo.Comandante);
         _gm.TestarMinijogo(Tarefas.Filtros);
-        yield return new WaitForSeconds(Tarefas.Def(Tarefas.Filtros).Limite + 1.6f);
+        yield return new WaitForSeconds(Tarefas.Def(Tarefas.Filtros).Limite + Minigame.DuracaoFaixa + 0.8f);
         Checar(_gm.Fase == Fase.TarefaConcluida, "minijogo termina sozinho quando o tempo acaba");
         Log("   filtros no fim do tempo: " + _gm.Missao.Hoje.MsgTarefa.Pt);
         _gm.JogarDeNovo();
@@ -793,8 +1228,8 @@ public class ProbeJogo : MonoBehaviour
         _gm.EscolherFazer();
         yield return null;
         Checar(_gm.Fase == Fase.Minijogo, "segunda abertura do minijogo começa sem o cartão");
-        _gm.CancelarMinijogo();
-        yield return null;
+        Checar(_gm.MinigameAtual != null && !_gm.MinigameAtual.EmDemonstracao, "sem o tutorial, o relógio do minijogo começa na hora");
+        yield return SairDoMinijogo();
         _gm.JogarDeNovo();
         yield return null;
     }

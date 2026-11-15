@@ -119,7 +119,7 @@ namespace DezDias
                 FicarCusto = T("energia -0 · O2 +0", "energy -0 · O2 +0"),
                 FicarDesc = T("A energia de hoje fica inteira, mas a água de hoje se perde.", "Today's energy stays whole, but today's water is lost."),
                 MiniTitulo = T("Canos da reciclagem", "Recycler pipes"),
-                MiniInstrucao = T("Clique nos canos para girar e ligue o tanque amarelo (água usada) ao azul (água limpa).", "Click the pipes to turn them and link the yellow tank (used water) to the blue one (clean water)."),
+                MiniInstrucao = T("Clique nos canos para girar e ligue o tanque mostarda (água usada) ao azul (água limpa).", "Click the pipes to turn them and link the mustard tank (used water) to the blue one (clean water)."),
             });
             Add(new TarefaDef
             {
