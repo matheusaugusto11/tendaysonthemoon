@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b73d7f5255c71443eab3074819493747, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 9100000, guid: 63afa1b6adb5448a9a295b74476d2394, type: 2}
   passadaCaminhar: 1.5
   passadaCorrer: 4.5
   limiteParado: 0.2

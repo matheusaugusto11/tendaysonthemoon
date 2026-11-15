@@ -5,8 +5,8 @@
    "nome": "Astronauta_Engenharia",
    "arquivo": "Astronauta_Engenharia.fbx",
    "tipo": "Astronauta",
-   "altura_m": 1.915,
-   "triangulos": 1628,
+   "altura_m": 1.905,
+   "triangulos": 10756,
    "ossos": [
     {
      "osso": "Hips",
@@ -240,8 +240,8 @@
    "nome": "Astronauta_Botanica",
    "arquivo": "Astronauta_Botanica.fbx",
    "tipo": "Astronauta",
-   "altura_m": 1.915,
-   "triangulos": 1356,
+   "altura_m": 1.905,
+   "triangulos": 10432,
    "ossos": [
     {
      "osso": "Hips",
@@ -487,8 +487,8 @@
    "nome": "Astronauta_Medicina",
    "arquivo": "Astronauta_Medicina.fbx",
    "tipo": "Astronauta",
-   "altura_m": 1.915,
-   "triangulos": 1280,
+   "altura_m": 1.905,
+   "triangulos": 9932,
    "ossos": [
     {
      "osso": "Hips",
@@ -710,8 +710,8 @@
    "nome": "Astronauta_Ciencia",
    "arquivo": "Astronauta_Ciencia.fbx",
    "tipo": "Astronauta",
-   "altura_m": 1.915,
-   "triangulos": 1360,
+   "altura_m": 1.905,
+   "triangulos": 10092,
    "ossos": [
     {
      "osso": "Hips",
@@ -950,7 +950,7 @@
    "arquivo": "Robo_Assistente.fbx",
    "tipo": "Robo",
    "altura_m": 1.367,
-   "triangulos": 1592,
+   "triangulos": 4864,
    "ossos": [
     {
      "osso": "Root",
