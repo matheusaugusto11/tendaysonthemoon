@@ -19,14 +19,27 @@ public static class MontarBase
     const string MatDir = "Assets/Materials/Base";
     const string Cena = "Assets/Scenes/Game.unity";
 
-    static MontarBase()
+    static double _proxima;
+    static MontarBase() { EditorApplication.update += Sondar; }
+
+    // Verifica a cada ~1 s se há um pedido (arquivos em Temp/) para montar a base ou capturar vistas.
+    static void Sondar()
     {
-        EditorApplication.delayCall += () =>
-        {
-            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
-            if (File.Exists("Temp/pedido_montar_base.txt")) { File.Delete("Temp/pedido_montar_base.txt"); Montar(); }
-            if (File.Exists("Temp/pedido_capturas.txt")) { File.Delete("Temp/pedido_capturas.txt"); Capturar(); }
-        };
+        if (EditorApplication.timeSinceStartup < _proxima) return;
+        _proxima = EditorApplication.timeSinceStartup + 1.0;
+        if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling || EditorApplication.isUpdating) return;
+        if (File.Exists("Temp/pedido_montar_base.txt")) { File.Delete("Temp/pedido_montar_base.txt"); Montar(); }
+        if (File.Exists("Temp/pedido_capturas.txt")) { File.Delete("Temp/pedido_capturas.txt"); Capturar(); }
+        if (File.Exists("Temp/pedido_portas.txt")) { File.Delete("Temp/pedido_portas.txt"); FixarPosePortas(); }
+        if (File.Exists("Temp/pedido_dump.txt")) { File.Delete("Temp/pedido_dump.txt"); DumpRaiz(); }
+    }
+
+    static void DumpRaiz()
+    {
+        var sb = new System.Text.StringBuilder();
+        foreach (var g in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+            sb.AppendLine($"{(g.activeSelf ? "ON " : "off")} {g.name}  pos={g.transform.position}  filhos={g.transform.childCount}  mov={(g.GetComponent<Movimento>() != null)}");
+        File.WriteAllText("Temp/dump_raiz.txt", sb.ToString());
     }
 
     // ---------------- JSON ----------------
@@ -112,12 +125,7 @@ public static class MontarBase
         var antigo = GameObject.Find("Base");
         if (antigo != null) UnityEngine.Object.DestroyImmediate(antigo);
 
-        // objetos de teste antigos: desligados (não apagados)
-        DesligarTeste("Chao"); DesligarTeste("estufa (3)");
-        var velhoCenario = GameObject.Find("Cenario");
-        if (velhoCenario != null) { velhoCenario.name = "Cenario (teste antigo)"; velhoCenario.SetActive(false); relatorio.Add("Objetos de teste antigos (Cenario, Chao, estufa (3)) foram DESATIVADOS, não apagados."); }
-        var dirLuzVelha = GameObject.Find("Directional Light");
-        if (dirLuzVelha != null) dirLuzVelha.SetActive(false);
+        LimparRaiz(cena, relatorio);
 
         var raiz = new GameObject("Base");
         var gCenario = Filho(raiz, "Cenario"); var gPortas = Filho(raiz, "Portas"); var gLuzes = Filho(raiz, "Luzes"); var gAmb = Filho(raiz, "Ambiente");
@@ -158,6 +166,7 @@ public static class MontarBase
         var instP = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(Dir + "base_portas.fbx"), gPortas.transform);
         instP.name = "base_portas";
         var clipesAsset = AssetDatabase.LoadAllAssetsAtPath(Dir + "base_portas.fbx").OfType<AnimationClip>().Where(c => !c.name.StartsWith("__preview")).ToDictionary(c => c.name);
+        // pose FECHADA (quadro 1 dos clipes) antes de criar os colisores, para eles saírem do tamanho certo
         var som = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audios/doorOpening.mp3");
         int nPortas = 0, nFolhas = 0;
         foreach (var g in Ler<PortasJ>("base_portas.json").portas.GroupBy(p => p.porta))
@@ -168,7 +177,9 @@ public static class MontarBase
                 var f = instP.transform.Find(p.objeto);
                 if (f == null) { Debug.LogWarning("[MontarBase] folha não achada: " + p.objeto); continue; }
                 folhas.Add(f);
-                if (clipesAsset.TryGetValue(p.clipe_fbx, out var clip)) clips.Add(clip);
+                // Divergência do Blender: os clipes das portas da Estufa se chamam Porta_Entrada_*/Porta_Fundo_* (sem "Estufa").
+                if (clipesAsset.TryGetValue(p.clipe_fbx, out var clip) || clipesAsset.TryGetValue(p.clipe_fbx.Replace("Porta_Estufa_", "Porta_"), out clip)) clips.Add(clip);
+                else Debug.LogWarning("[MontarBase] sem clipe para " + p.objeto + " (" + p.clipe_fbx + ")");
                 if (f.GetComponent<Collider>() == null) f.gameObject.AddComponent<BoxCollider>();
                 nFolhas++;
             }
@@ -191,10 +202,69 @@ public static class MontarBase
         PosicionarJogoNaBase(relatorio);
 
         ctrl.AplicarImediato(PresetLuz.Dia);
+        FixarPosePortas();
         EditorSceneManager.MarkSceneDirty(cena);
         EditorSceneManager.SaveScene(cena);
         File.WriteAllText("Temp/relatorio_montar_base.txt", string.Join("\n", relatorio));
         Debug.Log("[MontarBase] OK:\n" + string.Join("\n", relatorio));
+    }
+
+    static readonly string[] PrefixosTeste = { "Pilar", "Pilha", "Bola", "CaixaEmpurravel", "CaixaPesada", "Degrau", "Rampa", "Chao", "Cenario", "estufa (", "Player" };
+
+    // Move para "Cenario (teste antigo)" (desativado, sem apagar) tudo que sobrou do cenário de teste e duplicatas;
+    // mantém um único jogador (_Player) e um único grupo de estações (o do layout novo).
+    static void LimparRaiz(UnityEngine.SceneManagement.Scene cena, List<string> rel)
+    {
+        GameObject arq = null;
+        foreach (var g in cena.GetRootGameObjects()) if (g.name == "Cenario (teste antigo)") { arq = g; break; }
+        if (arq == null) arq = new GameObject("Cenario (teste antigo)");
+        int movidos = 0, apagados = 0;
+
+        // estações: fica a que já está no layout novo (estufa em z < -25)
+        GameObject estacoesBoa = null;
+        foreach (var g in cena.GetRootGameObjects())
+            if (g.name == "Estacoes") { var f = g.transform.Find("Estacao_estufa"); if (f != null && f.position.z < -25f) { estacoesBoa = g; break; } }
+        if (estacoesBoa == null) foreach (var g in cena.GetRootGameObjects()) if (g.name == "Estacoes") { estacoesBoa = g; break; }
+
+        foreach (var g in cena.GetRootGameObjects())
+        {
+            if (g == arq) continue;
+            if (g.name == "CapCam") { UnityEngine.Object.DestroyImmediate(g); apagados++; continue; }
+            bool arquivar = false;
+            if (g.name == "Estacoes") arquivar = g != estacoesBoa;
+            else if (g.name == "_Player") arquivar = false;
+            else if (g.name == "Player") arquivar = true;
+            else if (g.name == "Base" || g.name == "Main Camera" || g.name == "Global Volume" || g.name == "GameManager" || g.name == "Directional Light") arquivar = false;
+            else foreach (var pre in PrefixosTeste) if (g.name.StartsWith(pre)) { arquivar = true; break; }
+            if (arquivar) { g.transform.SetParent(arq.transform, true); movidos++; }
+        }
+        arq.SetActive(false);
+        var jog = GameObject.Find("_Player"); // pode estar inativo
+        foreach (var g in cena.GetRootGameObjects()) if (g.name == "_Player") g.SetActive(true);
+        if (estacoesBoa != null) estacoesBoa.SetActive(true);
+        var dl = GameObject.Find("Directional Light"); if (dl != null) dl.SetActive(false);
+        rel.Add($"Limpeza da raiz: {movidos} objetos de teste/duplicados movidos para 'Cenario (teste antigo)' (desativado, nada foi apagado); {apagados} temporário(s) removido(s).");
+    }
+
+    /// <summary>Grava na cena a pose FECHADA correta de cada folha (como a porta verde do Hub), sem depender do Play.</summary>
+    [MenuItem("Tools/Base Lunar/Fixar pose fechada das portas")]
+    public static void FixarPosePortas()
+    {
+        int n = 0;
+        foreach (var p in UnityEngine.Object.FindObjectsOfType<Porta>())
+        {
+            p.Preparar();
+            foreach (var f in p.folhas)
+            {
+                if (f == null) continue;
+                PrefabUtility.RecordPrefabInstancePropertyModifications(f);
+                EditorUtility.SetDirty(f);
+                n++;
+            }
+        }
+        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+        Debug.Log($"[MontarBase] pose fechada gravada em {n} folhas de porta.");
     }
 
     static void DesligarTeste(string nome) { var g = GameObject.Find(nome); if (g != null) g.SetActive(false); }
@@ -209,7 +279,7 @@ public static class MontarBase
     static bool DeveTerColisor(string nome) => ComColisor.Contains(nome);
 
     // Ponto de partida do prompt: W/100 (pontos) e W/150 (spots). Ajustado olhando as imagens de referência.
-    const float DivisorPonto = 35f, DivisorSpot = 60f;
+    const float DivisorPonto = 35f, DivisorSpot = 32f;
 
     static void Calibrar(Light l, LuzJ j, LightGroup lg)
     {
@@ -227,7 +297,7 @@ public static class MontarBase
         {
             l.type = LightType.Spot;
             lg.energiaBase = j.energia_blender_W / DivisorSpot;
-            l.range = 14f;
+            l.range = 16f;
             l.spotAngle = j.cone_graus > 0 ? j.cone_graus : 75f;
             l.innerSpotAngle = l.spotAngle * 0.6f;
             l.shadows = LightShadows.Soft;
@@ -325,6 +395,15 @@ public static class MontarBase
         ("hub", new Vector3(0f, 1.8f, 5.6f), new Vector3(0f, 1.9f, -3f), 75),
         ("laboratorio", new Vector3(-15.6f, 2.1f, -9.4f), new Vector3(-22f, 1.2f, -13f), 70),
         ("estufa", new Vector3(0, 2.0f, -17.2f), new Vector3(0, 1.4f, -32f), 70),
+        ("pouso", new Vector3(-12f, 9f, 16f), new Vector3(-30f, 0f, 30f), 60),
+        ("solar", new Vector3(30f, 10f, 0f), new Vector3(50f, 0f, 10f), 60),
+        ("lab_fundo", new Vector3(-19.36f, 1.7f, -11.18f), new Vector3(-24.56f, 1.5f, -14.18f), 70),
+        ("lab_porta", new Vector3(-19.36f, 1.7f, -11.18f), new Vector3(-14.16f, 1.5f, -8.18f), 70),
+        ("dorm_fundo", new Vector3(19.36f, 1.7f, 11.18f), new Vector3(24.56f, 1.5f, 14.18f), 70),
+        ("dorm_porta", new Vector3(19.36f, 1.7f, 11.18f), new Vector3(14.16f, 1.5f, 8.18f), 70),
+        ("hub_costas", new Vector3(0f, 1.8f, -4.5f), new Vector3(0f, 1.6f, 5f), 75),
+        ("porta_energia", new Vector3(-2.55f, 1.6f, 1.47f), new Vector3(-5.67f, 1.5f, 3.27f), 60),
+        ("porta_agua", new Vector3(2.55f, 1.6f, -1.47f), new Vector3(5.67f, 1.5f, -3.27f), 60),
         ("eclusa_externa", new Vector3(0, 2.6f, 40f), new Vector3(0, 2f, 28.3f), 65),
     };
 
@@ -335,12 +414,15 @@ public static class MontarBase
         if (ctrl == null) { Debug.LogError("[MontarBase] BaseLightingController não achado."); return; }
         string pasta = "Docs/capturas-base";
         Directory.CreateDirectory(pasta);
+        foreach (var pt in UnityEngine.Object.FindObjectsOfType<Porta>()) pt.Preparar(); // portas na pose fechada
         // esconde jogador e estações (não fazem parte do cenário de referência)
         var escondidos = new List<GameObject>();
-        foreach (var n in new[] { "Player", "Estacoes" }) { var o = GameObject.Find(n); if (o != null && o.activeSelf) { o.SetActive(false); escondidos.Add(o); } }
-        var go = new GameObject("CapCam"); var cam = go.AddComponent<Camera>();
+        foreach (var n in new[] { "Player", "_Player", "Estacoes" }) { var o = GameObject.Find(n); if (o != null && o.activeSelf) { o.SetActive(false); escondidos.Add(o); } }
+        GameObject go = null; RenderTexture rt = null;
+        try {
+        go = new GameObject("CapCam"); var cam = go.AddComponent<Camera>();
         cam.clearFlags = CameraClearFlags.Skybox; cam.allowHDR = true; cam.nearClipPlane = 0.1f; cam.farClipPlane = 1500f;
-        var rt = new RenderTexture(1280, 720, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+        rt = new RenderTexture(1280, 720, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
         cam.targetTexture = rt;
         foreach (PresetLuz p in Enum.GetValues(typeof(PresetLuz)))
         {
@@ -355,9 +437,17 @@ public static class MontarBase
                 UnityEngine.Object.DestroyImmediate(tex);
             }
         }
+        foreach (var lg in UnityEngine.Object.FindObjectsOfType<LightGroup>().Where(x => x.name.StartsWith("Farol pouso") || x.name.StartsWith("Farol eclusa a1")))
+            Debug.Log($"[luz] {lg.name} grupo={lg.grupo} base={lg.energiaBase} tipo={lg.Luz.type} I={lg.Luz.intensity} range={lg.Luz.range} ang={lg.Luz.spotAngle} sombra={lg.Luz.shadows} enabled={lg.Luz.enabled} fwd={lg.transform.forward} pos={lg.transform.position}");
         ctrl.AplicarImediato(PresetLuz.Dia);
-        foreach (var o in escondidos) o.SetActive(true);
-        cam.targetTexture = null; UnityEngine.Object.DestroyImmediate(rt); UnityEngine.Object.DestroyImmediate(go);
         Debug.Log("[MontarBase] capturas em " + pasta);
+        }
+        finally
+        {
+            // sempre restaura a cena, mesmo se a captura falhar
+            foreach (var o in escondidos) if (o != null) o.SetActive(true);
+            if (go != null) { var c = go.GetComponent<Camera>(); if (c != null) c.targetTexture = null; UnityEngine.Object.DestroyImmediate(go); }
+            if (rt != null) UnityEngine.Object.DestroyImmediate(rt);
+        }
     }
 }

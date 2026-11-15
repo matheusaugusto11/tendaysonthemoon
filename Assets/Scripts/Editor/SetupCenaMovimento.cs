@@ -16,9 +16,8 @@ public static class SetupCenaMovimento
             bool ehGame = cena.name == "Game" || (string.IsNullOrEmpty(cena.path) && GameObject.Find("Main Camera") != null);
             if (!ehGame) return;
             bool mudou = false;
-            if (RemoverDuplicados()) mudou = true;
-            if (Object.FindObjectOfType<Movimento>() == null) { Criar(); mudou = true; }
-            if (Object.FindObjectOfType<GameManager>() == null)
+            // (jogador e cenário de teste NÃO são mais recriados automaticamente; use o menu Tools se precisar)
+            if (Object.FindObjectsOfType<GameManager>(true).Length == 0)
             {
                 var gm = new GameObject("GameManager");
                 gm.AddComponent<GameManager>();
@@ -54,7 +53,7 @@ public static class SetupCenaMovimento
     static bool CriarEstacoes()
     {
         var existentes = new System.Collections.Generic.HashSet<string>();
-        foreach (var e in Object.FindObjectsOfType<Estacao>()) existentes.Add(e.id);
+        foreach (var e in Object.FindObjectsOfType<Estacao>(true)) existentes.Add(e.id);
         var pai = GameObject.Find("Estacoes");
         bool criou = false;
         for (int i = 0; i < Estacoes.Length; i++)
@@ -130,7 +129,7 @@ public static class SetupCenaMovimento
         if (rs.Length == 0) return false;
         var b = rs[0].bounds;
         for (int i = 1; i < rs.Length; i++) b.Encapsulate(rs[i].bounds);
-        foreach (var e in Object.FindObjectsOfType<Estacao>())
+        foreach (var e in Object.FindObjectsOfType<Estacao>(true))
         {
             if (e.id != "estufa") continue;
             Vector3 p = e.transform.position;
