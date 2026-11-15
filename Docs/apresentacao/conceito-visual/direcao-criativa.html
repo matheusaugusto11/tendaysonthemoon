@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direção Criativa · Ten Days on the Moon, deck de demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Variáveis da direção: identidade do jogo (DIRECAO-DE-INTERFACE.md e ART-BIBLE.md) */
+:root{
+  --casco:#E6E4DF;      /* pintura branca: fundo do deck */
+  --junta:#BFC0C4;      /* cinza claro: linhas de junção de painel */
+  --tinta:#14161C;      /* texto principal */
+  --apoio:#4A4E58;      /* texto secundário sobre o casco */
+  --aco:#2E323B;        /* aço escuro: monitores e fechamento */
+  --ceu:#05060C;        /* preto do espaço, só onde há céu */
+  --o2:#4DD0E1; --estufa:#6BD425; --rad:#C77DFF; --lab:#FF9F43; --energia:#FFD23F; --terra:#52638A;
+  --fio:rgba(20,22,28,.16);
+  --titulo:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --texto:"Nunito",system-ui,sans-serif;
+  --chanfro:1.1cqw;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#CFCDC8;font-family:var(--texto);color:var(--tinta);padding:32px 16px;-webkit-font-smoothing:antialiased}
+.deck{display:grid;gap:28px;max-width:1600px;margin:0 auto}
+.slide{container-type:inline-size;aspect-ratio:16/9;background:var(--casco);overflow:hidden;position:relative}
+.dentro{position:absolute;inset:0;padding:4.2cqw 5cqw;display:flex;flex-direction:column;font-size:1.15cqw;line-height:1.5}
+.slide.escuro{background:var(--aco);color:var(--casco);--fio:rgba(230,228,223,.2);--apoio:#B9BCC5}
+.slide.ceu{background:var(--ceu);color:var(--casco);--fio:rgba(230,228,223,.18);--apoio:#A9ADB8}
+.slide.cor{background:var(--energia);color:var(--tinta);--fio:rgba(20,22,28,.22);--apoio:#3B3420}
+
+/* juntas de painel: o grafismo tirado da nave */
+.slide.juntas::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(var(--junta),var(--junta)) 97.4% 0/1px 95.6% no-repeat,
+             linear-gradient(var(--junta),var(--junta)) 0 95.6%/100% 1px no-repeat}
+
+.topo{display:flex;justify-content:space-between;align-items:center;padding-bottom:1.2cqw;border-bottom:1px solid var(--fio);
+  font-family:var(--titulo);font-weight:600;font-size:.95cqw;letter-spacing:.14em;text-transform:uppercase;color:var(--apoio);position:relative}
+.topo .cod{color:inherit}
+.faixa{height:.32cqw;width:7cqw;margin-top:-.16cqw}
+
+h1,h2{font-family:var(--titulo);font-weight:700;letter-spacing:-.01em;line-height:1}
+h1{font-size:8.4cqw}
+h2{font-size:4.4cqw;margin-top:3cqw;max-width:66cqw}
+.gigante{font-size:6.4cqw;max-width:80cqw;line-height:1.02}
+.marca{box-shadow:inset 0 -.9cqw 0 var(--energia)}
+.apoio{color:var(--apoio);max-width:44cqw;margin-top:1.4cqw;font-size:1.35cqw}
+.base{margin-top:auto}
+.rotulo{font-family:var(--titulo);font-weight:600;font-size:.95cqw;letter-spacing:.14em;text-transform:uppercase;color:var(--apoio)}
+
+.colunas{display:grid;grid-template-columns:repeat(var(--n,3),1fr);gap:2.4cqw}
+.colunas>div{border-top:1px solid var(--fio);padding-top:1.1cqw}
+.colunas b{display:block;font-family:var(--titulo);font-weight:700;font-size:1.9cqw;margin:.3cqw 0 .2cqw;line-height:1.1}
+.colunas p{color:var(--apoio);font-size:1.1cqw}
+
+/* chanfro do jogo: canto superior esquerdo e inferior direito */
+.chanfro{clip-path:polygon(var(--chanfro) 0,100% 0,100% calc(100% - var(--chanfro)),calc(100% - var(--chanfro)) 100%,0 100%,0 var(--chanfro))}
+
+/* capa */
+.capa .rodape{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid var(--fio);padding-top:1.3cqw;font-size:1.1cqw;color:var(--apoio)}
+
+/* cores */
+.cores{display:grid;grid-template-columns:2.4fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:1.1cqw;flex:1;margin-top:2.6cqw;min-height:0}
+.cores>div{display:flex;flex-direction:column;min-height:0}
+.cores i{flex:1;border:1px solid var(--fio)}
+.cores .alto{grid-row:span 2}
+.cores b{font-family:var(--titulo);font-weight:700;font-size:1.3cqw;margin-top:.6cqw;display:flex;justify-content:space-between}
+.cores b span{color:var(--apoio);font-weight:600;letter-spacing:.06em}
+.cores p{font-size:.95cqw;color:var(--apoio)}
+.sistemas{display:grid;grid-template-columns:repeat(6,1fr);gap:1.1cqw;margin-top:1.4cqw}
+.sistemas div{border-top:.45cqw solid var(--c);padding-top:.6cqw;font-size:1cqw}
+.sistemas b{font-family:var(--titulo);font-weight:700;font-size:1.25cqw;display:block}
+.sistemas span{color:var(--apoio)}
+
+/* tipografia */
+.tipo{display:grid;grid-template-columns:1.25fr 1fr;gap:4.5cqw;flex:1;margin-top:2.6cqw;min-height:0}
+.tipo .amostra{font-family:var(--titulo);font-weight:700;line-height:.98;font-size:5.6cqw;letter-spacing:-.01em}
+.tipo .texto{font-size:1.45cqw;max-width:34cqw;margin-top:1.6cqw}
+.tipo .etq{margin-top:1.6cqw}
+.ficha{display:grid;margin-top:auto}
+.ficha div{display:grid;grid-template-columns:8.5cqw 1fr;border-top:1px solid var(--fio);padding:.65cqw 0;font-size:1.02cqw}
+.ficha div span:first-child{font-family:var(--titulo);font-weight:600;font-size:.95cqw;letter-spacing:.14em;text-transform:uppercase;color:var(--apoio)}
+
+/* plaqueta de inspeção (assinatura, parte 2) */
+.etq{display:inline-flex;align-items:center;gap:.8cqw;background:var(--tinta);color:var(--casco);font-family:var(--titulo);font-weight:600;
+  font-size:.95cqw;letter-spacing:.12em;text-transform:uppercase;padding:.45cqw .9cqw .45cqw .7cqw;--chanfro:.55cqw}
+.etq i{width:.7cqw;height:.7cqw;background:var(--c,var(--energia));display:block}
+.etq.regra{background:transparent;color:var(--tinta);border:1px solid var(--tinta)}
+
+/* moodboard */
+.mood{display:grid;grid-template-columns:1fr 2.1fr;gap:3.6cqw;flex:1;margin-top:2.2cqw;min-height:0}
+.mood h2{margin-top:0;font-size:3.4cqw;max-width:none}
+.mood .lista{margin-top:auto;display:grid}
+.mood .lista div{border-top:1px solid var(--fio);padding:.75cqw 0;font-size:1.1cqw}
+.mood .lista span{display:block;font-family:var(--titulo);font-weight:600;font-size:.95cqw;letter-spacing:.14em;text-transform:uppercase;color:var(--apoio)}
+.mosaico{display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(4,1fr);gap:.7cqw;min-height:0}
+.mosaico figure{overflow:hidden;background:#000;position:relative;min-height:0}
+.mosaico img{width:100%;height:100%;object-fit:cover;display:block}
+.mosaico figcaption{position:absolute;left:.6cqw;bottom:.6cqw;background:var(--casco);color:var(--tinta);font-family:var(--titulo);font-weight:600;font-size:.85cqw;letter-spacing:.12em;text-transform:uppercase;padding:.25cqw .6cqw}
+.mosaico figure:nth-child(1){grid-column:span 4;grid-row:span 2}
+.mosaico figure:nth-child(2){grid-column:span 2;grid-row:span 2}
+.mosaico figure:nth-child(3){grid-column:span 2;grid-row:span 2}
+.mosaico figure:nth-child(4){grid-column:span 2;grid-row:span 2}
+.mosaico figure:nth-child(5){grid-column:span 2;grid-row:span 2}
+
+/* pares */
+.pares{display:grid;grid-template-columns:1fr 1fr;gap:4cqw;margin-top:auto}
+.pares ul{list-style:none}
+.pares li{border-top:1px solid var(--fio);padding:.75cqw 0;font-size:1.15cqw;display:flex;gap:1cqw}
+.pares li::before{content:"+";font-weight:700;color:var(--energia)}
+.pares .fora li{color:var(--apoio)}
+.pares .fora li::before{content:"×";color:var(--apoio)}
+.pares .rotulo{margin-bottom:.8cqw}
+
+/* simulação da assinatura: um slide do deck em miniatura */
+.sim{display:grid;grid-template-columns:1.55fr 1fr;gap:3cqw;flex:1;margin-top:2.2cqw;min-height:0}
+.mini{container-type:inline-size;aspect-ratio:16/9;background:var(--casco);color:var(--tinta);--apoio:#4A4E58;position:relative;overflow:hidden;align-self:start}
+.mini::before{content:"";position:absolute;inset:0;background:linear-gradient(var(--junta),var(--junta)) 97.4% 0/1px 91% no-repeat,linear-gradient(var(--junta),var(--junta)) 0 91%/100% 1px no-repeat}
+.mini .in{position:absolute;inset:0;padding:5cqw 5.5cqw}
+.mini .cod{position:absolute;left:5.5cqw;top:4.2cqw;font-family:var(--titulo);font-weight:600;font-size:1.6cqw;letter-spacing:.14em;color:var(--apoio)}
+.mini .cod b{color:var(--tinta)}
+.mini h3{font-family:var(--titulo);font-weight:700;font-size:8.6cqw;line-height:.95;margin-top:7cqw;width:46cqw;letter-spacing:-.01em}
+.mini p{font-size:2.15cqw;line-height:1.45;width:44cqw;margin-top:2.4cqw;color:var(--apoio)}
+.mini .btn{position:absolute;left:5.5cqw;bottom:9cqw;background:#F4F3EF;color:var(--tinta);font-family:var(--titulo);font-weight:700;font-size:2.5cqw;
+  padding:1.3cqw 2.2cqw;display:flex;gap:2.4cqw;align-items:center;box-shadow:0 .6cqw 0 #8E8F94;--chanfro:1cqw}
+.mini .monitor{position:absolute;right:6cqw;top:6cqw;width:34cqw;background:var(--aco);padding:1.1cqw;--chanfro:1.8cqw}
+.mini .monitor .luz{height:.55cqw;background:var(--energia);margin:-1.1cqw -1.1cqw 1.1cqw}
+.mini .monitor img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.mini .monitor .ia{display:flex;justify-content:space-between;font-family:var(--titulo);font-weight:600;font-size:1.35cqw;letter-spacing:.12em;color:#B9BCC5;margin-top:.9cqw}
+.mini .rod{position:absolute;left:5.5cqw;right:5.5cqw;bottom:1.6cqw;display:flex;justify-content:space-between;font-family:var(--titulo);font-weight:600;font-size:1.35cqw;letter-spacing:.12em;color:var(--apoio)}
+.legenda-sim{font-size:1cqw;color:var(--apoio);margin-top:.8cqw}
+
+/* assets */
+.assets{display:grid;grid-template-columns:repeat(2,1fr);margin-top:auto;border-top:1px solid var(--fio);border-left:1px solid var(--fio)}
+.assets div{border-right:1px solid var(--fio);border-bottom:1px solid var(--fio);padding:1.2cqw 1.4cqw 1.3cqw}
+.assets span{font-family:var(--titulo);font-weight:600;font-size:.95cqw;letter-spacing:.14em;text-transform:uppercase;color:var(--apoio)}
+.assets .prot span{color:var(--tinta)}
+.assets .prot{background:rgba(255,210,63,.22)}
+.assets b{display:block;font-family:var(--titulo);font-weight:700;font-size:1.7cqw;margin:.3cqw 0 .15cqw;line-height:1.1}
+.assets p{color:var(--apoio);font-size:1.05cqw}
+.assets-fora{margin-top:1cqw;font-size:1.05cqw;color:var(--apoio)}
+
+/* estrutura */
+.estrutura{display:grid;grid-template-columns:repeat(4,1fr);margin-top:auto;border-top:1px solid var(--fio);border-left:1px solid var(--fio)}
+.estrutura div{border-right:1px solid var(--fio);border-bottom:1px solid var(--fio);padding:1cqw 1.2cqw 1.2cqw;position:relative}
+.estrutura div::before{content:"";position:absolute;left:0;right:0;top:0;height:.3cqw;background:var(--c)}
+.estrutura .num{font-family:var(--titulo);font-weight:600;font-size:.95cqw;letter-spacing:.14em;color:var(--apoio)}
+.estrutura b{display:block;font-family:var(--titulo);font-weight:700;font-size:1.45cqw;margin:.3cqw 0 .15cqw;line-height:1.1}
+.estrutura p{color:var(--apoio);font-size:.98cqw;line-height:1.4}
+.estrutura .vazio::before{display:none}
+
+@page{size:1600px 900px;margin:0}
+@media print{
+  body{background:none;padding:0}
+  .deck{gap:0;max-width:none}
+  .slide{width:1600px;height:900px;aspect-ratio:auto;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<main class="deck">
+
+<!-- 01 CAPA -->
+<section class="slide escuro capa"><div class="dentro">
+  <div class="topo"><span>Direção criativa · deck de demo</span><span>NASA Space Apps 2026</span></div>
+  <h1 style="margin-top:auto">Ten Days<br>on the Moon<span style="color:var(--energia)">.</span></h1>
+  <div class="rodape" style="margin-top:3cqw"><span>Houston, We have a Game! · 7 slides para os juízes</span><span>O manual de bordo de uma nave que uma criança consegue pilotar.</span></div>
+</div></section>
+
+<!-- 02 OBJETIVO -->
+<section class="slide juntas"><div class="dentro">
+  <div class="topo"><span class="cod">Objetivo</span><span>02 / 10</span></div>
+  <h2>O juiz lê sozinho. <span class="marca">Cada slide se explica.</span></h2>
+  <p class="apoio">Para juízes que abrem o link sem ninguém apresentando, muitos com inglês como segunda língua.</p>
+  <div class="colunas base" style="--n:3">
+    <div><span class="rotulo">01</span><b>Uma decisão e seu custo</b><p>Entender o jogo em menos de um minuto.</p></div>
+    <div><span class="rotulo">02</span><b>Dado real que pesa</b><p>Ver que o DONKI muda o resultado da partida.</p></div>
+    <div><span class="rotulo">03</span><b>Vontade de jogar</b><p>Sair com o link do itch.io na mão.</p></div>
+  </div>
+</div></section>
+
+<!-- 03 CONCEITO -->
+<section class="slide cor"><div class="dentro">
+  <div class="topo"><span>Conceito criativo</span><span>03 / 10</span></div>
+  <h2 class="gigante" style="margin-top:auto">O manual de bordo de uma nave que uma criança consegue pilotar.</h2>
+  <div class="colunas" style="--n:4;margin-top:3.6cqw">
+    <div><span class="rotulo">01</span><b>Casco claro</b></div>
+    <div><span class="rotulo">02</span><b>Marcação técnica</b></div>
+    <div><span class="rotulo">03</span><b>Monitor do jogo</b></div>
+    <div><span class="rotulo">04</span><b>Dado etiquetado</b></div>
+  </div>
+</div></section>
+
+<!-- 04 MOODBOARD: a referência é o próprio jogo -->
+<section class="slide escuro"><div class="dentro">
+  <div class="topo"><span>Atmosfera e referências</span><span>04 / 10</span></div>
+  <div class="mood">
+    <div style="display:flex;flex-direction:column">
+      <h2>Nave clara por fora. Painel escuro por dentro.</h2>
+      <div class="lista">
+        <div><span>01</span>A interface do jogo é a base</div>
+        <div><span>02</span>Casco pintado de branco, como as naves</div>
+        <div><span>03</span>Preto do espaço só onde há céu</div>
+      </div>
+    </div>
+    <div class="mosaico">
+      <figure><img src="referencias/ref-1.jpg" alt="Tela inicial do jogo: base lunar clara à esquerda e painel de aço escuro à direita"><figcaption>01 · Interface</figcaption></figure>
+      <figure><img src="referencias/ref-3.jpg" alt="Vista aérea da base de dia, módulos brancos sobre o regolito"><figcaption>02 · Casco</figcaption></figure>
+      <figure><img src="referencias/ref-2.jpg" alt="Tela de distribuição de energia em inglês"><figcaption>03 · Painel</figcaption></figure>
+      <figure><img src="referencias/ref-4.jpg" alt="Base durante erupção, com o cartão Isso aconteceu de verdade"><figcaption>04 · Evento</figcaption></figure>
+      <figure><img src="referencias/ref-5.jpg" alt="Interior do hub com cúpula de vidro"><figcaption>05 · Interior</figcaption></figure>
+    </div>
+  </div>
+</div></section>
+
+<!-- 05 CORES -->
+<section class="slide"><div class="dentro">
+  <div class="topo"><span>Cores</span><span>05 / 10</span></div>
+  <h2 style="font-size:3.6cqw">Branco de casco domina. Cor só identifica sistema.</h2>
+  <div class="cores">
+    <div class="alto"><i style="background:var(--casco)"></i><b>Pintura branca <span>#E6E4DF</span></b><p>Fundo de quase todo slide, cerca de 70%</p></div>
+    <div><i style="background:var(--tinta)"></i><b>Tinta <span>#14161C</span></b><p>Títulos e texto, 14,2:1</p></div>
+    <div><i style="background:var(--aco)"></i><b>Aço escuro <span>#2E323B</span></b><p>Monitores e fechamento</p></div>
+    <div><i style="background:var(--junta)"></i><b>Junta <span>#BFC0C4</span></b><p>Linhas de painel, só forma</p></div>
+    <div><i style="background:var(--ceu)"></i><b>Céu <span>#05060C</span></b><p>Só o slide da erupção</p></div>
+  </div>
+  <div class="sistemas">
+    <div style="--c:var(--o2)"><b>#4DD0E1</b><span>Oxigênio</span></div>
+    <div style="--c:var(--estufa)"><b>#6BD425</b><span>Comida</span></div>
+    <div style="--c:var(--rad)"><b>#C77DFF</b><span>Radiação</span></div>
+    <div style="--c:var(--lab)"><b>#FF9F43</b><span>Ciência</span></div>
+    <div style="--c:var(--terra)"><b>#52638A</b><span>Atraso até a Terra</span></div>
+    <div style="--c:var(--energia)"><b>#FFD23F</b><span>Energia</span></div>
+  </div>
+</div></section>
+
+<!-- 06 TIPOGRAFIA E SISTEMA -->
+<section class="slide juntas"><div class="dentro">
+  <div class="topo"><span>Tipografia e sistema</span><span>06 / 10</span></div>
+  <div class="tipo">
+    <div style="display:flex;flex-direction:column">
+      <p class="amostra">Every day ends with the same question: where does the power go?</p>
+      <p class="texto">Going out earns science and spends suit air. Staying in saves air and misses the discovery.</p>
+      <div><span class="etq chanfro" style="--c:var(--rad)"><i></i>NASA DONKI · archived 2026-11-13</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column">
+      <div class="ficha">
+        <div><span>Títulos</span><span>Barlow Semi Condensed 700, 64 px no slide de 1920</span></div>
+        <div><span>Texto</span><span>Nunito 400, 28 px; destaque em 700</span></div>
+        <div><span>Rótulos</span><span>Barlow Semi Condensed 600, 18 px, caixa alta</span></div>
+        <div><span>Grid</span><span>Margem de 96 px, 12 colunas, tudo à esquerda</span></div>
+        <div><span>Formas</span><span>Chanfro em 2 cantos, nunca canto redondo</span></div>
+        <div><span>Imagem</span><span>Só capturas do jogo, dentro de monitor</span></div>
+        <div><span>Formato</span><span>PDF 16:9 com fontes embutidas, sem animação</span></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 07 ASSINATURA APLICADA -->
+<section class="slide escuro"><div class="dentro">
+  <div class="topo"><span>Assinatura aplicada</span><span>07 / 10</span></div>
+  <div class="sim">
+    <div>
+      <div class="mini" aria-label="Simulação do slide 1 do deck">
+        <div class="in">
+          <div class="cod"><b>TDM-01</b> · OVERVIEW</div>
+          <h3>Ten Days on the Moon</h3>
+          <p>A strategy game for ages 7 to 12. You run a base at the Moon's south pole, and there is never enough power for everything.</p>
+          <div class="btn chanfro">Play in your browser <span>→</span></div>
+          <div class="monitor chanfro"><div class="luz"></div><img src="referencias/ref-3.jpg" alt="Captura da base vista de cima, dentro da moldura de monitor"><div class="ia"><span>IN-GAME CAPTURE</span><span>AI-ASSISTED ART</span></div></div>
+          <div class="rod"><span>HOUSTON, WE HAVE A GAME!</span><span>TDM-01 / 07</span></div>
+        </div>
+      </div>
+      <p class="legenda-sim">Simulação com a captura atual. A imagem final entra depois do layout aprovado.</p>
+    </div>
+    <div style="display:flex;flex-direction:column">
+      <h2 style="margin-top:0;font-size:3.1cqw">Cada slide é uma placa do casco.</h2>
+      <div class="pares" style="grid-template-columns:1fr;gap:1.6cqw">
+        <div><p class="rotulo">O que sustenta a direção</p><ul>
+          <li>Código de placa no canto, como peça de nave</li>
+          <li>Tela do jogo em monitor de aço com tira de luz</li>
+          <li>Botão branco do jogo como única ação</li>
+        </ul></div>
+        <div class="fora"><p class="rotulo">O que fica de fora</p><ul>
+          <li>Logo, insígnia, bandeira e vermelho da NASA</li>
+          <li>Neon, holograma e cartão arredondado de template</li>
+          <li>Rótulo em caixa alta acima de todo título</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 08 DIRECIONAMENTO DE ASSETS -->
+<section class="slide"><div class="dentro">
+  <div class="topo"><span>Direcionamento de assets</span><span>08 / 10</span></div>
+  <h2 style="font-size:3.6cqw">A base é o produto. Mostrar como hardware.</h2>
+  <div class="assets">
+    <div class="prot"><span>3D · protagonista</span><b>A Estação-Roda em render limpo, sobre fundo claro</b><p>Capa e fechamento. Foto de hardware em sala limpa, sem céu.</p></div>
+    <div><span>Captura de tela</span><b>Telas novas com a interface em inglês</b><p>Escolha, erupção e relatório, nos slides 4, 5 e 7.</p></div>
+    <div><span>Elemento gráfico</span><b>Planta técnica da base vista de cima</b><p>Slide 3. Os cinco módulos rotulados, nas cores dos sistemas.</p></div>
+    <div><span>Ícones</span><b>Os 35 ícones que o jogo já tem</b><p>Nos medidores e sistemas. Nada de ícone novo.</p></div>
+  </div>
+  <p class="assets-fora">Fica de fora: foto real de nave ou astronauta e qualquer desenho de criança. Direitos não conferidos, risco de identificador da NASA e regra de menores.</p>
+</div></section>
+
+<!-- 09 ESTRUTURA -->
+<section class="slide juntas"><div class="dentro">
+  <div class="topo"><span>Estrutura do deck</span><span>09 / 10</span></div>
+  <h2 style="font-size:3.6cqw">Do casco claro ao painel escuro, com o link.</h2>
+  <div class="estrutura">
+    <div style="--c:var(--energia)"><span class="num">TDM-01</span><b>Ten Days on the Moon</b><p>Título grande, render da base, botão para jogar.</p></div>
+    <div style="--c:var(--o2)"><span class="num">TDM-02</span><b>Six people, one question</b><p>A pergunta grande; a equipe como manifesto de tripulação.</p></div>
+    <div style="--c:var(--energia)"><span class="num">TDM-03</span><b>Where does the power go?</b><p>Uma linha de missão com 5 marcos e os 3 medidores do HUD.</p></div>
+    <div style="--c:var(--lab)"><span class="num">TDM-04</span><b>Nothing is free</b><p>Monitor grande com a tela de energia; os dois botões lado a lado.</p></div>
+    <div style="--c:var(--rad)"><span class="num">TDM-05</span><b>The flares really happened</b><p>Único slide de céu. Cartão real e régua C, M, X.</p></div>
+    <div style="--c:var(--estufa)"><span class="num">TDM-06</span><b>Real facts labeled real</b><p>Tabela técnica de 5 linhas, cada uma com plaqueta de fonte.</p></div>
+    <div style="--c:var(--energia)"><span class="num">TDM-07</span><b>What a kid takes home</b><p>Painel de aço, a frase grande, o botão com o link.</p></div>
+    <div class="vazio"><span class="num">Ação principal</span><b>Play in your browser</b><p>Nos slides 1 e 7, como o botão branco do jogo.</p></div>
+  </div>
+</div></section>
+
+<!-- 10 PRÓXIMOS PASSOS -->
+<section class="slide escuro"><div class="dentro">
+  <div class="topo"><span>Próximos passos</span><span>10 / 10</span></div>
+  <h2>Da direção aprovada<br>ao deck enviado.</h2>
+  <div class="colunas base" style="--n:3">
+    <div><span class="rotulo">01</span><b>Aprovação</b><p>Você valida ou ajusta esta direção.</p></div>
+    <div><span class="rotulo">02</span><b>Layout antes das imagens</b><p>Os 7 slides com as áreas de imagem marcadas. Depois, capturas e render.</p></div>
+    <div><span class="rotulo">03</span><b>Refinamento humano</b><p>Seu olhar ajusta o deck antes do envio.</p></div>
+  </div>
+</div></section>
+
+</main>
+</body>
+</html>
