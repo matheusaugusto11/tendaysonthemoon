@@ -47,6 +47,32 @@ public static class UiTema
     // Movimento (segundos). Nada de interface passa de 0,5 s.
     public const float TempoToque = 0.08f, TempoPainel = 0.25f, TempoMedidor = 0.6f, TempoFaixa = 0.3f, TempoMaximo = 0.5f;
 
+    // ---------- Movimento reduzido ----------
+
+    /// <summary>Só para o editor e os testes: faz de conta que o navegador pediu movimento reduzido.</summary>
+    public static bool ForcarMovimentoReduzido { get; set; }
+
+    static float _proximaLeitura;
+    static bool _reduzidoDoNavegador;
+
+    /// <summary>
+    /// O navegador pede movimento reduzido (prefers-reduced-motion). Com ele, deslocamentos, escalas, órbitas e voos de
+    /// câmera viram corte ou troca de opacidade, e tudo o que anda fica parado. Lido do navegador no máximo 1 vez por segundo.
+    /// </summary>
+    public static bool MovimentoReduzido
+    {
+        get
+        {
+            if (ForcarMovimentoReduzido) return true;
+            if (Time.realtimeSinceStartup >= _proximaLeitura)
+            {
+                _proximaLeitura = Time.realtimeSinceStartup + 1f;
+                _reduzidoDoNavegador = Navegador.PrefereMenosMovimento;
+            }
+            return _reduzidoDoNavegador;
+        }
+    }
+
     // ---------- Fontes ----------
     static Font _barlowBold, _barlowSemi, _nunito, _reserva;
 
@@ -121,6 +147,21 @@ public static class UiTema
         Recurso.Comida => "comida", Recurso.Radiacao => "radiacao", Recurso.Bateria => "mod_bateria", _ => null,
     };
 
+    /// <summary>
+    /// Cor do módulo ou sistema de cada tarefa: a da tira de luz dos painéis, da faixa do deslocamento e da seta guia.
+    /// O exercício é na esteira do Laboratório, por isso laranja.
+    /// </summary>
+    public static Color CorDaTarefa(string id)
+    {
+        switch (id)
+        {
+            case Tarefas.Estufa: return Estufa;
+            case Tarefas.Agua: case Tarefas.Filtros: case Tarefas.Upload: case Tarefas.Antena: case Tarefas.Vazamento: return Ar;
+            case Tarefas.Poeira: return Energia;
+            default: return Lab; // coleta de pedras, exercício e braço robótico
+        }
+    }
+
     /// <summary>Ícone de cada tarefa do dia.</summary>
     public static string IconeDaTarefa(string id) => id switch
     {
@@ -135,6 +176,7 @@ public static class UiTema
     static void Reiniciar()
     {
         _barlowBold = _barlowSemi = _nunito = _reserva = null;
+        ForcarMovimentoReduzido = false; _proximaLeitura = 0f; _reduzidoDoNavegador = false;
         _icones.Clear(); _avisados.Clear();
     }
 }

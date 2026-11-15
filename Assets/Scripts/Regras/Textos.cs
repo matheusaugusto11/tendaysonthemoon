@@ -44,7 +44,7 @@ namespace DezDias
             T("Você comanda uma base no polo sul da Lua, com quatro astronautas. A missão dura 10 dias.", "You command a base at the Moon's south pole, with four astronauts. The mission lasts 10 days."),
             T("Todo dia os painéis solares dão poucas células de energia. Você escolhe o que ligar: ar e água, estufa, abrigo, laboratório ou bateria. Não dá para ligar tudo!", "Every day the solar panels give a few energy cells. You choose what to power: air & water, greenhouse, shelter, lab or battery. You cannot power everything!"),
             T("O oxigênio não pode acabar. A radiação não pode encher. A comida não pode faltar. Se uma delas chegar ao limite, a tripulação volta para casa mais cedo, em segurança.", "Oxygen must not run out. Radiation must not fill up. Food must not run short. If one of them hits its limit, the crew goes home early, safely."),
-            T("Todo dia tem uma tarefa. Leve o astronauta até a estação marcada seguindo a seta amarela (setas, W A S D, controle ou o joystick na tela). Cada tarefa é um mini jogo, e toda tarefa tem um custo. Depois, volte ao console no centro do hub para distribuir a energia. Você tem 5 minutos por dia.", "Every day has a task. Take the astronaut to the marked station by following the yellow arrow (arrow keys, W A S D, a gamepad or the on-screen joystick). Each task is a mini game, and every task has a cost. Then go back to the console in the middle of the hub to share out the energy. You have 5 minutes per day."),
+            T("Todo dia tem uma tarefa. Leve o astronauta até a estação marcada seguindo a seta (setas, W A S D, controle ou o joystick na tela). Cada tarefa é um mini jogo, e toda tarefa tem um custo. Depois, volte ao console no centro do hub para distribuir a energia. Você tem 5 minutos por dia.", "Every day has a task. Take the astronaut to the marked station by following the arrow (arrow keys, W A S D, a gamepad or the on-screen joystick). Each task is a mini game, and every task has a cost. Then go back to the console in the middle of the hub to share out the energy. You have 5 minutes per day."),
             T("Às vezes chega um alerta de erupção solar, forte ou fraco. Ligar o abrigo protege da radiação, mas gasta energia. As erupções do jogo aconteceram de verdade: são dados arquivados do NASA DONKI.", "Sometimes a solar flare alert arrives, strong or weak. Powering the shelter protects from radiation, but uses energy. The flares in the game really happened: they are archived NASA DONKI data."),
         };
         public static readonly Txt Voltar = T("Voltar", "Back");
@@ -63,6 +63,10 @@ namespace DezDias
         public static readonly Txt Continuar = T("Continuar", "Continue");
         public static readonly Txt ContinuarB = T("CONTINUAR (B)", "CONTINUE (B)");
         public static readonly Txt Reiniciar = T("REINICIAR", "RESTART");
+        public static readonly Txt SomLigado = T("Som: ligado", "Sound: on");
+        public static readonly Txt SomDesligado = T("Som: desligado", "Sound: off");
+        public static readonly Txt ReiniciarPergunta = T("A missão atual será perdida. Voltar ao início?", "The current mission will be lost. Go back to the start?");
+        public static readonly Txt SimVoltarAoInicio = T("Sim, voltar ao início", "Yes, back to the start");
         public static readonly Txt AjudaControle = T("A: confirmar   B: voltar   Start: pausa", "A: confirm   B: back   Start: pause");
 
         // ---------- Boletim ----------
@@ -256,7 +260,7 @@ namespace DezDias
         // ---------- Tutorial do Dia 1 (web: TIPS) ----------
         public static readonly Txt ControleDaMissao = T("Controle da missão", "Mission control");
         public static readonly Txt DicaTutBoletim = T("Todo dia começa com o boletim. Ele mostra quanta energia a base vai ter e se o Sol está calmo. Hoje está tudo tranquilo.", "Every day starts with the briefing. It shows how much energy the base will have and whether the Sun is calm. All quiet today.");
-        public static readonly Txt DicaTutAteTarefa = T("Leve o astronauta até a estação marcada: é lá que fica a tarefa de hoje. Siga a seta amarela.", "Take the astronaut to the marked station: that is where today's task is. Follow the yellow arrow.");
+        public static readonly Txt DicaTutAteTarefa = T("Leve o astronauta até a estação marcada: é lá que fica a tarefa de hoje. Siga a seta.", "Take the astronaut to the marked station: that is where today's task is. Follow the arrow.");
         public static readonly Txt DicaTutEscolha = T("Toda tarefa tem um custo, escrito em cada botão. Você pode sair para buscar pedras ou ficar na base: as duas escolhas custam alguma coisa.", "Every task has a cost, written on each button. You can go out for rocks or stay at base: both choices cost something.");
         public static readonly Txt DicaTutMinijogo = T("A barra de tempo é o ar do traje. Arraste as pedras para a caixa e aperte VOLTAR antes que ela acabe.", "The time bar is the air in the suit. Drag the rocks into the box and press BACK before it runs out.");
         public static readonly Txt DicaTutConcluida = T("Viu? Cada escolha muda os medidores lá em cima. Na Lua nada é de graça.", "See? Each choice changes the meters up top. On the Moon nothing is free.");

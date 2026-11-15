@@ -131,6 +131,34 @@ namespace DezDias.Testes
         }
 
         [Test]
+        public void ZonaDeAlertaDoOxigenioEDe3ParaBaixo()
+        {
+            Assert.IsTrue(Apresentacao.OxigenioEmAlerta(0));
+            Assert.IsTrue(Apresentacao.OxigenioEmAlerta(3));
+            Assert.IsFalse(Apresentacao.OxigenioEmAlerta(4));
+            Assert.IsFalse(Apresentacao.OxigenioEmAlerta(Missao.MaxO2));
+        }
+
+        [Test]
+        public void ZonaDeAlertaDaRadiacaoEDe7ParaCima()
+        {
+            Assert.IsFalse(Apresentacao.RadiacaoEmAlerta(0));
+            Assert.IsFalse(Apresentacao.RadiacaoEmAlerta(6));
+            Assert.IsTrue(Apresentacao.RadiacaoEmAlerta(7));
+            Assert.IsTrue(Apresentacao.RadiacaoEmAlerta(Missao.MaxRad));
+        }
+
+        [Test]
+        public void AsZonasCabemNosLimitesDoJogo()
+        {
+            // A zona tem que ser alcançável antes do fim da missão (O2 em 0 e radiação em 10 encerram).
+            Assert.Less(Apresentacao.OxigenioAlerta, Missao.MaxO2);
+            Assert.Greater(Apresentacao.OxigenioAlerta, 0);
+            Assert.Less(Apresentacao.RadiacaoAlerta, Missao.MaxRad);
+            Assert.Greater(Apresentacao.RadiacaoAlerta, 0);
+        }
+
+        [Test]
         public void PaletaTemHexValido()
         {
             foreach (var f in typeof(Paleta).GetFields())

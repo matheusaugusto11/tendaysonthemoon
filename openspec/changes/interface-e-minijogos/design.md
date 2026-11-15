@@ -190,6 +190,15 @@ câmera. O véu escuro de 45% sai; só a Pausa escurece a cena.
 - A moldura de foco aparece só depois de teclado ou controle, e some quando o mouse ou o dedo se mexem. Como `Entrada.Selecionar` seleciona botões por código, a seleção sozinha não diz quem está jogando.
 - Na Distribuição, e no Resultado de um dia de erupção, o conteúdo ainda passa da altura da tela em alguns casos e rola. O cartão do dado real vem antes do "Por quê?" para a fonte da NASA ficar visível sem rolar. A lista vertical e o painel lateral do grupo 5 resolvem o resto.
 
+**O que a implementação (grupo 5) mostrou:**
+- Os três modos saem de `ModoDaFase`. A Página não tem caixa nem tira: é uma tela cheia opaca `#05060C` com o conteúdo centralizado. A Coluna tem 640 de largura, margem de 64 à direita e margens verticais de 24, para a nota de rodapé do Início caber.
+- O cabeçalho é fixo. Na Distribuição ele leva o título e a prévia do dia; no Resultado, o título e as três linhas de variação. O resto rola por baixo. A reserva de células ("Células livres: N") fica numa bandeja ao lado do botão principal, no rodapé da tela.
+- O painel entra em 250 ms (desliza 40 e aparece, com `CanvasGroup`), com o tempo real, para a pausa não travar a animação. Com movimento reduzido, só aparece, em 200 ms.
+- Os cartões de Escolha e Decisão do vazamento ficaram empilhados na vertical (230 de altura com chips, 200 sem). Uma linha de dois cartões ficava estreita demais em 840.
+- A dica do tutorial usa o corpo de rótulo (menor), porque o painel lateral é estreito. No Dia 1, Escolha, Resultado e Distribuição ainda rolam um pouco por causa dela.
+- A Pausa é um cartão central de 760 por 700 com tira branca. "Reiniciar" abre uma pergunta X com "Voltar" como principal e "Sim, voltar ao início" como secundário. "Som" mostra o estado escrito e grava em `PlayerPrefs` (`tdm_som`).
+- Verificado em 1920 por 1080 pelo probe (244 conferências, 0 falhas: modo de cada fase, sem véu, página opaca, pausa, movimento reduzido) e, em 1280 por 720, só por captura: o probe travou na parte dos minijogos nessa resolução (o painel de minijogo ainda é o antigo, do grupo 7), sem relação com o grupo 5.
+
 A Distribuição vira lista vertical (uma linha de cerca de 112 por módulo, até 6 linhas), com a
 reserva de células e "Começar o dia" no rodapé.
 
@@ -220,6 +229,19 @@ máquina provisória da estação ficam escondidos. Com movimento reduzido, a c�
 da tarefa sem modelo novo e sem Cinemachine.
 *Alternativa:* Cinemachine com uma câmera virtual por estação, descartado agora pelo prazo e por ser
 pacote novo. Pode substituir o `CameraFoco` depois sem mudar a spec.
+
+**O que a implementação (grupo 5) mostrou:** o `CameraFoco` nasceu no grupo 5, antes dos
+minijogos, porque o Resultado e o Início precisam dele. Tem quatro estados (Livre, Indo, Preso,
+Voltando) e três chamadas: `Focar(pos, rot, fov)`, `Orbitar(centro, raio, altura, graus por
+segundo, fov, deslocamento)` e `Soltar()`. Ele roda depois do `Movimento` (ordem 200), e
+`Movimento.AtualizarCamera` sai cedo enquanto `Ativo`. `GameManager.AjustarCamera(fase)` decide:
+- **Resultado:** pose aérea, de (0, 110, 52) para (2, 0, 2), campo de visão 60, base deslocada 58 para a esquerda do painel;
+- **Início:** órbita de raio 70 e altura 75 em torno de (2, 0, 2), 3 graus por segundo, campo de visão 55;
+- **Como jogar, Créditos, Relatório e Menu de minijogos:** a câmera não muda;
+- **as outras fases:** `Soltar()`, e o personagem volta ao ângulo de antes.
+
+Falta para o grupo 7 só `Focar(Estacao)`, o `pontoCamera` e o close em Escolha, Decisão do
+vazamento e minijogo. Movimento reduzido: a câmera corta, e a órbita do Início fica parada.
 
 ### D9. Molde comum do minijogo
 
@@ -282,6 +304,16 @@ Os widgets são montados com `FormaUI`:
 
 O HUD guarda o último valor mostrado e anima até o novo em 600 ms. Quando o valor muda, aparece a
 variação flutuante. `AtualizarHud` continua sendo o ponto de entrada.
+
+**O que a implementação (grupo 4) mostrou:**
+- Cada medidor é um componente (`MedidorHud`, em `MedidoresHud.cs`) que anima sozinho no `Update` com o tempo real, então a pausa não congela a animação nem prende uma variação na tela. A variação flutuante (`VariacaoFlutuante`) se apaga sozinha em 1,3 s, e há uma por medidor: a nova substitui a anterior.
+- Os medidores saltam direto, sem animar nem soltar variação, na primeira leitura e quando a missão é outra (Jogar de novo). Sem isso, toda partida nova começaria com três variações falsas.
+- As zonas de alerta (Oxigênio 3 ou menos, Radiação 7 ou mais) ficam em `Apresentacao`, testadas no assembly de regras. O Oxigênio marca a zona com um traço vermelho sob os três primeiros segmentos; a Radiação, com a faixa hachurada.
+- O ícone vermelho de alerta ocupa um lugar reservado, para o HUD não pular quando ele aparece.
+- A faixa, a seta guia e o nome do destino usam `UiTema.CorDaTarefa`, a mesma cor da tira dos painéis. O exercício passou do verde para o laranja: a esteira fica no Laboratório. O botão de idioma mostra só o código (EN ou PT), o do idioma para o qual a troca leva.
+- A dica do tutorial dizia "siga a seta amarela", e a seta agora tem a cor do módulo. O texto virou "siga a seta", em português e em inglês.
+- O botão de ação tem o tamanho do botão principal (400 por 104). Com o joystick da câmera na tela, ele sobe para 16 acima do topo do joystick. Os joysticks aparecem sempre que o personagem pode andar, inclusive no PC, então na prática ele fica nessa altura em todo deslocamento.
+- Movimento reduzido (`UiTema.MovimentoReduzido`, de `Navegador.PrefereMenosMovimento` ou forçado pelo editor para teste): os medidores saltam, a variação flutuante aparece sem subir e o painel só aparece. O valor é lido de novo a cada 1 s, para acompanhar a mudança de preferência do sistema.
 
 ### D12. Custo em ícones, a partir do texto atual
 

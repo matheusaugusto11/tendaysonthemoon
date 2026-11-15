@@ -124,6 +124,7 @@ public class Movimento : MonoBehaviour
     void AtualizarCamera()
     {
         if (!cameraTransform) return;
+        if (CameraFoco.Instancia != null && CameraFoco.Instancia.Ativo) return; // a interface está dirigindo a câmera
         Quaternion rot = Quaternion.Euler(_pitch, _yaw, 0);
         Vector3 foco = transform.position + Vector3.up * altura;
         cameraTransform.position = foco - rot * Vector3.forward * distancia;

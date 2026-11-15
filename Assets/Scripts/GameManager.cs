@@ -491,7 +491,40 @@ public class GameManager : MonoBehaviour
         if (jogador) jogador.Congelar(!(nova == Fase.AteTarefa || nova == Fase.AteHub));
         Alvo = Proxima = null;
         RefrescarEstacoes();
+        AjustarCamera(nova);
         _ui.Render();
+    }
+
+    // ---------------- Câmera por fase (grupo 5 da mudança interface-e-minijogos) ----------------
+
+    /// <summary>Base vista de cima, de fora: mesma pose das capturas aéreas (MontarBase), com a cena empurrada para a esquerda, fora do painel.</summary>
+    static readonly Vector3 AereaDe = new Vector3(0f, 110f, 52f), AereaPara = new Vector3(2f, 0f, 2f);
+    const float AereaFov = 60f, AereaDeslocamento = 58f;
+
+    /// <summary>
+    /// Resultado: a câmera sobe e mostra a base de fora, para a luz do dia (calma, erupção ou noite) aparecer à esquerda do painel.
+    /// Início: órbita lenta em volta da base. As páginas opacas (Como jogar, Créditos, Relatório) não mexem na câmera.
+    /// Nas demais fases a câmera volta ao personagem.
+    /// </summary>
+    void AjustarCamera(Fase nova)
+    {
+        var cf = CameraFoco.Garantir();
+        if (cf == null) return;
+        switch (nova)
+        {
+            case Fase.Resultado:
+                CameraFoco.PoseOlhando(AereaDe, AereaPara, AereaDeslocamento, out var pos, out var rot);
+                cf.Focar(pos, rot, AereaFov);
+                break;
+            case Fase.Inicio:
+                cf.Orbitar(AereaPara, 70f, 75f, 3f, 55f, 52f);
+                break;
+            case Fase.ComoJogar: case Fase.Creditos: case Fase.Relatorio: case Fase.MenuMinijogos:
+                break;
+            default:
+                cf.Soltar();
+                break;
+        }
     }
 
     void DefinirLuz(PresetLuz p)

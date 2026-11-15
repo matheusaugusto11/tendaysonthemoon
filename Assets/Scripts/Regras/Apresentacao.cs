@@ -48,6 +48,16 @@ namespace DezDias
             return pct >= 100 ? FaixaNota.Otimo : pct >= 50 ? FaixaNota.Bom : FaixaNota.NaoDeu;
         }
 
+        // ---------- Zonas de alerta dos medidores (spec hud-e-moldura) ----------
+
+        /// <summary>Oxigênio de 0 a 10: de 3 para baixo é a zona de alerta.</summary>
+        public const int OxigenioAlerta = 3;
+        /// <summary>Radiação de 0 a 10: de 7 para cima é a zona de alerta.</summary>
+        public const int RadiacaoAlerta = 7;
+
+        public static bool OxigenioEmAlerta(int oxigenio) => oxigenio <= OxigenioAlerta;
+        public static bool RadiacaoEmAlerta(int radiacao) => radiacao >= RadiacaoAlerta;
+
         // ---------- Contraste (WCAG) ----------
 
         static double Luminancia(string hex)
