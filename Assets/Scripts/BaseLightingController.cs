@@ -173,6 +173,7 @@ public class BaseLightingController : MonoBehaviour
         }
         if (_dados == null) { Debug.LogWarning("[BaseLightingController] presetsJson não atribuído."); return; }
         if (transicao < 0f) transicao = transicaoPadrao;
+        if (Application.isPlaying) Alarme(p == PresetLuz.Erupcao, PresetAtual == PresetLuz.Erupcao);
         PresetAtual = p;
         _para = Montar(p);
         if (_atual == null || transicao <= 0f || !Application.isPlaying)
@@ -186,8 +187,36 @@ public class BaseLightingController : MonoBehaviour
     /// <summary>Aplica imediatamente (usado fora do Play, ex.: capturas do editor).</summary>
     public void AplicarImediato(PresetLuz p) { SetPreset(p, 0f); }
 
+    [Header("Alarme do evento climático (Resources/Sons/Alarme)")]
+    [Tooltip("Quantas vezes o alarme toca quando as luzes vermelhas ligam. 0 = enquanto elas estiverem ligadas.")]
+    [Min(0)] public int repeticoesAlarme = 3;
+    [Range(0f, 1f)] public float volumeAlarme = 0.5f;
+
+    AudioSource _alarme;
+    float _fimAlarme;
+
+    /// <summary>Liga o alarme quando entra o cenário de Erupção (luzes vermelhas) e desliga quando ele sai.</summary>
+    void Alarme(bool ligar, bool jaEstava)
+    {
+        if (!ligar) { if (_alarme) _alarme.Stop(); return; }
+        if (jaEstava && _alarme && _alarme.isPlaying) return;
+        if (!SonsUI.Ligado) return;
+        var clip = SonsUI.Arquivo("Alarme");
+        if (!clip) return;
+        if (!_alarme)
+        {
+            _alarme = gameObject.AddComponent<AudioSource>();
+            _alarme.playOnAwake = false; _alarme.loop = true; _alarme.spatialBlend = 0f;
+        }
+        _alarme.clip = clip;
+        _alarme.volume = volumeAlarme;
+        _alarme.Play();
+        _fimAlarme = repeticoesAlarme > 0 ? Time.time + clip.length * repeticoesAlarme : float.MaxValue;
+    }
+
     void Update()
     {
+        if (_alarme && _alarme.isPlaying && Time.time >= _fimAlarme) _alarme.Stop();
         if (_atual == null) return;
         if (_t < 1f)
         {

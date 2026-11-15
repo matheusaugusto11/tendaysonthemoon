@@ -29767,6 +29767,7 @@ MonoBehaviour:
   anguloMaxSeguir: 100
   travarDirecaoAoAndar: 1
   anguloRetravar: 20
+  controlesDeToque: 0
   joystick: {fileID: 0}
   joystickCamera: {fileID: 0}
   look: {fileID: 0}
@@ -35848,6 +35849,7 @@ MonoBehaviour:
   anguloMaxSeguir: 100
   travarDirecaoAoAndar: 1
   anguloRetravar: 20
+  controlesDeToque: 0
   joystick: {fileID: 0}
   joystickCamera: {fileID: 0}
   look: {fileID: 0}
@@ -37503,6 +37505,7 @@ MonoBehaviour:
   anguloMaxSeguir: 100
   travarDirecaoAoAndar: 1
   anguloRetravar: 20
+  controlesDeToque: 0
   joystick: {fileID: 0}
   joystickCamera: {fileID: 0}
   look: {fileID: 0}

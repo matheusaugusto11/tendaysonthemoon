@@ -21,6 +21,8 @@ public class Porta : MonoBehaviour
     public float raioFechar = 4.8f;
     public AudioClip somAbrir;
     [Range(0f, 1f)] public float volumeSom = 1f;
+    /// <summary>Volume geral do som das portas (multiplica o volumeSom de cada porta). Baixe aqui se ficar alto.</summary>
+    public const float VolumeGeralPortas = 0.3f;
 
     public bool Aberta { get; private set; }
 
@@ -92,7 +94,7 @@ public class Porta : MonoBehaviour
     {
         if (Aberta) return;
         Aberta = true;
-        if (somAbrir != null && Application.isPlaying) AudioSource.PlayClipAtPoint(somAbrir, _centro, volumeSom);
+        if (somAbrir != null && Application.isPlaying) AudioSource.PlayClipAtPoint(somAbrir, _centro, volumeSom * Porta.VolumeGeralPortas);
     }
     public void Fechar() { Aberta = false; }
     public void Alternar() { if (Aberta) Fechar(); else Abrir(); }

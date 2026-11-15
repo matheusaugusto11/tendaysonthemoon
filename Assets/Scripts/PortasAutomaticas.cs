@@ -122,7 +122,7 @@ public class PortasAutomaticas : MonoBehaviour
             {
                 lado.aberto = true;
                 // Som 3D na posição das portas, só quando elas começam a abrir.
-                if (somAbrir != null) AudioSource.PlayClipAtPoint(somAbrir, lado.centro, volumeSom);
+                if (somAbrir != null) AudioSource.PlayClipAtPoint(somAbrir, lado.centro, volumeSom * global::Porta.VolumeGeralPortas);
             }
             else if (lado.aberto && d > raioFechar) lado.aberto = false;
 

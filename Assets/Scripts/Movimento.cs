@@ -83,6 +83,7 @@ public class Movimento : MonoBehaviour
         ControlesMobile.modo = controlesDeToque;
         if (ControlesMobile.UsarToque && !joystick && !joystickCamera) ControlesMobile.Criar(out joystick, out joystickCamera);
         if (cameraTransform) _yaw = cameraTransform.eulerAngles.y;
+        if (!GetComponent<SomPassos>()) gameObject.AddComponent<SomPassos>();
         Congelar(_congelado);
     }
 

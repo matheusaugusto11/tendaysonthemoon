@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using DezDias;
 using UnityEngine;
 
 /// <summary>
 /// Sons de interface (design D10 da mudança interface-e-minijogos): clipes gerados em código por <see cref="SomSintetico"/>,
-/// tocados num AudioSource próprio. Ligado ou mudo fica em PlayerPrefs (tdm_som, 1 = ligado). No WebGL o áudio só começa
+/// tocados num AudioSource próprio. O toque dos botões usa o arquivo Resources/Sons/ClickUI quando ele existe. Ligado ou mudo fica em PlayerPrefs (tdm_som, 1 = ligado). No WebGL o áudio só começa
 /// depois do primeiro gesto, o que não pesa: todo som sai de um toque ou de um clique.
 /// </summary>
 public static class SonsUI
@@ -25,16 +26,26 @@ public static class SonsUI
         set { try { PlayerPrefs.SetInt(ChaveSom, value ? 1 : 0); PlayerPrefs.Save(); } catch { } }
     }
 
-    public static void Toque() => Tocar(ref _toque, "toque", SomSintetico.Toque);
+    public static void Toque() => Tocar(ref _toque, "toque", SomSintetico.Toque, "ClickUI");
     public static void Acerto() => Tocar(ref _acerto, "acerto", SomSintetico.Acerto);
     public static void Concluido() => Tocar(ref _concluido, "concluido", SomSintetico.Concluido);
     /// <summary>Fim sem sucesso: o toque de "feito", mais grave e suave. Nunca um som de erro (GDD 4.2, decisão 25).</summary>
     public static void NaoDeu() => Tocar(ref _naoDeu, "naodeu", SomSintetico.NaoDeu);
     public static void Painel() => Tocar(ref _painel, "painel", SomSintetico.Painel);
 
-    static void Tocar(ref AudioClip clip, string nome, System.Func<float[]> gerar)
+    static readonly Dictionary<string, AudioClip> _arquivos = new Dictionary<string, AudioClip>();
+
+    /// <summary>Clipe de áudio em Resources/Sons (null se não existir). Fica guardado depois da primeira busca.</summary>
+    public static AudioClip Arquivo(string nome)
+    {
+        if (!_arquivos.TryGetValue(nome, out var c)) _arquivos[nome] = c = Resources.Load<AudioClip>("Sons/" + nome);
+        return c;
+    }
+
+    static void Tocar(ref AudioClip clip, string nome, System.Func<float[]> gerar, string arquivo = null)
     {
         if (!Ligado) return;
+        if (clip == null && arquivo != null) clip = Arquivo(arquivo);
         if (clip == null)
         {
             var dados = gerar();
@@ -56,7 +67,7 @@ public static class SonsUI
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Reiniciar()
     {
-        _fonte = null; _toque = _acerto = _concluido = _naoDeu = _painel = null;
+        _fonte = null; _arquivos.Clear(); _toque = _acerto = _concluido = _naoDeu = _painel = null;
         Tocados = 0; Ultimo = "";
     }
 }
