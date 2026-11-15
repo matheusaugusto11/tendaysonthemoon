@@ -35,10 +35,13 @@ Mantido pelo P.O. Consulta feita em **13/11/2026**, salvo indicação na linha.
 | F18 | NASA Human Research Program, *Hazard: Isolation and Confinement* | Eventos "Ninguém dormiu direito" e "Saudade de casa" (seção 4) | https://www.nasa.gov/hrp/hazard-isolation-and-confinement/ | Idem F2 | 15/11/2026 |
 | F19 | NASA, *ZINNIAS FROM SPACE! NASA Studies the Multiple Benefits of Gardening* (19/01/2016) | Evento "Fungo na estufa" (seção 4) | https://www.nasa.gov/humans-in-space/zinnias-from-space-nasa-studies-the-multiple-benefits-of-gardening/ | Idem F2 | 15/11/2026 |
 | F20 | NASA OSDR, OSD-268, *Microbiological and nutritional analysis of lettuce crops grown on the International Space Station* | Fonte complementar do evento "Fungo na estufa" (seção 4) | https://osdr.nasa.gov/bio/repo/data/studies/OSD-268 | Repositório público de dados da NASA. Termos de uso do OSDR não conferidos: o jogo cita só o título do estudo | 15/11/2026 |
+| F21 | NASA, *Astronaut Exercise* (20/05/2024, atualizada em 03/02/2025) | Tarefa "Hora do exercício" (seção 5) | https://www.nasa.gov/missions/station/iss-research/astronaut-exercise/ | Idem F2 | 15/11/2026 |
+| F22 | NASA Space Station blog, *Canadarm2 Reaches Out and Captures Cygnus XL Cargo Craft* (13/04/2026) | Tarefa do braço robótico: captura de nave de carga (seção 5) | https://www.nasa.gov/blogs/spacestation/2026/04/13/canadarm2-reaches-out-and-captures-cygnus-xl-cargo-craft/ | Idem F2 | 15/11/2026 |
+| F23 | NASA blog, *Station Crew Works Robotics, Research as Artemis II Launch Preps Continue* (01/04/2026) | Tarefa do braço robótico: treino a cada 60 dias (seção 5) | https://www.nasa.gov/blogs/general-blog/2026/04/01/station-crew-works-robotics-research-as-artemis-ii-launch-preps-continue/ | Idem F2 | 15/11/2026 |
 
 ### Recursos oficiais do desafio que o jogo ainda não usa
 
-Publicados na aba Resources em 13/11/2026 (ver [DESAFIO-2026-11-14.md](DESAFIO-2026-11-14.md), seção 6).
+Publicados na aba Resources em 13/11/2026 (ver [DESAFIO.md](DESAFIO.md), seção 6).
 
 | Recurso | Situação no jogo |
 | --- | --- |
@@ -228,3 +231,18 @@ crops grown on the International Space Station* (VEG-01A, VEG-01B e VEG-03A, alf
 Veggie). A página do estudo descreve o cultivo em "Veggie pillows" e a colheita com "sanitized
 scissors". O evento do fungo cita o estudo como fonte complementar. Nenhum estudo de sono foi
 procurado além disso: o evento do sono usa F16 e F18.
+
+---
+
+## 5. Fatos das tarefas
+
+Tarefas do dia que citam fato real (`Assets/Scripts/Regras/Tarefas.cs`). Páginas abertas em **15/11/2026**.
+
+| Tarefa | Fato usado no texto | Situação | O que a fonte diz, na íntegra | Fonte |
+| --- | --- | --- | --- | --- |
+| Atraso de comunicação | Cerca de 1,3 s da Lua à Terra; até 20 min de Marte | **Confirmado** (fatos 6 e 6b da seção 3) | Ver seção 3 | F3, F7, F8 |
+| Hora do exercício | No espaço o corpo perde músculo e osso; na Estação, até 10 horas de exercício por semana | **Confirmado** | "Without Earth's gravity, both bone and muscle atrophy, or become smaller and weaker." / "Despite spending up to 10 hours per week exercising, astronauts continued to lose muscle mass and bone density." | F21 |
+| Braço robótico | Na Estação, a tripulação captura naves de carga com o Canadarm2 e treina isso a cada 60 dias | **Confirmado**, em duas páginas. A página de 13/04 (F22) **não** fala dos 60 dias; até 15/11 era a única citada nos créditos | "captured Northrop Grumman's Cygnus XL spacecraft using the International Space Station's Canadarm2 robotic arm" (F22) / "Mission rules require the crew to practice using Canadarm2 during simulated spacecraft capture scenarios every 60 days" (F23) | F22, F23 |
+
+Na tela de créditos do jogo (`Textos.FontesNasa`), F5 (Artemis Base Camp, citada no evento "A Terra vai se esconder")
+e F23 entraram em 15/11/2026. Só aparecem no itch.io depois de refazer o build WebGL.

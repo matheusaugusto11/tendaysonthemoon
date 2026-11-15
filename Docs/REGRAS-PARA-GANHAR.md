@@ -4,7 +4,7 @@ Lista do que o jogo e a submissão precisam cumprir para ter mais chance no desa
 **Build a Junior Astronaut Mission Trainer** (NASA Space Apps Challenge 2026).
 
 É um resumo para consulta rápida durante o hackathon. O texto completo e traduzido do
-enunciado está em [DESAFIO-2026-11-14.md](DESAFIO-2026-11-14.md); as fontes de dados, em [DADOS-NASA-2026-11-14.md](DADOS-NASA-2026-11-14.md).
+enunciado está em [DESAFIO.md](DESAFIO.md); as fontes de dados, em [DADOS-NASA.md](DADOS-NASA.md).
 
 Atualizado em 14/11/2026, primeiro dia do hackathon. "Hoje", neste arquivo, é 14/11.
 
@@ -113,26 +113,28 @@ O guia pede atenção igual ao critério Presentation: o vídeo de 30 s pesa tan
 
 ## 5. Checklist antes de enviar
 
+Atualizado em 15/11/2026, à noite. O detalhe de cada item está em [SUBMISSAO.md](SUBMISSAO.md).
+
 **Jogo**
 
 - [x] Abre por um link público, no navegador, sem conta (https://carambo.itch.io/ten-days-on-the-moon, 15/11)
-- [ ] Dá para jogar uma missão do começo ao fim
-- [ ] Toda decisão mostra o custo
-- [ ] Fonte da NASA visível em cada dado real, rotulado como arquivado ou ao vivo
-- [ ] Tela de créditos com todas as fontes e assets (falta o autor e o link de cada som do Pixabay)
-- [ ] Sem logotipo, bandeira ou identificador de missão da NASA
+- [ ] Dá para jogar uma missão do começo ao fim. O auto jogar do Editor existe ([QA-AUTOJOGO.md](QA-AUTOJOGO.md)); no WebGL, a missão até o dia 10 não foi testada
+- [x] Toda decisão mostra o custo (conferido no código em 15/11: as 22 escolhas de evento e as 9 tarefas com escolha têm custo; o Vazamento é emergência sem escolha. Teste em `ApresentacaoTestes`)
+- [x] Fonte da NASA visível em cada dado real, rotulado como arquivado (conferido no código em 15/11: todo evento e tarefa com fato real cita a fonte; cartões do DONKI com "Archived data · not live")
+- [ ] Tela de créditos com todas as fontes e assets. Artemis Base Camp e o post dos 60 dias do Canadarm2 entraram no código em 15/11, mas **falta refazer o build**. Falta o autor e o link de cada som do Pixabay
+- [x] Sem logotipo, bandeira ou identificador de missão da NASA (conferido em 15/11: slides, página do itch.io, arquivos e textura do astronauta)
 - [x] Texto em inglês disponível (botão English; o jogo abre em português por padrão)
-- [ ] Marca d'água em toda imagem gerada por IA
+- [ ] Marca d'água em toda imagem gerada por IA. Slides: falta no slide 5. Repositório: imagens do Gemini sem marca
 
 **Submissão**
 
 - [ ] Project Name e High-Level Project Summary
-- [ ] Link to Project Demo (vídeo de até 30 s ou até 7 slides, link público)
-- [ ] Link to Final Project (sem senha nem cadastro)
+- [ ] Link to Project Demo (7 slides prontos em `Docs/apresentacao/`; **falta link público**)
+- [ ] Link to Final Project (itch.io público; **GitHub privado**)
 - [ ] Detailed Project Description
 - [ ] Use of Super Intelligence (SI)
-- [ ] NASA Data
+- [ ] NASA Data (base em [DADOS-NASA.md](DADOS-NASA.md), F1 a F23)
 - [ ] Space Agency Partner Data and Other References
-- [x] Licença open source no repositório (`LICENSE` Apache 2.0, falta o push)
+- [x] Licença open source no repositório (`LICENSE` Apache 2.0, na `main` do remoto)
 - [ ] Caixas de termos e de trabalho original marcadas
 - [ ] "Submit for Judging" clicado antes de 15/11, 23h59

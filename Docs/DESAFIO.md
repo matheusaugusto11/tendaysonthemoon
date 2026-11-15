@@ -215,7 +215,7 @@ com o hackathon já aberto: a lista continua com os mesmos 7 recursos.
 | Space resources for STEM and youth organizations | CSA (Canadá), agência parceira | https://www.asc-csa.gc.ca/eng/youth-educators/resources-stem-and-youth-organizations.asp | Atividades bilíngues gratuitas para educadores e grupos de jovens |
 | Food production on the moon and in remote areas | CSA (Canadá), agência parceira | https://www.asc-csa.gc.ca/eng/youth-educators/toolkits/food-production/ | Pacote didático sobre produção de comida no espaço e nutrição de astronautas |
 
-O que o jogo usa de cada fonte, com data de consulta, está em [DADOS-NASA-2026-11-14.md](DADOS-NASA-2026-11-14.md).
+O que o jogo usa de cada fonte, com data de consulta, está em [DADOS-NASA.md](DADOS-NASA.md).
 
 ---
 
