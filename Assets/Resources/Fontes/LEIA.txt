@@ -1,0 +1,15 @@
+Fontes da interface (design D3 da mudança interface-e-minijogos). Licença SIL Open Font License 1.1: os dois OFL ficam junto das fontes.
+
+BarlowSemiCondensed-Bold.ttf e -SemiBold.ttf
+  Barlow Semi Condensed, The Barlow Project Authors. Baixadas sem alteração de
+  https://github.com/google/fonts/tree/main/ofl/barlowsemicondensed
+
+Nunito-Bold.ttf
+  Nunito, The Nunito Project Authors. O Google Fonts publica só a versão variável (Nunito[wght].ttf).
+  Esta é a instância estática com wght=700, gerada com fontTools (varLib.instancer), porque o Font do Unity
+  não escolhe o peso de uma fonte variável. O OFL da Nunito não reserva nome de fonte.
+  Origem: https://github.com/google/fonts/tree/main/ofl/nunito
+
+Cobertura conferida: acentos do português e todos os caracteres não ASCII dos textos do jogo (· é ã ç á ó ê í õ ...),
+mais o sinal de menos U+2212. NÃO têm ▲ ▼ → (triângulos e setas são desenhados por FormaUI e por ícone) nem, na
+Barlow, o subscrito ₂ (o rótulo "O₂" usa a Nunito).

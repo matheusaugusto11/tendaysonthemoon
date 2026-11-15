@@ -30,6 +30,9 @@ public static class MontarBase
         if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling || EditorApplication.isUpdating) return;
         if (File.Exists("Temp/pedido_montar_base.txt")) { File.Delete("Temp/pedido_montar_base.txt"); Montar(); }
         if (File.Exists("Temp/pedido_capturas.txt")) { File.Delete("Temp/pedido_capturas.txt"); Capturar(); }
+        if (File.Exists("Temp/pedido_camera.txt")) { File.Delete("Temp/pedido_camera.txt"); ConfigurarCameraEZonas(); }
+        if (File.Exists("Temp/pedido_totens.txt")) { File.Delete("Temp/pedido_totens.txt"); RefazerTotens(); }
+        if (File.Exists("Temp/pedido_cap_totens.txt")) { var suf = File.ReadAllText("Temp/pedido_cap_totens.txt").Trim(); File.Delete("Temp/pedido_cap_totens.txt"); CapturarTotens(suf); }
         if (File.Exists("Temp/pedido_portas.txt")) { File.Delete("Temp/pedido_portas.txt"); FixarPosePortas(); }
         if (File.Exists("Temp/pedido_dump.txt")) { File.Delete("Temp/pedido_dump.txt"); DumpRaiz(); }
     }
@@ -122,7 +125,7 @@ public static class MontarBase
         if (cena.path != Cena) cena = EditorSceneManager.OpenScene(Cena, OpenSceneMode.Single);
 
         // refaz do zero se já existir
-        var antigo = GameObject.Find("Base");
+        var antigo = RaizBase(cena);
         if (antigo != null) UnityEngine.Object.DestroyImmediate(antigo);
 
         LimparRaiz(cena, relatorio);
@@ -203,6 +206,7 @@ public static class MontarBase
 
         ctrl.AplicarImediato(PresetLuz.Dia);
         FixarPosePortas();
+        ConfigurarCameraEZonas(false);
         EditorSceneManager.MarkSceneDirty(cena);
         EditorSceneManager.SaveScene(cena);
         File.WriteAllText("Temp/relatorio_montar_base.txt", string.Join("\n", relatorio));
@@ -244,6 +248,126 @@ public static class MontarBase
         if (estacoesBoa != null) estacoesBoa.SetActive(true);
         var dl = GameObject.Find("Directional Light"); if (dl != null) dl.SetActive(false);
         rel.Add($"Limpeza da raiz: {movidos} objetos de teste/duplicados movidos para 'Cenario (teste antigo)' (desativado, nada foi apagado); {apagados} temporário(s) removido(s).");
+    }
+
+    // ---------------- Câmera de 3ª pessoa + zonas ----------------
+    // Enquadramento por lugar: (distância, inclinação, fov, prioridade)
+    static readonly (float d, float i, float f, int p) ZHub = (4.8f, 22f, 60f, 1), ZTunel = (3.2f, 12f, 64f, 2), ZSala = (4.2f, 22f, 60f, 2), ZEstufa = (4.6f, 18f, 60f, 2);
+
+    [MenuItem("Tools/Base Lunar/Câmera de 3ª pessoa e zonas")]
+    public static void ConfigurarCameraEZonasMenu() => ConfigurarCameraEZonas(true);
+
+    public static void ConfigurarCameraEZonas(bool salvar = true)
+    {
+        var cena = EditorSceneManager.GetActiveScene();
+        var camGo = Camera.main != null ? Camera.main.gameObject : GameObject.Find("Main Camera");
+        if (camGo == null) { Debug.LogError("[Camera] Main Camera não encontrada."); return; }
+        var c3 = camGo.GetComponent<CameraTerceiraPessoa>() ?? camGo.AddComponent<CameraTerceiraPessoa>();
+        c3.alvo = UnityEngine.Object.FindObjectOfType<Movimento>();
+        camGo.GetComponent<Camera>().nearClipPlane = c3.planoProximo;
+        EditorUtility.SetDirty(c3);
+
+        // zonas: refaz do zero dentro de Base/ZonasCamera (a Base da RAIZ; há discos "Base" nas estações)
+        var baseGo = RaizBase(cena);
+        foreach (var z in UnityEngine.Object.FindObjectsOfType<ZonaCamera>(true))
+            if (z != null && z.transform.parent != null && z.transform.parent.name == "ZonasCamera")
+                UnityEngine.Object.DestroyImmediate(z.transform.parent.gameObject); // inclusive as criadas no lugar errado
+        var pai = new GameObject("ZonasCamera");
+        if (baseGo != null) pai.transform.SetParent(baseGo.transform, false);
+
+        Zona(pai, "Zona_Hub", Vector3.zero, Quaternion.identity, new Vector3(13.6f, 6f, 13.6f), ZHub);
+        foreach (var kv in Modulos)
+        {
+            Vector3 c = kv.Value, u = c.normalized;
+            var rot = Quaternion.LookRotation(u, Vector3.up);
+            Zona(pai, "Zona_Tunel_" + kv.Key, u * 11.6f, rot, new Vector3(3.4f, 6f, 9.6f), ZTunel);
+            if (kv.Key == "Estufa") Zona(pai, "Zona_Estufa", new Vector3(0, 0, -27.1f), rot, new Vector3(9f, 7f, 22.6f), ZEstufa);
+            else Zona(pai, "Zona_" + kv.Key, c, rot, new Vector3(8.4f, 6f, 12.4f), ZSala);
+        }
+        if (salvar) { EditorSceneManager.MarkSceneDirty(cena); EditorSceneManager.SaveScene(cena); }
+        Debug.Log($"[Camera] CameraTerceiraPessoa na {camGo.name}; {pai.transform.childCount} zonas criadas em Base/ZonasCamera.");
+    }
+
+    // ---------------- Totens das estações (estilo da base) ----------------
+    const string MatTotemDestaque = "Assets/Materials/Estacoes/Totem destaque.mat";
+
+    [MenuItem("Tools/Base Lunar/Refazer totens das estações")]
+    public static void RefazerTotens()
+    {
+        var cena = EditorSceneManager.GetActiveScene();
+        var corpo = AssetDatabase.LoadAssetAtPath<Material>(MatDir + "/Painel branco.mat");
+        var escuro = AssetDatabase.LoadAssetAtPath<Material>(MatDir + "/Painel escuro.mat");
+        var destaque = AssetDatabase.LoadAssetAtPath<Material>(MatTotemDestaque);
+        if (destaque == null)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(MatTotemDestaque));
+            destaque = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            destaque.SetColor("_BaseColor", Color.white);
+            destaque.SetFloat("_Smoothness", 0.6f);
+            destaque.EnableKeyword("_EMISSION");
+            destaque.SetColor("_EmissionColor", Color.white);
+            destaque.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            AssetDatabase.CreateAsset(destaque, MatTotemDestaque);
+        }
+        int n = 0;
+        foreach (var e in UnityEngine.Object.FindObjectsOfType<Estacao>(true))
+        {
+            e.matCorpo = corpo; e.matEscuro = escuro; e.matDestaque = destaque;
+            var v = e.transform.Find("Visual");
+            if (v != null) UnityEngine.Object.DestroyImmediate(v.gameObject);
+            var desc = e.transform.Find("Visual_descartado");
+            if (desc != null) UnityEngine.Object.DestroyImmediate(desc.gameObject);
+            e.Montar();
+            EditorUtility.SetDirty(e);
+            n++;
+        }
+        EditorSceneManager.MarkSceneDirty(cena); EditorSceneManager.SaveScene(cena);
+        Debug.Log($"[Totens] {n} estações refeitas no estilo da base (corpo={(corpo ? corpo.name : "null")}, escuro={(escuro ? escuro.name : "null")}).");
+    }
+
+    /// <summary>Fotos de algumas estações (ativas, na cor da tarefa) em Docs/capturas-totens/&lt;id&gt;_&lt;sufixo&gt;.png.</summary>
+    static void CapturarTotens(string sufixo)
+    {
+        var pasta = "Docs/capturas-totens"; Directory.CreateDirectory(pasta);
+        var camGo = new GameObject("CamTotem"); var cam = camGo.AddComponent<Camera>();
+        cam.fieldOfView = 60f; cam.nearClipPlane = 0.05f;
+        var rt = new RenderTexture(960, 640, 24);
+        foreach (var e in UnityEngine.Object.FindObjectsOfType<Estacao>())
+        {
+            if (e.id != "backup" && e.id != "reciclador" && e.id != "vazamento") continue;
+            var v = e.transform.Find("Visual");
+            var ativa = typeof(Estacao).GetMethod("Definir");
+            ativa.Invoke(e, new object[] { true, false });
+            // câmera como a de 3ª pessoa: atrás de um personagem a ~2 m do totem, vindo do hub
+            Vector3 p = e.transform.position, paraHub = -p; paraHub.y = 0; paraHub = paraHub.sqrMagnitude > 0.25f ? paraHub.normalized : Vector3.forward;
+            Vector3 olho = p + paraHub * 5.5f + Vector3.up * 2.6f;
+            cam.transform.position = olho; cam.transform.LookAt(p + Vector3.up * 1.1f);
+            cam.targetTexture = rt; cam.Render(); cam.targetTexture = null;
+            var tex = new Texture2D(960, 640, TextureFormat.RGB24, false);
+            RenderTexture.active = rt; tex.ReadPixels(new Rect(0, 0, 960, 640), 0, 0); tex.Apply(); RenderTexture.active = null;
+            File.WriteAllBytes($"{pasta}/{e.id}_{sufixo}.png", tex.EncodeToPNG());
+            UnityEngine.Object.DestroyImmediate(tex);
+        }
+        UnityEngine.Object.DestroyImmediate(rt); UnityEngine.Object.DestroyImmediate(camGo);
+        Debug.Log("[Totens] capturas em " + pasta);
+    }
+
+    static GameObject RaizBase(UnityEngine.SceneManagement.Scene cena)
+    {
+        foreach (var g in cena.GetRootGameObjects()) if (g.name == "Base") return g;
+        return null;
+    }
+
+    static void Zona(GameObject pai, string nome, Vector3 pos, Quaternion rot, Vector3 tam, (float d, float i, float f, int p) cfg)
+    {
+        var go = new GameObject(nome);
+        go.transform.SetParent(pai.transform, false);
+        go.transform.SetPositionAndRotation(new Vector3(pos.x, 0f, pos.z), rot);
+        var b = go.AddComponent<BoxCollider>();
+        b.isTrigger = true; b.size = tam; b.center = new Vector3(0, tam.y * 0.5f - 0.5f, 0);
+        var z = go.AddComponent<ZonaCamera>();
+        z.distancia = cfg.d; z.inclinacao = cfg.i; z.fov = cfg.f; z.prioridade = cfg.p;
+        z.corGizmo = cfg.p >= 2 ? new Color(1f, 0.7f, 0.2f, 0.18f) : new Color(0.3f, 0.8f, 1f, 0.18f);
     }
 
     /// <summary>Grava na cena a pose FECHADA correta de cada folha (como a porta verde do Hub), sem depender do Play.</summary>
@@ -362,7 +486,6 @@ public static class MontarBase
             { "filtro", Slot("Energia", -2.5f, -2.5f) },
             { "backup", Slot("Laboratorio", 0, 0) },
             { "esteira", Slot("Laboratorio", 3f, 2.5f) },
-            { "cama", Slot("Dormitorio", -1f, 1.5f) },
             { "airlock", new Vector3(0, 0, 25.5f) },
             { "vazamento", new Vector3(3.2f, 0, 3.2f) },
         };

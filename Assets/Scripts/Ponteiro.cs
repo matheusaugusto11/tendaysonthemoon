@@ -23,8 +23,11 @@ public static class Ponteiro
 
     public static void Iniciar()
     {
-        Pos = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
-        _antes = false; Down = Up = Held = false; Movimento = 0f;
+        // Começa onde o mouse está (senão o 1º frame "anda" do centro até o mouse e esfrega uma célula sozinho).
+        Pos = ModoCursor ? new Vector2(Screen.width * 0.5f, Screen.height * 0.5f) : (Vector2)Input.mousePosition;
+        // O clique que abriu o minigame ainda pode estar "segurado" neste frame (WebGL): não vira toque dentro dele.
+        _antes = Input.GetMouseButton(0);
+        Down = Up = Held = false; Movimento = 0f;
         _mouseAntes = Input.mousePosition;
     }
 

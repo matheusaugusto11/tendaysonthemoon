@@ -1,414 +1,572 @@
 using System;
 using System.Collections.Generic;
+using DezDias;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum EstadoJogo { Titulo, Intro, Briefing, Acao, Minigame, Resumo, Pontuacao, GameOver }
+/// <summary>Fases de um dia e as telas fora da missão (spec ciclo-da-missao).</summary>
+public enum Fase
+{
+    Inicio, ComoJogar, Boletim, AteTarefa, Escolha, MinijogoInfo, Minijogo, DecisaoVazamento,
+    TarefaConcluida, AteHub, Distribuir, DiaAcontece, Resultado, Relatorio, Creditos, MenuMinijogos,
+}
 
 /// <summary>
-/// Controla o ciclo de 10 dias: Título → Intro → [Briefing → Ação → Resumo] x10 → Pontuação.
-/// Tudo numa cena só: este script liga/desliga o movimento do personagem e as telas.
+/// Máquina de fases do jogo (design D2 da mudança fluxo-web-no-3d). As regras ficam no assembly DezDias.Regras;
+/// aqui só se troca de fase, libera ou congela o personagem, conta o relógio do dia, ativa as estações e chama a UI.
 /// </summary>
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instancia { get; private set; }
 
-    [Header("Dias (vazio = usa os 10 padrões do roteiro)")]
-    public DayData[] dias;
-
     [Header("Referências (achadas sozinhas se vazias)")]
     public Movimento jogador;
 
-    public EstadoJogo Estado { get; private set; }
-    public int DiaAtual { get; private set; }
+    [Header("Dia")]
+    [Tooltip("Segundos de cada dia, do Boletim até chegar ao console do hub (300 = 5 min). Baixe para testar o fim do tempo.")]
+    public float duracaoDia = 300f;
+    [Tooltip("Segundos da fase 'o dia acontece' antes do resultado.")]
+    public float duracaoAnimacao = 3.6f;
+
+    [Header("Console de energia do hub (criado se a cena não tiver uma Estacao 'console')")]
+    public Vector3 posicaoConsole = Vector3.zero;
+    public float raioConsole = 3.5f;
+
+    [Header("Depuração")]
+    [Tooltip("Abre o menu de teste dos minijogos, como ?minigames na build WebGL.")]
+    public bool abrirMenuMinijogos;
+
+    public Fase Fase { get; private set; } = Fase.Inicio;
+    public Missao Missao { get; private set; }
+    /// <summary>Modo do menu de teste dos minijogos (sem HUD e sem dias).</summary>
+    public bool Teste { get; private set; }
+    public Modo ModoTeste { get; private set; } = Modo.Cadete;
+    public bool Pausado { get; private set; }
     public float TempoRestante { get; private set; }
-    public Recursos Recursos { get; private set; } = new Recursos();
-    public DayData DadosDoDia => dias[DiaAtual - 1];
-    public int TotalDias => dias.Length;
+    public int Slide { get; private set; }
+    public int PassoAnim { get; private set; }
+    public bool TutorialLigado { get; private set; } = true;
+    public Estacao Alvo { get; private set; }
+    public Estacao Proxima { get; private set; }
 
-    /// <summary>Resultado da noite para a tela de resumo.</summary>
-    public float ResumoComida, ResumoOxigenio, ResumoEnergiaRestante;
+    /// <summary>Dicas do tutorial: só no Dia 1 da partida que começou com o tutorial ligado.</summary>
+    public bool TutorialAtivo => Missao != null && Missao.Tutorial && Missao.Dia == 1 && !Teste;
 
-    public event Action<EstadoJogo> EstadoMudou;
-    public event Action RecursosMudaram;
+    static bool FaseComRelogio(Fase f) => f == Fase.AteTarefa || f == Fase.Escolha || f == Fase.DecisaoVazamento || f == Fase.TarefaConcluida || f == Fase.AteHub;
+    /// <summary>O relógio do dia anda (parado no minijogo e na pausa).</summary>
+    public bool RelogioCorre => !Pausado && !Teste && Missao != null && FaseComRelogio(Fase);
 
     UIJogo _ui;
-    bool _painelAvisado;
-    Estacao[] _estacoes;
-    readonly HashSet<string> _concluidas = new HashSet<string>();
+    Minigame _minigame;
+    BaseLightingController _luz;
+    readonly Dictionary<string, Estacao> _estacoes = new Dictionary<string, Estacao>();
+    Estacao _console;
+    readonly List<Erupcao> _erupcoes = new List<Erupcao>();
+    readonly System.Random _rng = new System.Random();
+    readonly HashSet<string> _vistos = new HashSet<string>();
+    Fase _retornoComoJogar = Fase.Inicio, _retornoCreditos = Fase.Inicio;
+    float _animT;
+    string _tarefaTeste;
 
-    /// <summary>Estação para onde a seta aponta (próxima pendente, ou a Cama quando tudo foi feito).</summary>
-    public Estacao Alvo { get; private set; }
-    /// <summary>Estação ao alcance do jogador (mostra botão AÇÃO).</summary>
-    public Estacao Proxima { get; private set; }
-    public bool TudoFeito { get; private set; }
-    public bool AlvoUrgente { get; private set; }
+    const string ChaveVistos = "tdm_seen", ChaveTutorial = "tdm_tut";
 
-    /// <summary>Painéis solares cobertos de poeira: bateria menor até limpar (começa no Dia 4).</summary>
-    public bool PainelSujo { get; private set; }
-    public const float EnergiaPainelSujo = 60f;
-    public const float ComidaInicial = 60f;
-    public const float ConsumoComidaPorDia = 6f;
-    public const float SemComidaPerdaOxigenio = 10f;
-
-    /// <summary>Linhas explicando o que mudou na noite (para a tela de resumo).</summary>
-    public readonly List<string> ResumoLinhas = new List<string>();
+    // =====================================================================
+    // Ciclo de vida
+    // =====================================================================
 
     void Awake()
     {
         Instancia = this;
-        if (dias == null || dias.Length == 0) dias = DiasPadrao.Criar();
+        Idioma.Definir(Navegador.LinguaInicial());
+        CarregarErupcoes();
+        CarregarPreferencias();
     }
 
     void Start()
     {
         if (!jogador) jogador = FindObjectOfType<Movimento>();
-        _estacoes = FindObjectsOfType<Estacao>();
+        _luz = FindObjectOfType<BaseLightingController>();
+        RegistrarEstacoes();
         _ui = new UIJogo(this);
-        MudarEstado(EstadoJogo.Titulo);
+        Idioma.Mudou += AoMudarIdioma;
+        if (abrirMenuMinijogos || Navegador.PediuMenuMinijogos()) AbrirMenuMinijogos();
+        else MudarFase(Fase.Inicio);
     }
 
-    public bool Pausado { get; private set; }
+    void OnDestroy()
+    {
+        Idioma.Mudou -= AoMudarIdioma;
+        Time.timeScale = 1f;
+    }
+
+    void Update()
+    {
+        if (_ui == null) return;
+        if (PodePausar)
+        {
+            if (Entrada.PausaDown) { DefinirPausa(!Pausado); return; }
+            if (Pausado && Entrada.VoltarDown) { Retomar(); return; }
+        }
+        if (Pausado) return;
+
+        if (Fase == Fase.Minijogo)
+        {
+            _minigame?.Tick();
+            if (Entrada.VoltarDown) CancelarMinijogo();
+        }
+        else if (Fase == Fase.DiaAcontece)
+        {
+            _animT += Time.deltaTime;
+            if (PassoAnim == 0 && _animT >= 1.5f) { PassoAnim = 1; _ui.AtualizarLegenda(); }
+            if (_animT >= duracaoAnimacao) IrParaResultado();
+        }
+
+        if (RelogioCorre)
+        {
+            TempoRestante -= Time.deltaTime;
+            if (TempoRestante <= 0f) { TempoRestante = 0f; TempoAcabou(); }
+        }
+
+        if (Fase == Fase.AteTarefa || Fase == Fase.AteHub)
+        {
+            AtualizarGuia();
+            if (Proxima != null && Entrada.ConfirmarDown) Interagir();
+        }
+        _ui.AtualizarHud();
+    }
+
+    // =====================================================================
+    // Dados e preferências
+    // =====================================================================
+
+    [Serializable] class RegistroFLR { public string id, eventType, startTime, classLabel, sourceUrl, retrievedOn; public bool isTest; public int gameIntensity; }
+    [Serializable] class ArquivoErupcoes { public string fonte; public RegistroFLR[] records; }
+
+    void CarregarErupcoes()
+    {
+        _erupcoes.Clear();
+        var arq = Resources.Load<TextAsset>("ErupcoesDONKI");
+        if (arq == null) { Debug.LogError("[GameManager] Resources/ErupcoesDONKI.json não encontrado: o jogo fica sem erupções."); return; }
+        var dados = JsonUtility.FromJson<ArquivoErupcoes>(arq.text);
+        if (dados?.records == null) return;
+        foreach (var r in dados.records)
+        {
+            if (r.isTest) continue;
+            _erupcoes.Add(new Erupcao
+            {
+                Id = r.id, Classe = r.classLabel, Url = r.sourceUrl, Intensidade = r.gameIntensity,
+                Data = string.IsNullOrEmpty(r.startTime) || r.startTime.Length < 10 ? r.startTime : r.startTime.Substring(0, 10),
+            });
+        }
+    }
+
+    void CarregarPreferencias()
+    {
+        try
+        {
+            foreach (var id in PlayerPrefs.GetString(ChaveVistos, "").Split(','))
+                if (!string.IsNullOrEmpty(id)) _vistos.Add(id);
+            TutorialLigado = PlayerPrefs.GetString(ChaveTutorial, "") != "1";
+        }
+        catch (Exception e) { Debug.LogWarning("[GameManager] Preferências indisponíveis: " + e.Message); }
+    }
+
+    void SalvarPreferencias()
+    {
+        try
+        {
+            PlayerPrefs.SetString(ChaveVistos, string.Join(",", _vistos));
+            PlayerPrefs.SetString(ChaveTutorial, TutorialLigado ? "" : "1");
+            PlayerPrefs.Save();
+        }
+        catch (Exception e) { Debug.LogWarning("[GameManager] Não deu para salvar as preferências: " + e.Message); }
+    }
+
+    public bool MinijogoVisto(string id) => _vistos.Contains(id);
+
+    // =====================================================================
+    // Estações
+    // =====================================================================
+
+    void RegistrarEstacoes()
+    {
+        _estacoes.Clear();
+        foreach (var e in FindObjectsOfType<Estacao>())
+        {
+            if (string.IsNullOrEmpty(e.id)) continue;
+            if (_estacoes.ContainsKey(e.id))
+            {
+                Debug.LogWarning($"[GameManager] Duas estações ativas com o id '{e.id}': {_estacoes[e.id].name} e {e.name}. Uso a primeira.");
+                continue;
+            }
+            _estacoes[e.id] = e;
+        }
+        if (!_estacoes.TryGetValue("console", out _console)) _console = CriarConsole();
+        foreach (var d in Tarefas.Defs)
+            if (!_estacoes.ContainsKey(d.Estacao))
+                Debug.LogWarning($"[GameManager] A estação '{d.Estacao}' da tarefa '{d.Id}' não está na cena: a tarefa abre no console do hub.");
+        Debug.Log("[GameManager] Estações: " + string.Join(", ", _estacoes.Keys) + " + console");
+    }
+
+    Estacao CriarConsole()
+    {
+        var go = new GameObject("Estacao_console");
+        go.SetActive(false); // preenche os campos antes do Awake montar o visual
+        go.transform.position = posicaoConsole;
+        var e = go.AddComponent<Estacao>();
+        e.id = "console";
+        e.nome = Textos.Console.ToString();
+        e.cor = new Color(1f, 0.82f, 0.25f);
+        e.raio = raioConsole;
+        e.semMaquina = true;
+        go.SetActive(true);
+        return e;
+    }
+
+    /// <summary>Estação da tarefa de hoje (ou o console, se a cena não tiver a estação).</summary>
+    Estacao EstacaoDaTarefa()
+    {
+        if (Missao?.Hoje == null) return null;
+        var d = Tarefas.Def(Missao.Hoje.Tarefa);
+        return d != null && _estacoes.TryGetValue(d.Estacao, out var e) ? e : _console;
+    }
+
+    /// <summary>Só o destino da fase atual fica ativo: a estação da tarefa (indo) ou o console (voltando).</summary>
+    void RefrescarEstacoes()
+    {
+        foreach (var e in _estacoes.Values) e.Definir(false, false);
+        if (_console) _console.Definir(false, false);
+        if (Missao == null || Teste) return;
+        if (Fase == Fase.AteTarefa)
+        {
+            var e = EstacaoDaTarefa();
+            if (e != null) { e.Definir(true, false); e.DefinirRotulo(Tarefas.Def(Missao.Hoje.Tarefa).Nome.ToString()); }
+        }
+        else if (Fase == Fase.AteHub && _console)
+        {
+            _console.Definir(true, false);
+            _console.DefinirRotulo(Textos.Console.ToString());
+        }
+    }
+
+    void AtualizarGuia()
+    {
+        Alvo = Fase == Fase.AteHub ? _console : EstacaoDaTarefa();
+        Proxima = null;
+        if (Alvo != null && jogador != null && Alvo.DistanciaAte(jogador.transform.position) <= Alvo.raio) Proxima = Alvo;
+        var rotulo = Fase == Fase.AteHub ? Textos.BotaoDistribuir : Textos.BotaoIniciar.F(Tarefas.Def(Missao.Hoje.Tarefa).Nome);
+        _ui.AtualizarGuia(Alvo, Proxima, rotulo);
+    }
+
+    /// <summary>Botão AÇÃO / tecla E / botão A perto do destino.</summary>
+    public void Interagir()
+    {
+        if (Pausado || Missao == null) return;
+        if (Fase == Fase.AteTarefa || Fase == Fase.AteHub) AtualizarGuia();
+        if (Proxima == null) return;
+        if (Fase == Fase.AteTarefa) MudarFase(Fase.Escolha);
+        else if (Fase == Fase.AteHub && Missao.Hoje.TarefaResolvida) AbrirDistribuicao();
+    }
+
+    // =====================================================================
+    // Fluxo da missão
+    // =====================================================================
+
+    public void Comecar(Modo modo)
+    {
+        Teste = false;
+        Missao = RegrasMissao.NovaPartida(modo, _erupcoes, _rng, TutorialLigado);
+        if (Missao.Tutorial)
+        {
+            IniciarDia(false);
+            Slide = 0;
+            _retornoComoJogar = Fase.Boletim;
+            MudarFase(Fase.ComoJogar);
+        }
+        else IniciarDia(true);
+    }
+
+    void IniciarDia(bool mostrar)
+    {
+        RegrasMissao.IniciarDia(Missao);
+        TempoRestante = Mathf.Max(1f, duracaoDia);
+        DefinirLuz(PresetLuz.Dia);
+        if (mostrar) MudarFase(Fase.Boletim);
+    }
+
+    public void SairDoBoletim() { if (Fase == Fase.Boletim) MudarFase(Fase.AteTarefa); }
+
+    public void EscolherFazer()
+    {
+        if (Fase != Fase.Escolha || !Tarefas.PodeFazer(Missao)) return;
+        var id = Missao.Hoje.Tarefa;
+        if (!Teste && !_vistos.Contains(id)) MudarFase(Fase.MinijogoInfo);
+        else IniciarMinijogo();
+    }
+
+    public void EscolherFicar()
+    {
+        if (Fase != Fase.Escolha) return;
+        Tarefas.Ficar(Missao);
+        MudarFase(Fase.TarefaConcluida);
+    }
+
+    /// <summary>Botão "Começar!" do cartão de primeira vez do minijogo.</summary>
+    public void ComecarMinijogo()
+    {
+        if (Fase != Fase.MinijogoInfo) return;
+        _vistos.Add(Missao.Hoje.Tarefa);
+        SalvarPreferencias();
+        IniciarMinijogo();
+    }
+
+    void IniciarMinijogo()
+    {
+        var id = Missao.Hoje.Tarefa;
+        _minigame = Minigames.Criar(id, Tarefas.LimiteReal(Missao, id));
+        // Dia 1 com tutorial: a mão fantasma mostra o gesto por 3 s antes de o relógio começar (tarefa 7.8).
+        _minigame.demo = TutorialAtivo ? Minigame.DuracaoDemo : 0f;
+        MudarFase(Fase.Minijogo);
+        _ui.AbrirMinigame(_minigame, AoResultadoMinijogo, AoFecharMinijogo);
+    }
+
+    /// <summary>Minijogo aberto agora (null fora dele). Para a sonda.</summary>
+    public Minigame MinigameAtual => _minigame;
+
+    /// <summary>SAIR / B: termina o minijogo com o progresso atual.</summary>
+    public void CancelarMinijogo()
+    {
+        if (Fase == Fase.Minijogo) _minigame?.Cancelar();
+    }
+
+    /// <summary>Fim do minijogo: aplica o resultado na hora e devolve o efeito, que a faixa de resultado mostra com a nota.</summary>
+    Txt AoResultadoMinijogo(ResultadoMinijogo r)
+    {
+        Tarefas.Fazer(Missao, r);
+        return Missao.Hoje.Tarefa == Tarefas.Vazamento ? Missao.Hoje.MsgVazamento : Missao.Hoje.MsgTarefa;
+    }
+
+    /// <summary>A faixa de resultado saiu: segue para a decisão do vazamento ou para a tarefa concluída.</summary>
+    void AoFecharMinijogo()
+    {
+        _minigame = null;
+        _ui.FecharMinigame();
+        if (Missao.Hoje.Tarefa == Tarefas.Vazamento && !Missao.Hoje.TarefaResolvida) MudarFase(Fase.DecisaoVazamento);
+        else MudarFase(Fase.TarefaConcluida);
+    }
+
+    public void VazamentoReforcar() { if (Fase != Fase.DecisaoVazamento) return; Tarefas.VazamentoReforcar(Missao); MudarFase(Fase.TarefaConcluida); }
+    public void VazamentoDepois() { if (Fase != Fase.DecisaoVazamento) return; Tarefas.VazamentoDepois(Missao); MudarFase(Fase.TarefaConcluida); }
+
+    public void VoltarAoHub()
+    {
+        if (Fase != Fase.TarefaConcluida || Teste) return;
+        if (TempoRestante <= 0f) AbrirDistribuicao();
+        else MudarFase(Fase.AteHub);
+    }
+
+    void TempoAcabou()
+    {
+        bool antesDaTarefa = !Missao.Hoje.TarefaResolvida;
+        if (antesDaTarefa) Tarefas.TempoEsgotado(Missao);
+        AbrirDistribuicao();
+        _ui.Aviso(Textos.TempoAcabou);
+    }
+
+    void AbrirDistribuicao()
+    {
+        RegrasMissao.PrepararDistribuicao(Missao);
+        MudarFase(Fase.Distribuir);
+    }
+
+    public void Mais(Modulo mod) { if (Fase == Fase.Distribuir && RegrasMissao.Mais(Missao, mod)) _ui.Render(); }
+    public void Menos(Modulo mod) { if (Fase == Fase.Distribuir && RegrasMissao.Menos(Missao, mod)) _ui.Render(); }
+
+    public void ComecarODia()
+    {
+        if (Fase != Fase.Distribuir) return;
+        var r = RegrasMissao.Resolver(Missao);
+        DefinirLuz(r.Erupcao != null ? PresetLuz.Erupcao : PresetLuz.Noite);
+        if (Navegador.PrefereMenosMovimento) { IrParaResultado(); return; }
+        PassoAnim = 0;
+        _animT = 0f;
+        MudarFase(Fase.DiaAcontece);
+    }
+
+    public void PularAnim() { if (Fase == Fase.DiaAcontece) IrParaResultado(); }
+    void IrParaResultado() => MudarFase(Fase.Resultado);
+
+    public void Proximo()
+    {
+        if (Fase != Fase.Resultado) return;
+        if (TutorialAtivo && TutorialLigado) { TutorialLigado = false; SalvarPreferencias(); }
+        if (Missao.Fim != Fim.Nenhum) MudarFase(Fase.Relatorio);
+        else IniciarDia(true);
+    }
+
+    public void JogarDeNovo()
+    {
+        Missao = null;
+        Teste = false;
+        DefinirLuz(PresetLuz.Dia);
+        MudarFase(Fase.Inicio);
+    }
+
+    public void Reiniciar()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    // ---------------- Como jogar, tutorial, créditos, idioma ----------------
+
+    public void AbrirComoJogar() { Slide = 0; _retornoComoJogar = Fase.Inicio; MudarFase(Fase.ComoJogar); }
+
+    public void SlideProximo()
+    {
+        if (Slide >= Textos.SlideTitulo.Length - 1) MudarFase(_retornoComoJogar);
+        else { Slide++; _ui.Render(); }
+    }
+
+    public void SlideAnterior() { if (Slide > 0) { Slide--; _ui.Render(); } }
+    public void PularSlides() => MudarFase(_retornoComoJogar);
+
+    public void AlternarTutorial()
+    {
+        TutorialLigado = !TutorialLigado;
+        SalvarPreferencias();
+        _ui.Render();
+    }
+
+    public void AbrirCreditos() { _retornoCreditos = Fase; MudarFase(Fase.Creditos); }
+    public void FecharCreditos() => MudarFase(_retornoCreditos == Fase.Creditos ? Fase.Inicio : _retornoCreditos);
+
+    public void AlternarIdioma() => Idioma.Alternar();
+
+    void AoMudarIdioma()
+    {
+        if (_ui == null) return;
+        _ui.Render();
+        RefrescarEstacoes();
+    }
+
+    // ---------------- Menu de teste dos minijogos ----------------
+
+    public void AbrirMenuMinijogos()
+    {
+        Teste = true;
+        Missao = null;
+        MudarFase(Fase.MenuMinijogos);
+    }
+
+    public void DefinirModoTeste(Modo m) { ModoTeste = m; _ui.Render(); }
+
+    public void TestarMinijogo(string id)
+    {
+        _tarefaTeste = id;
+        Teste = true;
+        Missao = RegrasMissao.NovaPartida(ModoTeste, _erupcoes, _rng, false);
+        Missao.Alertas.Clear();
+        Missao.Sombra = new[] { -1, -1 };
+        Missao.Tarefas[0] = id;
+        RegrasMissao.IniciarDia(Missao);
+        Missao.Hoje.Tarefa = id;
+        Missao.O2 = Missao.MaxO2;
+        IniciarMinijogo();
+    }
+
+    public void TestarDeNovo() { if (!string.IsNullOrEmpty(_tarefaTeste)) TestarMinijogo(_tarefaTeste); }
+
+    // ---------------- Pausa ----------------
+
+    bool PodePausar => FaseComRelogio(Fase) || Fase == Fase.Minijogo;
 
     public void Pausar() => DefinirPausa(true);
     public void Retomar() => DefinirPausa(false);
 
     void DefinirPausa(bool pausar)
     {
-        if (pausar && Estado != EstadoJogo.Acao && Estado != EstadoJogo.Minigame) return;
+        if (pausar && !PodePausar) return;
         Pausado = pausar;
         Time.timeScale = pausar ? 0f : 1f;
-        if (jogador) jogador.Congelar(pausar || Estado != EstadoJogo.Acao);
+        if (jogador) jogador.Congelar(pausar || !(Fase == Fase.AteTarefa || Fase == Fase.AteHub));
         _ui.MostrarPausa(pausar);
     }
 
-    void OnDestroy() => Time.timeScale = 1f;
+    // ---------------- Troca de fase ----------------
 
-    void Update()
+    void MudarFase(Fase nova)
     {
-        // Controle: Start pausa/continua, B volta.
-        if (Estado == EstadoJogo.Acao || Estado == EstadoJogo.Minigame)
-        {
-            if (Entrada.PausaDown) { DefinirPausa(!Pausado); return; }
-            if (Pausado && Entrada.VoltarDown) { Retomar(); return; }
-        }
-        if (Estado == EstadoJogo.Intro && Entrada.VoltarDown) MudarEstado(EstadoJogo.Titulo);
-        if (Estado == EstadoJogo.Minigame && !Pausado)
-        {
-            _minigame?.Tick();
-            if (Entrada.VoltarDown) CancelarMinigame();
-            return;
-        }
-        if (Pausado) return;
-        if (Estado != EstadoJogo.Acao) return;
-        TempoRestante -= Time.deltaTime;
-        if (TempoRestante <= 0f) { TempoRestante = 0f; TerminarDia(); return; }
-        AtualizarEventos();
-        if (Estado != EstadoJogo.Acao) return;
-        AtualizarEstacoes();
-        _ui.AtualizarHud();
-        _ui.AtualizarGuia(Alvo, Proxima);
-        _ui.AtualizarAlerta(_evento, _eventoRestante);
-        if (Proxima != null && Entrada.ConfirmarDown) Interagir();
-    }
-
-    // ---------- Estações / tarefas ----------
-
-    static readonly string[] PoolPadrao = { "lixo", "filtro", "esteira", "estufa", "reciclador" };
-    readonly List<string> _tarefasHoje = new List<string>();
-    /// <summary>ids das tarefas do dia (fixas + sorteadas + painel se sujo).</summary>
-    public IReadOnlyList<string> TarefasHoje => _tarefasHoje;
-
-    // Evento do dia em andamento (alarme/vazamento)
-    EventoDia _evento;
-    float _eventoRestante;
-    bool[] _disparados = new bool[0];
-    public EventoDia EventoAtivo => _evento;
-    public float EventoRestante => _eventoRestante;
-    public bool BackupFeito { get; private set; }
-
-    bool EstacaoDoDia(Estacao e)
-    {
-        if (e.id == "cama") return true;
-        if (_evento != null && _evento.estacao == e.id) return true;
-        if (e.id == "airlock") return _tarefasHoje.Contains(e.id) && _concluidas.Contains("backup");
-        return _tarefasHoje.Contains(e.id);
-    }
-
-    void RefrescarEstacoes()
-    {
-        foreach (var e in _estacoes) e.Definir(EstacaoDoDia(e), _concluidas.Contains(e.id));
-    }
-
-    void AtualizarEventos()
-    {
-        var eventos = DadosDoDia.eventos;
-        if (_evento == null && eventos != null)
-        {
-            float decorrido = Mathf.Max(DadosDoDia.duracaoSegundos, 1f) - TempoRestante;
-            for (int i = 0; i < eventos.Length; i++)
-            {
-                if (_disparados[i] || decorrido < eventos[i].segundo || !ExisteEstacao(eventos[i].estacao)) continue;
-                _disparados[i] = true;
-                _evento = eventos[i];
-                _eventoRestante = _evento.limite;
-                RefrescarEstacoes();
-                _ui.Alerta(_evento.titulo, _evento.texto);
-                break;
-            }
-        }
-        if (_evento == null) return;
-
-        if (_evento.drenoOxigenioPorSeg > 0f)
-        {
-            AplicarRecursos(0, -_evento.drenoOxigenioPorSeg * Time.deltaTime, 0);
-            if (Estado != EstadoJogo.Acao) return; // game over durante o dreno
-        }
-        if (_evento.limite > 0f)
-        {
-            _eventoRestante -= Time.deltaTime;
-            if (_eventoRestante <= 0f)
-            {
-                var ev = _evento;
-                _evento = null;
-                AplicarRecursos(-ev.penalEnergia, -ev.penalOxigenio, 0);
-                RefrescarEstacoes();
-                _ui.Aviso("Você demorou demais! A base sofreu danos.");
-            }
-        }
-    }
-
-    public string NomeDe(string id)
-    {
-        foreach (var e in _estacoes) if (e.id == id) return e.nome;
-        return id;
-    }
-
-    /// <summary>Monta a lista de tarefas do dia: fixas do DayData + sorteadas (sem repetir) + painel se estiver sujo.</summary>
-    void SortearTarefas()
-    {
-        _tarefasHoje.Clear();
-        var d = DadosDoDia;
-        foreach (var id in d.estacoes ?? new string[0]) _tarefasHoje.Add(id);
-        if (PainelSujo && !_tarefasHoje.Contains("painel")) _tarefasHoje.Add("painel");
-
-        var pool = new List<string>(d.poolAleatorio != null && d.poolAleatorio.Length > 0 ? d.poolAleatorio : PoolPadrao);
-        pool.RemoveAll(id => _tarefasHoje.Contains(id) || !ExisteEstacao(id));
-        for (int i = 0; i < d.tarefasAleatorias && pool.Count > 0; i++)
-        {
-            int k = UnityEngine.Random.Range(0, pool.Count);
-            _tarefasHoje.Add(pool[k]);
-            pool.RemoveAt(k);
-        }
-    }
-
-    bool ExisteEstacao(string id)
-    {
-        foreach (var e in _estacoes) if (e.id == id) return true;
-        return false;
-    }
-
-    void PrepararEstacoes()
-    {
-        _concluidas.Clear();
-        foreach (var e in _estacoes) e.Definir(EstacaoDoDia(e), false);
-    }
-
-    void AtualizarEstacoes()
-    {
+        Fase = nova;
+        if (Pausado) { Pausado = false; Time.timeScale = 1f; _ui?.MostrarPausa(false); }
+        // O personagem só anda nas fases de deslocamento.
+        if (jogador) jogador.Congelar(!(nova == Fase.AteTarefa || nova == Fase.AteHub));
         Alvo = Proxima = null;
-        if (!jogador) return;
-        Vector3 p = jogador.transform.position;
-        float melhorAlvo = float.MaxValue, melhorProx = float.MaxValue;
-        Estacao cama = null;
-        TudoFeito = true;
-        foreach (var e in _estacoes)
-        {
-            if (!EstacaoDoDia(e)) continue;
-            if (e.id == "cama") { cama = e; continue; }
-            if (e.Concluida) continue;
-            TudoFeito = false;
-            float d = e.DistanciaAte(p);
-            if (d < melhorAlvo) { melhorAlvo = d; Alvo = e; }
-        }
-        // Evento urgente tem prioridade na seta
-        AlvoUrgente = false;
-        if (_evento != null)
-            foreach (var e in _estacoes)
-                if (e.id == _evento.estacao && !e.Concluida) { Alvo = e; AlvoUrgente = true; TudoFeito = false; }
-        if (Alvo == null) Alvo = cama; // tudo feito → vá dormir
-        foreach (var e in _estacoes)
-        {
-            if (!EstacaoDoDia(e) || e.Concluida) continue;
-            if (e.id == "cama" && !TudoFeito) continue;
-            float d = e.DistanciaAte(p);
-            if (d <= e.raio && d < melhorProx) { melhorProx = d; Proxima = e; }
-        }
-    }
-
-    /// <summary>Botão AÇÃO / tecla E. Por enquanto conclui direto; as próximas tasks abrem o minigame aqui.</summary>
-    public void Interagir()
-    {
-        var e = Proxima;
-        if (e == null || Estado != EstadoJogo.Acao) return;
-        if (e.id == "cama") { TerminarDia(); return; }
-        AbrirMinigame(e);
-    }
-
-    Minigame _minigame;
-    Estacao _estacaoDoMinigame;
-
-    void AbrirMinigame(Estacao e)
-    {
-        _estacaoDoMinigame = e;
-        _minigame = Minigames.Criar(e);
-        MudarEstado(EstadoJogo.Minigame);          // congela o personagem
-        _ui.AbrirMinigame(_minigame, sucesso => FecharMinigame(sucesso));
-    }
-
-    void FecharMinigame(bool sucesso)
-    {
-        var e = _estacaoDoMinigame;
-        _minigame = null; _estacaoDoMinigame = null;
-        MudarEstado(EstadoJogo.Acao);
-        if (sucesso && e != null) ConcluirEstacao(e);
-    }
-
-    /// <summary>Botão SAIR / tecla B: fecha o minigame sem concluir a tarefa.</summary>
-    public void CancelarMinigame()
-    {
-        if (Estado != EstadoJogo.Minigame || _minigame == null) return;
-        _minigame.Cancelar();
-    }
-
-    public void ConcluirEstacao(Estacao e)
-    {
-        _concluidas.Add(e.id);
-        if (e.id == "painel") PainelSujo = false;
-        if (e.id == "backup") BackupFeito = true;
-        bool eraEvento = _evento != null && _evento.estacao == e.id;
-        if (eraEvento) _evento = null;
-        TempoRestante = Mathf.Max(0f, TempoRestante - e.custoTempo);
-        var (cEnergia, cOxigenio, _) = Estacao.Custos(e.id);
-        AplicarRecursos(-cEnergia, -cOxigenio, 0);
-        if (Estado == EstadoJogo.GameOver) return;
         RefrescarEstacoes();
-
-        // Última tarefa do jogo: a comporta fecha e o dia 10 termina.
-        if (e.id == "airlock") { TerminarDia(); return; }
-
-        bool tudo = _evento == null;
-        foreach (var id in _tarefasHoje) if (!_concluidas.Contains(id)) tudo = false;
-        string aviso = eraEvento ? "Crise resolvida!" : $"{e.nome} concluída!";
-        if (tudo) aviso = "Tudo pronto! Volte para a cama para dormir.";
-        _ui.Aviso(aviso);
-        _ui.AtualizarTarefas();
+        AjustarCamera(nova);
+        _ui.Render();
     }
 
-    public bool EstaConcluida(string id) => _concluidas.Contains(id);
+    // ---------------- Câmera por fase (grupo 5 da mudança interface-e-minijogos) ----------------
 
-    // ---------- Fluxo ----------
+    /// <summary>Base vista de cima, de fora: mesma pose das capturas aéreas (MontarBase), com a cena empurrada para a esquerda, fora do painel.</summary>
+    static readonly Vector3 AereaDe = new Vector3(0f, 110f, 52f), AereaPara = new Vector3(2f, 0f, 2f);
+    const float AereaFov = 60f, AereaDeslocamento = 58f;
 
-    public void Jogar() => MudarEstado(EstadoJogo.Intro);
-
-    public void ComecarJogo()
+    /// <summary>
+    /// Resultado: a câmera sobe e mostra a base de fora, para a luz do dia (calma, erupção ou noite) aparecer à esquerda do painel.
+    /// Início: órbita lenta em volta da base. As páginas opacas (Como jogar, Créditos, Relatório) não mexem na câmera.
+    /// Nas demais fases a câmera volta ao personagem.
+    /// </summary>
+    void AjustarCamera(Fase nova)
     {
-        DiaAtual = 1;
-        PainelSujo = false;
-        BackupFeito = false;
-        Recursos = new Recursos { comida = ComidaInicial };
-        IniciarBriefing();
-    }
-
-    void IniciarBriefing()
-    {
-        if (DiaAtual >= 4 && !_painelAvisado) { PainelSujo = true; _painelAvisado = true; }
-        SortearTarefas();
-        _evento = null;
-        _disparados = new bool[DadosDoDia.eventos != null ? DadosDoDia.eventos.Length : 0];
-        Recursos.energia = PainelSujo ? Mathf.Min(EnergiaPainelSujo, DadosDoDia.energiaInicial) : DadosDoDia.energiaInicial;
-        RecursosMudaram?.Invoke();
-        MudarEstado(EstadoJogo.Briefing);
-    }
-
-    public void ComecarAcao()
-    {
-        TempoRestante = Mathf.Max(DadosDoDia.duracaoSegundos, 1f);
-        PrepararEstacoes();
-        MudarEstado(EstadoJogo.Acao);
-        var nasa = DonkiDados.Do(DiaAtual);
-        if (nasa != null) _ui.Aviso("Evento NASA hoje: " + nasa.nome);
-    }
-
-    /// <summary>Chamado pela cama (Task 3), pelo botão temporário "Dormir" ou quando o tempo zera.</summary>
-    public void TerminarDia()
-    {
-        if (Estado != EstadoJogo.Acao && Estado != EstadoJogo.Minigame) return;
-
-        _evento = null;
-        // Consumo e consequências da noite
-        float o2Antes = Recursos.oxigenio, comidaAntes = Recursos.comida;
-        ResumoLinhas.Clear();
-        float dO2 = -DadosDoDia.perdaOxigenioNoite, dComida = -ConsumoComidaPorDia;
-        foreach (var e in _estacoes)
+        var cf = CameraFoco.Garantir();
+        if (cf == null) return;
+        switch (nova)
         {
-            if (e.id == "cama" || !EstacaoDoDia(e)) continue;
-            var (comidaFeita, o2Ignorada, motivo) = Estacao.Regras(e.id);
-            if (e.Concluida) dComida += comidaFeita;
-            else
-            {
-                dO2 -= o2Ignorada;
-                if (motivo != "") ResumoLinhas.Add(motivo);
-            }
+            case Fase.Resultado:
+                CameraFoco.PoseOlhando(AereaDe, AereaPara, AereaDeslocamento, out var pos, out var rot);
+                cf.Focar(pos, rot, AereaFov);
+                break;
+            case Fase.Inicio:
+                cf.Orbitar(AereaPara, 70f, 75f, 3f, 55f, 52f);
+                break;
+            // Close na estação da tarefa (design D8): começa na escolha e fica o mesmo até sair da tarefa concluída,
+            // sem a câmera ir e voltar entre a escolha, o cartão, o minijogo e a tela de concluída.
+            case Fase.Escolha: case Fase.DecisaoVazamento: case Fase.MinijogoInfo: case Fase.Minijogo: case Fase.TarefaConcluida:
+                FocarNaTarefa(cf);
+                break;
+            case Fase.ComoJogar: case Fase.Creditos: case Fase.Relatorio: case Fase.MenuMinijogos:
+                break;
+            default:
+                cf.Soltar();
+                break;
         }
-        if (PainelSujo) ResumoLinhas.Add("Painéis sujos: pouca energia amanhã");
-        if (Recursos.comida + dComida <= 0f)
-        {
-            dO2 -= SemComidaPerdaOxigenio;
-            ResumoLinhas.Add("Sem comida: a base enfraqueceu (oxigênio caiu mais)");
-        }
-        Recursos.Aplicar(0, dO2, dComida);
-        ResumoOxigenio = o2Antes - Recursos.oxigenio;
-        ResumoComida = comidaAntes - Recursos.comida; // negativo = comida produzida
-        ResumoEnergiaRestante = Recursos.energia;
-        RecursosMudaram?.Invoke();
-
-        MudarEstado(Recursos.oxigenio <= 0f ? EstadoJogo.GameOver : EstadoJogo.Resumo);
     }
 
-    public void ProximoDia()
+    /// <summary>
+    /// Câmera na estação da tarefa de hoje. No menu de teste, sem a estação na cena, a câmera mostra a base de cima
+    /// (vista geral); na missão, sem a estação, a tarefa abre no console do hub e o close é nele.
+    /// </summary>
+    void FocarNaTarefa(CameraFoco cf)
     {
-        if (DiaAtual >= TotalDias) { MudarEstado(EstadoJogo.Pontuacao); return; }
-        DiaAtual++;
-        IniciarBriefing();
+        var d = Missao != null ? Tarefas.Def(Missao.Hoje.Tarefa) : null;
+        Estacao e = null;
+        if (d != null) _estacoes.TryGetValue(d.Estacao, out e);
+        if (e == null && !Teste) e = _console;
+        if (e != null) { cf.FocarEstacao(e, jogador != null ? jogador.transform : null); return; }
+        CameraFoco.PoseOlhando(AereaDe, AereaPara, AereaDeslocamento, out var pos, out var rot);
+        cf.Focar(pos, rot, AereaFov);
     }
 
-    public void Reiniciar() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    /// <summary>Estação registrada com o id (null se a cena não tiver). Para a sonda e as capturas.</summary>
+    public Estacao EstacaoPorId(string id) => id != null && _estacoes.TryGetValue(id, out var e) ? e : null;
 
-    /// <summary>API para minigames/eventos (próximas tasks): aplica custo de recursos.</summary>
-    public void AplicarRecursos(float dEnergia, float dOxigenio, float dComida)
+    void DefinirLuz(PresetLuz p)
     {
-        Recursos.Aplicar(dEnergia, dOxigenio, dComida);
-        RecursosMudaram?.Invoke();
-        if (Recursos.oxigenio <= 0f) MudarEstado(EstadoJogo.GameOver);
+        if (_luz) _luz.SetPreset(p);
     }
 
-    public string TextoPontuacao()
-    {
-        float o2 = Recursos.oxigenio, comida = Recursos.comida;
-        if (!BackupFeito) return "Você sobreviveu, mas deixou a pesquisa para trás. Muita ciência foi sacrificada.";
-        if (o2 >= 70f && comida >= 5f) return "Missão Perfeita! Você entendeu o peso das suas escolhas!";
-        if (o2 >= 30f) return "Você sobreviveu, mas sacrificou muita ciência.";
-        return "Resgate no limite. A base quase não aguentou.";
-    }
-
-    void MudarEstado(EstadoJogo novo)
-    {
-        Estado = novo;
-        if (Pausado) { Pausado = false; Time.timeScale = 1f; }
-        // O personagem só se mexe na fase de Ação.
-        if (jogador) jogador.Congelar(novo != EstadoJogo.Acao);
-        _ui.Mostrar(novo);
-        EstadoMudou?.Invoke(novo);
-    }
+    /// <summary>Só para testes e depuração: muda o tempo restante do dia.</summary>
+    public void DepurarTempo(float segundos) => TempoRestante = segundos;
 }

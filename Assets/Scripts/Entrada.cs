@@ -82,6 +82,20 @@ public static class Entrada
         }
     }
 
+    /// <summary>R ou clique no analógico direito (R3): põe a câmera nas costas do personagem.</summary>
+    public static bool RecentrarDown
+    {
+        get
+        {
+            bool r = Input.GetKeyDown(KeyCode.R);
+#if ENABLE_INPUT_SYSTEM
+            var g = Gamepad.current;
+            if (g != null && g.rightStickButton.wasPressedThisFrame) r = true;
+#endif
+            return r;
+        }
+    }
+
     static Vector2 ComZonaMorta(Vector2 v) => v.magnitude < ZonaMorta ? Vector2.zero : v;
 
     /// <summary>Garante um EventSystem com o módulo certo (Input System se disponível: toque, mouse, gamepad).</summary>
