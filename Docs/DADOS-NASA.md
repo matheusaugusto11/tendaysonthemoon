@@ -52,7 +52,7 @@ Publicados na aba Resources em 13/11/2026 (ver [DESAFIO-2026-11-14.md](DESAFIO-2
 | Limite | O CCMC recusa intervalo maior que 60 dias ("Date range cannot exceed 60 days") |
 | Períodos baixados | Setembro de 2017, e de 01/01/2024 a 12/11/2026 em blocos de até 60 dias |
 | Resposta bruta | 19 arquivos JSON, sem nenhuma edição, em [donki/](donki/) (`FLR_<início>_<fim>.json`). Ao todo, 1.982 erupções: 89 X, 1.603 M, 283 C e 7 B |
-| Arquivo do jogo | `Assets/_Project/Data/Nasa/donki-real.json`, gerado por script a partir dos JSON brutos, sem digitação manual |
+| Arquivo do jogo | `Assets/Resources/ErupcoesDONKI.json` (Unity), com os 20 registros da lista curada (seção 2.3) no formato abaixo. A mesma lista está embutida no protótipo web (`web/index.html`, array `FLARES`) |
 
 ### 2.2 Regra de curadoria
 

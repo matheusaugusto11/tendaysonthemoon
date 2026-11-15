@@ -362,7 +362,6 @@ public static class MontarBase
             { "filtro", Slot("Energia", -2.5f, -2.5f) },
             { "backup", Slot("Laboratorio", 0, 0) },
             { "esteira", Slot("Laboratorio", 3f, 2.5f) },
-            { "cama", Slot("Dormitorio", -1f, 1.5f) },
             { "airlock", new Vector3(0, 0, 25.5f) },
             { "vazamento", new Vector3(3.2f, 0, 3.2f) },
         };

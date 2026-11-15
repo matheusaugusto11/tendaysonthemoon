@@ -1,64 +1,78 @@
 using System.Collections.Generic;
+using DezDias;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>Fábrica: devolve o minigame de cada estação.</summary>
+/// <summary>Fábrica: devolve o minigame de cada tarefa (tabela D3 do design da mudança fluxo-web-no-3d).</summary>
 public static class Minigames
 {
-    public static Minigame Criar(Estacao e)
-    {
-        switch (e.id)
-        {
-            case "esteira": return new MinigameEsteira(e.nome, 4);
-            case "antena": return new MinigameDisjuntores(ModoDisjuntor.Antena, e.nome);
-            case "estufa": return new MinigameDisjuntores(ModoDisjuntor.Estufa, e.nome);
-            case "disjuntores": return new MinigameDisjuntores(ModoDisjuntor.Escudo, e.nome);
-            case "filtro":
-            case "painel": return new MinigameRaspadinha(e.nome);
-            case "reciclador": return new MinigameCanos(e.nome);
-            case "lixo": return new MinigameLixo(e.nome, "Lixo", 4, "COMPACTAR", "Arraste os lixos para o compactador e aperte COMPACTAR.");
-            case "backup": return new MinigameLixo(e.nome, "Maleta", 4, "ENVIAR", "Arraste as maletas de pesquisa para a caixa e aperte ENVIAR.");
-            case "vazamento": return new MinigameSegurar(e.nome);
-            case "airlock": return new MinigameSegurar("VOLTAR PARA A TERRA", "SEGURE o clique / toque / botão A para fechar a comporta e partir!", "AIRLOCK", 3f);
-            default: return new MinigameProvisorio(e.nome);
-        }
-    }
-}
+    static Txt T(string pt, string en) => new Txt(pt, en);
 
-/// <summary>Minigame de mentira: um botão que conclui (usado se faltar um minigame).</summary>
-public class MinigameProvisorio : Minigame
-{
-    readonly string _nome;
-    public MinigameProvisorio(string nome) { _nome = nome; titulo = nome; instrucao = "Minigame em construção."; }
-    protected override void Construir()
+    public static Minigame Criar(string tarefa, float limite)
     {
-        Rotulo($"Aqui vai o minigame: {_nome}", 44, new Vector2(0, 80), new Vector2(1200, 120));
-        var area = Retangulo(new Vector2(0, -80), new Vector2(520, 130), new Color(0.2f, 0.45f, 0.85f));
-        Rotulo("CONCLUIR (clique)", 44, new Vector2(0, -80), new Vector2(520, 130));
-        _btn = area.rectTransform;
+        Minigame m;
+        switch (tarefa)
+        {
+            case Tarefas.Amostra:
+                m = new MinigameLixo(T("Pedra", "Rock"), 4, T("VOLTAR", "BACK"), T("CAIXA DE AMOSTRAS", "SAMPLE BOX"), new Color(0.62f, 0.6f, 0.66f), botaoSempreAtivo: true);
+                break;
+            case Tarefas.Braco:
+                m = new MinigameLixo(T("Caixa", "Box"), 1, T("PEGAR", "GRAB"), T("GARRA", "CLAW"), new Color(0.9f, 0.62f, 0.26f), botaoSempreAtivo: false);
+                break;
+            case Tarefas.Poeira:
+                m = new MinigameRaspadinha(new Color(0.17f, 0.36f, 0.62f));
+                break;
+            case Tarefas.Filtros:
+                m = new MinigameRaspadinha(new Color(0.75f, 0.9f, 1f));
+                break;
+            case Tarefas.Agua:
+                m = new MinigameCanos();
+                break;
+            case Tarefas.Upload:
+                m = new MinigameEsteira(3, errarDesfaz: false, rotulo: T("PACOTES ENVIADOS", "PACKETS SENT"));
+                break;
+            case Tarefas.Exercicio:
+                m = new MinigameEsteira(5, errarDesfaz: true, rotulo: T("PASSOS NO RITMO", "STEPS IN RHYTHM"));
+                break;
+            case Tarefas.Estufa:
+                m = new MinigameDisjuntores(ModoDisjuntor.Estufa);
+                break;
+            case Tarefas.Antena:
+                m = new MinigameDisjuntores(ModoDisjuntor.Antena);
+                break;
+            default:
+                m = new MinigameSegurar();
+                break;
+        }
+        var d = Tarefas.Def(tarefa);
+        if (d != null) { m.titulo = d.MiniTitulo; m.instrucao = d.MiniInstrucao; }
+        m.duracao = limite;
+        return m;
     }
-    RectTransform _btn;
-    protected override void Atualizar() { if (Ponteiro.Down && Sobre(_btn)) Vencer(); }
 }
 
 // =====================================================================================
 // 1) ESTEIRA — ritmo: apertar no momento certo (ESPAÇO / A / toque) na zona verde.
+//    Exercício (5 acertos, errar desfaz) e transmissão de dados (3 pacotes, errar não desfaz).
 // =====================================================================================
 public class MinigameEsteira : Minigame
 {
     const float Largura = 1000f;
     readonly int _alvo;
+    readonly bool _errarDesfaz;
+    readonly Txt _rotulo;
     int _acertos;
     float _x, _dir = 1f, _zonaX;
     const float ZonaLarg = 150f, Vel = 650f;
     RectTransform _cursor, _zona;
     Image[] _pontos;
 
-    public MinigameEsteira(string nome, int acertos)
+    public MinigameEsteira(int acertos, bool errarDesfaz, Txt rotulo)
     {
-        titulo = nome; _alvo = acertos;
-        instrucao = $"Aperte ESPAÇO / A / toque quando o cursor estiver na zona verde. {acertos} acertos!";
+        _alvo = acertos; _errarDesfaz = errarDesfaz; _rotulo = rotulo;
     }
+
+    protected override float Progresso() => _acertos / (float)_alvo;
 
     protected override void Construir()
     {
@@ -69,6 +83,7 @@ public class MinigameEsteira : Minigame
         _pontos = new Image[_alvo];
         for (int i = 0; i < _alvo; i++)
             _pontos[i] = Retangulo(new Vector2((i - (_alvo - 1) / 2f) * 80f, -140), new Vector2(50, 50), new Color(1, 1, 1, 0.2f));
+        Rotulo(_rotulo.ToString(), 28, new Vector2(0, -200), new Vector2(900, 40));
         NovaZona();
     }
 
@@ -94,7 +109,7 @@ public class MinigameEsteira : Minigame
                 if (_acertos >= _alvo) { Vencer(); return; }
                 NovaZona();
             }
-            else if (_acertos > 0)
+            else if (_errarDesfaz && _acertos > 0)
             {
                 _acertos--;
                 _pontos[_acertos].color = new Color(1, 1, 1, 0.2f);
@@ -104,27 +119,32 @@ public class MinigameEsteira : Minigame
 }
 
 // =====================================================================================
-// 2) RASPADINHA — esfregar a sujeira (filtro / painel solar).
+// 2) RASPADINHA — esfregar a poeira (painéis solares / filtros de ar). Nota = fração limpa.
 // =====================================================================================
 public class MinigameRaspadinha : Minigame
 {
     const int Cols = 10, Lins = 4;
     const float Celula = 130f, Raio = 105f;
+    readonly Color _fundo;
     float[] _sujeira;
     Image[] _cels;
     Vector2[] _centros;
 
-    public MinigameRaspadinha(string nome)
+    public MinigameRaspadinha(Color fundoLimpo) { _fundo = fundoLimpo; }
+
+    protected override float Progresso()
     {
-        titulo = nome;
-        instrucao = "Clique/toque e arraste (ou segure A e mova o analógico) para esfregar a poeira!";
+        if (_sujeira == null) return 0f;
+        float s = 0f;
+        foreach (var v in _sujeira) s += v;
+        return 1f - s / _sujeira.Length;
     }
 
     protected override void Construir()
     {
         int n = Cols * Lins;
         _sujeira = new float[n]; _cels = new Image[n]; _centros = new Vector2[n];
-        Retangulo(Vector2.zero, new Vector2(Cols * Celula + 10, Lins * Celula + 10), new Color(0.75f, 0.9f, 1f)); // vidro limpo
+        Retangulo(Vector2.zero, new Vector2(Cols * Celula + 10, Lins * Celula + 10), _fundo); // superfície limpa
         for (int i = 0; i < n; i++)
         {
             int c = i % Cols, l = i / Cols;
@@ -154,12 +174,15 @@ public class MinigameRaspadinha : Minigame
 }
 
 // =====================================================================================
-// 3) LIXO (zero-G) / BACKUP — arrastar itens flutuantes para a caixa e apertar o botão.
+// 3) ARRASTAR — itens flutuando (gravidade baixa) para a caixa, depois apertar o botão.
+//    Coleta de pedras (botão VOLTAR sempre ativo; nota = pedras na caixa) e braço robótico (1 caixa, PEGAR).
 // =====================================================================================
 public class MinigameLixo : Minigame
 {
-    readonly string _item, _botao;
+    readonly Txt _item, _botao, _caixaRotulo;
     readonly int _qtd;
+    readonly bool _botaoSempre;
+    readonly Color _cor;
     class Peca { public RectTransform rt; public Vector2 vel; public bool dentro; }
     List<Peca> _pecas;
     Peca _segurando;
@@ -167,25 +190,30 @@ public class MinigameLixo : Minigame
     Image _botaoImg;
     const float Meio = 55f; // meia-largura da peça
 
-    public MinigameLixo(string nome, string item, int qtd, string botao, string instr)
+    public MinigameLixo(Txt item, int qtd, Txt botao, Txt caixaRotulo, Color cor, bool botaoSempreAtivo)
     {
-        titulo = nome; _item = item; _qtd = qtd; _botao = botao; instrucao = instr;
+        _item = item; _qtd = qtd; _botao = botao; _caixaRotulo = caixaRotulo; _cor = cor; _botaoSempre = botaoSempreAtivo;
     }
+
+    int Dentro() => _pecas == null ? 0 : _pecas.FindAll(x => x.dentro).Count;
+    protected override float Progresso() => Dentro() / (float)_qtd;
+    protected override bool SairConclui => _botaoSempre;
 
     protected override void Construir()
     {
         _segurando = null;
         _caixa = Retangulo(new Vector2(0, 0), new Vector2(280, 280), new Color(0.2f, 0.5f, 0.7f, 0.9f)).rectTransform;
-        Rotulo(_botao == "ENVIAR" ? "CAIXA" : "COMPACTADOR", 30, new Vector2(0, 110), new Vector2(260, 50));
+        Rotulo(_caixaRotulo.ToString(), 26, new Vector2(0, 110), new Vector2(270, 50));
         _botaoRt = Retangulo(new Vector2(0, -215), new Vector2(380, 80), new Color(0.35f, 0.35f, 0.4f)).rectTransform;
         _botaoImg = _botaoRt.GetComponent<Image>();
-        Rotulo(_botao, 40, new Vector2(0, -215), new Vector2(380, 80));
+        Rotulo(_botao.ToString(), 40, new Vector2(0, -215), new Vector2(380, 80));
 
         _pecas = new List<Peca>();
         for (int i = 0; i < _qtd; i++)
         {
             Vector2 pos = new Vector2(i % 2 == 0 ? Random.Range(-600f, -250f) : Random.Range(250f, 600f), Random.Range(-100f, 180f));
-            var im = Retangulo(pos, Vector2.one * Meio * 2f, _item == "Lixo" ? new Color(0.8f, 0.55f, 0.3f) : new Color(0.9f, 0.85f, 0.3f));
+            var im = Retangulo(pos, Vector2.one * Meio * 2f, _cor);
+            Rotulo(_item.ToString(), 22, Vector2.zero, new Vector2(Meio * 2f, 40), im.transform);
             _pecas.Add(new Peca { rt = im.rectTransform, vel = Random.insideUnitCircle.normalized * Random.Range(120f, 200f) });
         }
     }
@@ -214,7 +242,7 @@ public class MinigameLixo : Minigame
             if (Mathf.Abs(c.x) < 140 && Mathf.Abs(c.y) < 140)
             {
                 _segurando.dentro = true;
-                int idx = _pecas.FindAll(x => x.dentro).Count - 1;
+                int idx = Dentro() - 1;
                 _segurando.rt.anchoredPosition = new Vector2((idx % 2 - 0.5f) * 120f, (idx / 2 - 0.5f) * 120f);
                 _segurando.rt.sizeDelta = Vector2.one * 90f;
             }
@@ -223,13 +251,15 @@ public class MinigameLixo : Minigame
         }
 
         bool todos = _pecas.TrueForAll(x => x.dentro);
-        _botaoImg.color = todos ? new Color(0.3f, 0.8f, 0.4f) : new Color(0.35f, 0.35f, 0.4f);
-        if (todos && Ponteiro.Down && Sobre(_botaoRt)) Vencer();
+        bool ativo = todos || _botaoSempre;
+        _botaoImg.color = ativo ? new Color(0.3f, 0.8f, 0.4f) : new Color(0.35f, 0.35f, 0.4f);
+        if (ativo && Ponteiro.Down && _segurando == null && Sobre(_botaoRt)) Terminar(Progresso());
     }
 }
 
 // =====================================================================================
-// 4) CANOS 3x3 — girar os canos até ligar o tanque amarelo ao azul.
+// 4) CANOS 3x3 — girar os canos até ligar o tanque amarelo ao azul. Reciclagem de água.
+//    Resolvido: nota de 80 a 100% pelo tempo. Sem resolver: trecho molhado ÷ caminho.
 // =====================================================================================
 public class MinigameCanos : Minigame
 {
@@ -239,13 +269,7 @@ public class MinigameCanos : Minigame
 
     class Tile { public bool reto; public int rot; public RectTransform rt; public Image[] barras = new Image[4]; }
     Tile[,] _g;
-    int _linIni, _linFim;
-
-    public MinigameCanos(string nome)
-    {
-        titulo = nome;
-        instrucao = "Clique nos canos para girar e ligue o tanque amarelo (urina) ao azul (água limpa).";
-    }
+    int _linIni, _linFim, _tamCaminho = 1, _molhados;
 
     int Conexoes(Tile t)
     {
@@ -254,6 +278,8 @@ public class MinigameCanos : Minigame
         for (int d = 0; d < 4; d++) if ((baseMask & (1 << d)) != 0) m |= 1 << ((d + t.rot) % 4);
         return m;
     }
+
+    protected override float Progresso() => Mathf.Clamp01(_molhados / (float)_tamCaminho) * 0.79f;
 
     protected override void Construir()
     {
@@ -268,6 +294,7 @@ public class MinigameCanos : Minigame
         caminho.Add(new Vector2Int(2, linMeio));
         l = linMeio;
         while (l != _linFim) { l += l < _linFim ? 1 : -1; caminho.Add(new Vector2Int(2, l)); }
+        _tamCaminho = caminho.Count;
 
         for (int c = 0; c < 3; c++) for (int r = 0; r < 3; r++)
             _g[c, r] = new Tile { reto = Random.value < 0.5f, rot = Random.Range(0, 4) };
@@ -278,13 +305,11 @@ public class MinigameCanos : Minigame
             int saida = i == caminho.Count - 1 ? 1 : DirDe(caminho[i], caminho[i + 1]);
             var t = _g[caminho[i].x, caminho[i].y];
             t.reto = (entrada + 2) % 4 == saida;
-            // acha a rotação cujas conexões = {entrada, saída}
             int alvo = (1 << entrada) | (1 << saida);
             for (int rot = 0; rot < 4; rot++) { t.rot = rot; if (Conexoes(t) == alvo) break; }
             t.rot = (t.rot + Random.Range(1, 4)) % 4; // embaralha (nunca já resolvido por esse tile)
         }
 
-        // Visual
         for (int c = 0; c < 3; c++) for (int r = 0; r < 3; r++)
         {
             Vector2 pos = new Vector2((c - 1) * (Tam + 12), -(r - 1) * (Tam + 12));
@@ -299,10 +324,10 @@ public class MinigameCanos : Minigame
             Atualizar(t);
         }
         float yIni = -(_linIni - 1) * (Tam + 12), yFim = -(_linFim - 1) * (Tam + 12);
-        Retangulo(new Vector2(-340, yIni), new Vector2(110, 110), new Color(1f, 0.85f, 0.2f));
-        Rotulo("URINA", 24, new Vector2(-340, yIni), new Vector2(110, 40));
-        Retangulo(new Vector2(340, yFim), new Vector2(110, 110), new Color(0.3f, 0.6f, 1f));
-        Rotulo("ÁGUA", 24, new Vector2(340, yFim), new Vector2(110, 40));
+        Retangulo(new Vector2(-370, yIni), new Vector2(150, 110), new Color(1f, 0.85f, 0.2f));
+        Rotulo(Idioma.L("ÁGUA\nUSADA", "USED\nWATER"), 22, new Vector2(-370, yIni), new Vector2(150, 80));
+        Retangulo(new Vector2(370, yFim), new Vector2(150, 110), new Color(0.3f, 0.6f, 1f));
+        Rotulo(Idioma.L("ÁGUA\nLIMPA", "CLEAN\nWATER"), 22, new Vector2(370, yFim), new Vector2(150, 80));
         Colorir();
     }
 
@@ -345,6 +370,7 @@ public class MinigameCanos : Minigame
         foreach (var t in _g) foreach (var b in t.barras) b.color = Color.gray;
         var molhados = new List<Tile>();
         bool ok = Percorrer(molhados);
+        _molhados = molhados.Count;
         foreach (var t in molhados) foreach (var b in t.barras) b.color = ok ? new Color(0.4f, 0.8f, 1f) : new Color(1f, 0.85f, 0.2f);
         return ok;
     }
@@ -357,7 +383,7 @@ public class MinigameCanos : Minigame
             {
                 t.rot = (t.rot + 1) % 4;
                 Atualizar(t);
-                if (Colorir()) Vencer();
+                if (Colorir()) Terminar(Mathf.Max(0.8f, 1f - Tempo / duracao));
                 return;
             }
     }
@@ -365,53 +391,45 @@ public class MinigameCanos : Minigame
 
 // =====================================================================================
 // 5) DISJUNTORES — ligar o sistema pedido sem estourar a carga (desligue outro!).
+//    Estufa e antena (comunicação). Resolvido: 100% até 1/3 do tempo, 70% até 2/3, depois 40%.
 // =====================================================================================
-public enum ModoDisjuntor { Estufa, Escudo, Antena }
+public enum ModoDisjuntor { Estufa, Antena }
 
 public class MinigameDisjuntores : Minigame
 {
-    static readonly string[] Nomes = { "Estufa", "Filtros", "Comunicação", "Escudo" };
+    static readonly Txt[] Nomes =
+    {
+        new Txt("Estufa", "Greenhouse"), new Txt("Filtros", "Filters"),
+        new Txt("Comunicação", "Comms"), new Txt("Escudo", "Shield"),
+    };
     readonly int[] _consumo = { 30, 25, 20, 50 };
     readonly bool[] _ligada = new bool[4];
     readonly int _alvo;
     const int Capacidade = 80;
 
-    RectTransform[] _trilhos = new RectTransform[4];
-    RectTransform[] _botoes = new RectTransform[4];
-    Image[] _luz = new Image[4];
+    readonly RectTransform[] _trilhos = new RectTransform[4];
+    readonly RectTransform[] _botoes = new RectTransform[4];
+    readonly Image[] _luz = new Image[4];
     RectTransform _cargaBarra;
     Image _cargaImg;
     Text _cargaTexto;
     int _arrastando = -1;
     float _flashAte;
+    bool _resolvido;
     const float Alto = 260f, Meio = Alto / 2f - 34f;
 
-    public MinigameDisjuntores(ModoDisjuntor modo, string nome)
+    public MinigameDisjuntores(ModoDisjuntor modo)
     {
-        titulo = nome;
-        switch (modo)
-        {
-            case ModoDisjuntor.Estufa:
-                _alvo = 0; _ligada[1] = true; _ligada[2] = true;
-                instrucao = "Ligue a ESTUFA arrastando a alavanca para cima. Cuidado com a carga máxima!";
-                break;
-            case ModoDisjuntor.Escudo:
-                _alvo = 3; _ligada[0] = true; _ligada[1] = true; _ligada[2] = true;
-                instrucao = "TEMPESTADE! Ligue o ESCUDO. Para isso desligue outros sistemas (a carga estoura!).";
-                break;
-            default:
-                _alvo = 2; _consumo[2] = 55; _ligada[0] = true; _ligada[1] = true;
-                instrucao = "Ligue a COMUNICAÇÃO (gasta muita energia). Desligue algo para liberar carga.";
-                break;
-        }
+        if (modo == ModoDisjuntor.Estufa) { _alvo = 0; _ligada[1] = true; _ligada[2] = true; _ligada[3] = true; _consumo[3] = 30; }
+        else { _alvo = 2; _consumo[2] = 55; _ligada[0] = true; _ligada[1] = true; }
     }
 
     int Carga() { int s = 0; for (int i = 0; i < 4; i++) if (_ligada[i]) s += _consumo[i]; return s; }
+    protected override float Progresso() => _resolvido ? 1f : 0f;
 
     protected override void Construir()
     {
         _arrastando = -1;
-        // barra de carga
         Retangulo(new Vector2(0, 200), new Vector2(1000, 44), new Color(0, 0, 0, 0.5f));
         var fill = Retangulo(Vector2.zero, new Vector2(992, 36), new Color(0.4f, 0.85f, 0.4f), Area);
         _cargaImg = fill; _cargaBarra = fill.rectTransform;
@@ -426,7 +444,7 @@ public class MinigameDisjuntores : Minigame
             _botoes[i] = Retangulo(new Vector2(x, 0), new Vector2(120, 68), new Color(0.85f, 0.85f, 0.9f)).rectTransform;
             _luz[i] = Retangulo(new Vector2(x, -190), new Vector2(40, 40), Color.gray);
             Rotulo($"{Nomes[i]}\n{_consumo[i]}", 28, new Vector2(x, -225), new Vector2(240, 70));
-            if (i == _alvo) Rotulo("▲ LIGAR", 26, new Vector2(x, 130), new Vector2(200, 40));
+            if (i == _alvo) Rotulo(Idioma.L("LIGAR ESTE", "SWITCH ON"), 26, new Vector2(x, 130), new Vector2(240, 40));
             PosicionarBotao(i);
         }
         Atualizar();
@@ -441,7 +459,6 @@ public class MinigameDisjuntores : Minigame
 
     protected override void Atualizar()
     {
-        // arrastar alavanca
         if (Ponteiro.Down)
             for (int i = 0; i < 4; i++) if (Sobre(_botoes[i]) || Sobre(_trilhos[i])) { _arrastando = i; break; }
         if (_arrastando >= 0)
@@ -452,14 +469,19 @@ public class MinigameDisjuntores : Minigame
             {
                 int i = _arrastando; _arrastando = -1;
                 bool quer = y > -30f;
-                if (quer && !_ligada[i] && Carga() + _consumo[i] > Capacidade) { _flashAte = Time.time + 0.6f; Mensagem("Sobrecarga!"); }
+                if (quer && !_ligada[i] && Carga() + _consumo[i] > Capacidade) { _flashAte = Time.time + 0.6f; UI.Mensagem(Idioma.L("Sobrecarga!", "Overload!")); }
                 else
                 {
-                    if (quer != _ligada[i]) Mensagem("");
+                    if (quer != _ligada[i]) UI.Mensagem("");
                     _ligada[i] = quer;
                 }
                 PosicionarBotao(i);
-                if (_ligada[_alvo] && Carga() <= Capacidade) Vencer();
+                if (_ligada[_alvo] && Carga() <= Capacidade)
+                {
+                    _resolvido = true;
+                    float f = Tempo / duracao;
+                    Terminar(f <= 1f / 3f ? 1f : f <= 2f / 3f ? 0.7f : 0.4f);
+                }
             }
         }
 
@@ -467,27 +489,19 @@ public class MinigameDisjuntores : Minigame
         _cargaBarra.sizeDelta = new Vector2(992f * Mathf.Clamp01(carga / (float)Capacidade), 36f);
         _cargaImg.color = Time.time < _flashAte ? new Color(1f, 0.2f, 0.2f)
             : (carga > Capacidade * 0.85f ? new Color(1f, 0.7f, 0.2f) : new Color(0.4f, 0.85f, 0.4f));
-        _cargaTexto.text = $"CARGA {carga} / {Capacidade}";
+        _cargaTexto.text = Idioma.L($"CARGA {carga} / {Capacidade}", $"LOAD {carga} / {Capacidade}");
     }
-
-    void Mensagem(string m) => UI.Mensagem(m);
 }
 
 // =====================================================================================
-// 6) SEGURAR — manter o botão pressionado para consertar o vazamento.
+// 6) SEGURAR — manter o botão pressionado para selar o vazamento. Nota = progresso.
 // =====================================================================================
 public class MinigameSegurar : Minigame
 {
     float _prog;
     RectTransform _barra;
-    readonly float _tempo;
-    readonly string _texto;
 
-    public MinigameSegurar(string nome, string instr = null, string texto = "Tssshhhh...", float tempo = 4f)
-    {
-        titulo = nome; _tempo = tempo; _texto = texto;
-        instrucao = instr ?? "SEGURE o clique / toque / botão A para selar o vazamento!";
-    }
+    protected override float Progresso() => _prog;
 
     protected override void Construir()
     {
@@ -495,12 +509,12 @@ public class MinigameSegurar : Minigame
         Retangulo(Vector2.zero, new Vector2(700, 60), new Color(0, 0, 0, 0.5f));
         var f = Retangulo(Vector2.zero, new Vector2(1, 50), new Color(0.4f, 0.85f, 1f));
         _barra = f.rectTransform; _barra.pivot = new Vector2(0, 0.5f); _barra.anchoredPosition = new Vector2(-345, 0);
-        Rotulo(_texto, 50, new Vector2(0, 120), new Vector2(800, 80));
+        Rotulo("Tssshhhh...", 50, new Vector2(0, 120), new Vector2(800, 80));
     }
 
     protected override void Atualizar()
     {
-        _prog = Mathf.Clamp01(_prog + (Ponteiro.Held ? 1f : -0.6f) * Time.deltaTime / _tempo);
+        _prog = Mathf.Clamp01(_prog + (Ponteiro.Held ? 1f : -0.6f) * Time.deltaTime / 4f);
         _barra.sizeDelta = new Vector2(690f * _prog, 50f);
         if (_prog >= 1f) Vencer();
     }

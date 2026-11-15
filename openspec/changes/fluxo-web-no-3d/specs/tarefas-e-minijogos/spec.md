@@ -37,7 +37,7 @@ Antes de cada tarefa (menos o vazamento), o jogo SHALL mostrar as duas escolhas,
 
 #### Scenario: Custos antes de escolher
 - **WHEN** a tela de escolha da transmissão de dados aparece
-- **THEN** "Transmitir os dados" mostra "⚡ −2 hoje · ⭐ +0 a +4" e "Guardar a energia" mostra "⚡ −0 · ⭐ 0"
+- **THEN** "Transmitir os dados" mostra "energia -2 hoje · ciência +0 a +4" e "Guardar a energia" mostra "energia -0 · ciência 0" (com palavras no lugar de ícones, porque a fonte do WebGL não tem emoji)
 
 #### Scenario: Saída bloqueada sem ar
 - **WHEN** o Oxigênio é 1 ou menos e a tarefa é de fora da base (coleta de pedras ou poeira nos painéis)

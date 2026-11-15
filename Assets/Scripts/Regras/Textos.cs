@@ -1,0 +1,264 @@
+namespace DezDias
+{
+    /// <summary>
+    /// Textos do jogo em PT e EN, copiados do protótipo web (web/index.html, chamadas L(pt,en)).
+    /// Só caracteres do Latin-1 (a fonte do WebGL não tem emoji nem O₂ subscrito): ícones viram palavras.
+    /// </summary>
+    public static class Textos
+    {
+        static Txt T(string pt, string en) => new Txt(pt, en);
+
+        // ---------- Início ----------
+        public static readonly Txt Titulo = T("Dez Dias na Lua", "Ten Days on the Moon");
+        public static readonly Txt IntroTexto = T("Você comanda uma base no polo sul da Lua, com quatro astronautas. A missão dura 10 dias.", "You command a base at the Moon's south pole, with four astronauts. The mission lasts 10 days.");
+        public static readonly Txt IntroItem1 = T("Todo dia a base ganha poucas células de energia. Você escolhe para onde elas vão. Não dá para ligar tudo.", "Every day the base gets a few energy cells. You choose where they go. You cannot power everything.");
+        public static readonly Txt IntroItem2 = T("Cuide do oxigênio, da radiação e da comida, e faça ciência para ganhar estrelas.", "Look after oxygen, radiation and food, and do science to earn stars.");
+        public static readonly Txt IntroItem3 = T("Toda escolha tem um custo. As erupções solares do jogo aconteceram de verdade: são dados arquivados da NASA.", "Every choice has a cost. The solar flares in the game really happened: they are archived NASA data.");
+        public static readonly Txt EscolhaMissao = T("Escolha sua missão", "Choose your mission");
+        public static readonly Txt Cadete = T("Cadete", "Cadet");
+        public static readonly Txt CadeteIdade = T("7 a 9 anos", "Ages 7 to 9");
+        public static readonly Txt CadeteDesc = T("Mais ar e comida no começo. Menos erupções.", "More air and food at the start. Fewer flares.");
+        public static readonly Txt Comandante = T("Comandante", "Commander");
+        public static readonly Txt ComandanteIdade = T("10 a 12 anos", "Ages 10 to 12");
+        public static readonly Txt ComandanteDesc = T("Mais alertas e dias de sombra mais duros.", "More alerts and harsher shadow days.");
+        public static readonly Txt ComoJogar = T("Como jogar", "How to play");
+        public static readonly Txt TutorialDia1 = T("Tutorial no Dia 1: {0}", "Day 1 tutorial: {0}");
+        public static readonly Txt Ligado = T("ligado", "on");
+        public static readonly Txt Desligado = T("desligado", "off");
+        public static readonly Txt Creditos = T("Créditos e fontes", "Credits and sources");
+        /// <summary>Rótulo do botão de idioma: mostra o idioma para onde ele troca.</summary>
+        public static readonly Txt BotaoIdioma = T("English", "Português");
+        public static readonly Txt Rodape = T("Arte e código gerados com IA · Protótipo para o NASA Space Apps Challenge 2026 · Não é um produto da NASA", "Art and code made with AI · Prototype for the NASA Space Apps Challenge 2026 · Not a NASA product");
+
+        // ---------- Como jogar (slides) ----------
+        public static readonly Txt[] SlideTitulo =
+        {
+            T("Sua missão", "Your mission"),
+            T("A energia é pouca", "Energy is scarce"),
+            T("Três coisas para cuidar", "Three things to look after"),
+            T("Ande e resolva", "Walk and solve"),
+            T("O Sol é de verdade", "The Sun is real"),
+        };
+        public static readonly Txt[] SlideTexto =
+        {
+            T("Você comanda uma base no polo sul da Lua, com quatro astronautas. A missão dura 10 dias.", "You command a base at the Moon's south pole, with four astronauts. The mission lasts 10 days."),
+            T("Todo dia os painéis solares dão poucas células de energia. Você escolhe o que ligar: ar e água, estufa, abrigo, laboratório ou bateria. Não dá para ligar tudo!", "Every day the solar panels give a few energy cells. You choose what to power: air & water, greenhouse, shelter, lab or battery. You cannot power everything!"),
+            T("O oxigênio não pode acabar. A radiação não pode encher. A comida não pode faltar. Se uma delas chegar ao limite, a tripulação volta para casa mais cedo, em segurança.", "Oxygen must not run out. Radiation must not fill up. Food must not run short. If one of them hits its limit, the crew goes home early, safely."),
+            T("Todo dia tem uma tarefa. Leve o astronauta até a estação marcada seguindo a seta amarela (setas, W A S D, controle ou o joystick na tela). Cada tarefa é um mini jogo, e toda tarefa tem um custo. Depois, volte ao console no centro do hub para distribuir a energia. Você tem 5 minutos por dia.", "Every day has a task. Take the astronaut to the marked station by following the yellow arrow (arrow keys, W A S D, a gamepad or the on-screen joystick). Each task is a mini game, and every task has a cost. Then go back to the console in the middle of the hub to share out the energy. You have 5 minutes per day."),
+            T("Às vezes chega um alerta de erupção solar, forte ou fraco. Ligar o abrigo protege da radiação, mas gasta energia. As erupções do jogo aconteceram de verdade: são dados arquivados do NASA DONKI.", "Sometimes a solar flare alert arrives, strong or weak. Powering the shelter protects from radiation, but uses energy. The flares in the game really happened: they are archived NASA DONKI data."),
+        };
+        public static readonly Txt Voltar = T("Voltar", "Back");
+        public static readonly Txt Proximo = T("Próximo", "Next");
+        public static readonly Txt Pular = T("Pular", "Skip");
+        public static readonly Txt Comecar = T("Começar!", "Start!");
+
+        // ---------- HUD e pausa ----------
+        public static readonly Txt DiaDe = T("Dia {0} de {1}", "Day {0} of {1}");
+        public static readonly Txt Oxigenio = T("Oxigênio", "Oxygen");
+        public static readonly Txt Radiacao = T("Radiação", "Radiation");
+        public static readonly Txt Bateria = T("Bateria", "Battery");
+        public static readonly Txt Comida = T("Comida", "Food");
+        public static readonly Txt Ciencia = T("Ciência", "Science");
+        public static readonly Txt Pausa = T("PAUSA", "PAUSED");
+        public static readonly Txt Continuar = T("Continuar", "Continue");
+        public static readonly Txt ContinuarB = T("CONTINUAR (B)", "CONTINUE (B)");
+        public static readonly Txt Reiniciar = T("REINICIAR", "RESTART");
+        public static readonly Txt AjudaControle = T("A: confirmar   B: voltar   Start: pausa", "A: confirm   B: back   Start: pause");
+
+        // ---------- Boletim ----------
+        public static readonly Txt Boletim = T("Boletim da manhã", "Morning briefing");
+        public static readonly Txt Parte1 = T("Parte 1 de 3 · Rotina da base", "Part 1 of 3 · Base routine");
+        public static readonly Txt Parte2 = T("Parte 2 de 3 · Imprevistos do espaço", "Part 2 of 3 · Space surprises");
+        public static readonly Txt Parte3 = T("Parte 3 de 3 · Preparar a volta para casa", "Part 3 of 3 · Getting ready to go home");
+        public static readonly Txt LuzDeHoje = T("Luz de hoje", "Today's light");
+        public static readonly Txt LuzSombra = T("o Sol ficou atrás de um morro. Os painéis rendem só {0} células.", "the Sun is behind a hill. The panels give only {0} cells.");
+        public static readonly Txt LuzNormal = T("o Sol anda baixo pelo horizonte e os painéis rendem {0} células.", "the Sun travels low along the horizon and the panels give {0} cells.");
+        public static readonly Txt NaBateria = T(" Há {0} na bateria.", " There are {0} in the battery.");
+        public static readonly Txt AlertaForte = T("Alerta FORTE de erupção solar", "STRONG solar flare alert");
+        public static readonly Txt AlertaForteTexto = T("É bem provável que a erupção venha hoje.", "The flare will very likely come today.");
+        public static readonly Txt AlertaFraco = T("Alerta fraco de erupção solar", "Weak solar flare alert");
+        public static readonly Txt AlertaFracoTexto = T("Pode ser que a erupção não venha.", "The flare may not come.");
+        public static readonly Txt AbrigoCusta = T("Ligar o abrigo protege, mas custa energia.", "Powering the shelter protects, but costs energy.");
+        public static readonly Txt ClimaEspacial = T("Clima espacial", "Space weather");
+        public static readonly Txt SolCalmo = T("Sol calmo hoje.", "the Sun is calm today.");
+        public static readonly Txt VazamentoAberto = T("Vazamento aberto", "Open leak");
+        public static readonly Txt VazamentoAbertoTexto = T("a base perde 1 de oxigênio por dia até o conserto (2 células).", "the base loses 1 oxygen a day until repaired (2 cells).");
+        public static readonly Txt Tripulacao = T("Tripulação", "Crew");
+        public static readonly Txt TripulacaoForte = T("em ótima forma depois do exercício. 1 célula a mais hoje.", "in great shape after exercising. 1 extra cell today.");
+        public static readonly Txt TripulacaoFraca = T("mais fraca sem exercício. 1 célula a menos hoje.", "weaker without exercise. 1 cell fewer today.");
+        public static readonly Txt SemContato = T("Sem contato com a Terra", "No contact with Earth");
+        public static readonly Txt SemContatoTexto = T("hoje você decide sem a dica do controle da missão.", "today you decide without mission control's hint.");
+
+        // ---------- Deslocamento e relógio ----------
+        public static readonly Txt LeveAte = T("Leve o astronauta até: {0}", "Take the astronaut to: {0}");
+        public static readonly Txt ConsoleHub = T("Console de energia, no centro do hub", "Energy console, in the middle of the hub");
+        public static readonly Txt Console = T("Console de energia", "Energy console");
+        public static readonly Txt BotaoIniciar = T("{0}\nINICIAR (A / E)", "{0}\nSTART (A / E)");
+        public static readonly Txt BotaoDistribuir = T("DISTRIBUIR ENERGIA\n(A / E)", "SHARE OUT ENERGY\n(A / E)");
+        public static readonly Txt TempoAcabou = T("O tempo do dia acabou!", "The day's time is up!");
+        public static readonly Txt TempoAcabouTarefa = T("O tempo do dia acabou antes da tarefa. ", "The day's time ran out before the task. ");
+
+        // ---------- Escolha e tarefa ----------
+        public static readonly Txt RiscoErupcao = T("Hoje tem alerta de erupção. Quem sai da base fica sem a proteção do abrigo.", "There is a flare alert today. Anyone who goes outside is away from the shelter's protection.");
+        public static readonly Txt OxigenioBaixo = T("Oxigênio baixo demais para sair.", "Oxygen is too low to go outside.");
+        public static readonly Txt VoltarAoHub = T("Voltar ao hub e distribuir energia", "Back to the hub to share out energy");
+        public static readonly Txt JogarDeNovo = T("Jogar de novo", "Play again");
+        public static readonly Txt MenuMinijogos = T("Menu de minijogos", "Minigame menu");
+        public static readonly Txt VoceSabia = T("Você sabia?", "Did you know?");
+        public static readonly Txt Fontes = T("Fontes", "Sources");
+        public static readonly Txt Fonte = T("Fonte", "Source");
+        public static readonly Txt PrimeiraVez = T("Este aviso aparece só na primeira vez deste mini jogo. Depois, ele fica no botão ?.", "This card only shows the first time you play this mini game. After that, it lives under the ? button.");
+        public static readonly Txt Sair = T("SAIR (B)", "EXIT (B)");
+        public static readonly Txt Concluido = T("Concluído!", "Done!");
+        public static readonly Txt TempoEsgotado = T("Tempo esgotado!", "Time's up!");
+        public static readonly Txt Nota = T("Nota: {0}%", "Score: {0}%");
+
+        // ---------- Distribuição ----------
+        public static readonly Txt Distribuir = T("Distribuir energia", "Share out the energy");
+        public static readonly Txt DistribuirTexto = T("Use + e - para mandar células a cada módulo. Não dá para ligar tudo.", "Use + and - to send cells to each module. You cannot power everything.");
+        public static readonly Txt SugestaoCadete = T(" Já deixamos 2 no ar e água; você pode mudar.", " We already put 2 on air & water; you can change that.");
+        public static readonly Txt CelulasLivres = T("Células livres: {0}", "Free cells: {0}");
+        public static readonly Txt AlertaForteHoje = T("Alerta FORTE de erupção hoje", "STRONG flare alert today");
+        public static readonly Txt AlertaFracoHoje = T("Alerta fraco de erupção hoje", "Weak flare alert today");
+        public static readonly Txt DicaControle = T("Dica do controle da missão", "Mission control's hint");
+        public static readonly Txt CelulasVaoSePerder = T("{0} célula(s) livres vão se perder se não forem usadas ou guardadas.", "{0} free cell(s) will be lost unless used or saved.");
+        public static readonly Txt ComecarDia = T("Começar o dia", "Start the day");
+
+        public static readonly Txt[] NomeModulo =
+        {
+            T("Ar e água", "Air & water"), T("Estufa", "Greenhouse"), T("Abrigo", "Shelter"),
+            T("Laboratório", "Lab"), T("Bateria", "Battery"), T("Conserto", "Repair"),
+        };
+        public static readonly Txt DicaAr = T("2 células mantêm o oxigênio. 3 recuperam 1. Com menos, ele cai.", "2 cells keep oxygen steady. 3 win back 1. With fewer, it drops.");
+        public static readonly Txt DicaEstufa = T("Faltam {0} células para colher comida e ar.", "{0} more cells until a harvest of food and air.");
+        public static readonly Txt DicaAbrigo = T("Protege da radiação se uma erupção vier.", "Protects from radiation if a flare hits.");
+        public static readonly Txt DicaLab = T("Cada célula rende 1 estrela de ciência.", "Each cell earns 1 science star.");
+        public static readonly Txt DicaBateria = T("Guarda células para os dias de sombra.", "Saves cells for shadow days.");
+        public static readonly Txt DicaConserto = T("Precisa de 2 células para fechar o vazamento.", "Needs 2 cells to seal the leak.");
+
+        // Prévia (web: previewLines)
+        public static readonly Txt PreviaSemContato = T("Sem contato com a Terra: sem previsão hoje.", "No contact with Earth: no forecast today.");
+        public static readonly Txt PreviaO2Igual = T("O oxigênio se mantém.", "Oxygen holds steady.");
+        public static readonly Txt PreviaO2Sobe = T("O oxigênio sobe {0}.", "Oxygen rises {0}.");
+        public static readonly Txt PreviaO2Cai = T("O oxigênio cai {0}.", "Oxygen drops {0}.");
+        public static readonly Txt PreviaAbrigo2 = T("Se a erupção vier, a tripulação fica protegida.", "If the flare hits, the crew is protected.");
+        public static readonly Txt PreviaAbrigo1 = T("Se a erupção vier, o abrigo barra só metade da radiação.", "If the flare hits, the shelter blocks only half the radiation.");
+        public static readonly Txt PreviaAbrigo0 = T("Se a erupção vier, a tripulação fica exposta.", "If the flare hits, the crew is exposed.");
+        public static readonly Txt PreviaCiencia = T("Ciência: +{0}.", "Science: +{0}.");
+        public static readonly Txt PreviaColheita = T("A estufa dá colheita hoje.", "The greenhouse gives a harvest today.");
+        public static readonly Txt PreviaCresce = T("A estufa cresce. Faltarão {0} células.", "The greenhouse grows. {0} more cells to go.");
+        public static readonly Txt PreviaComidaAcabando = T("A comida está acabando!", "Food is running out!");
+        public static readonly Txt PreviaGuardadas = T("{0} célula(s) ficam guardadas para amanhã.", "{0} cell(s) stay saved for tomorrow.");
+
+        // ---------- Resolução do dia (web: resolve) ----------
+        public static readonly Txt ArTotal = T("Ar e água com força total: o oxigênio subiu 1.", "Air & water at full power: oxygen rose 1.");
+        public static readonly Txt ArLigado = T("Ar e água ligados: o oxigênio se manteve.", "Air & water on: oxygen held steady.");
+        public static readonly Txt ArPouca = T("Ar e água com pouca energia: o oxigênio caiu 1.", "Air & water low on power: oxygen dropped 1.");
+        public static readonly Txt ArSem = T("Ar e água sem energia: o oxigênio caiu 2.", "Air & water unpowered: oxygen dropped 2.");
+        public static readonly Txt VazamentoConsertado = T("Vazamento consertado! Custou 2 células.", "Leak sealed! It cost 2 cells.");
+        public static readonly Txt VazamentoContinua = T("O vazamento continua: mais 1 de oxigênio perdido.", "The leak continues: 1 more oxygen lost.");
+        public static readonly Txt Colheita = T("Colheita! A estufa deu comida para 4 dias e 1 de oxigênio.", "Harvest! The greenhouse gave 4 days of food and 1 oxygen.");
+        public static readonly Txt MomentoColheita = T("A estufa deu comida e ar. Plantar cedo valeu a espera.", "The greenhouse gave food and air. Planting early paid off.");
+        public static readonly Txt EstufaCresceu = T("A estufa cresceu. Faltam {0} células para colher.", "The greenhouse grew. {0} more cells until harvest.");
+        public static readonly Txt LabRendeu = T("O laboratório rendeu {0} estrela(s) de ciência.", "The lab earned {0} science star(s).");
+        public static readonly Txt ErupcaoProtegeu = T("A erupção veio e o abrigo protegeu quem estava dentro.", "The flare hit and the shelter protected everyone inside.");
+        public static readonly Txt ErupcaoMeia = T("A erupção veio. O abrigo com meia energia barrou só parte: radiação +{0}.", "The flare hit. The half-powered shelter blocked only part: radiation +{0}.");
+        public static readonly Txt ErupcaoSem = T("A erupção veio e o abrigo estava sem energia: radiação +{0}.", "The flare hit and the shelter had no power: radiation +{0}.");
+        public static readonly Txt AstronautaFora = T("Um astronauta tinha saído da base hoje e pegou a erupção fora do abrigo: radiação +2.", "An astronaut had gone outside today and met the flare away from the shelter: radiation +2.");
+        public static readonly Txt MomentoFora = T("Erupção solar com um astronauta fora da base. A radiação subiu {0}.", "Solar flare with an astronaut outside. Radiation rose {0}.");
+        public static readonly Txt MomentoAbrigoFraco = T("Erupção solar com o abrigo fraco. A radiação subiu {0}.", "Solar flare with a weak shelter. Radiation rose {0}.");
+        public static readonly Txt MomentoAbrigoLigado = T("Erupção solar, e o abrigo ligado protegeu todo mundo.", "Solar flare, and the powered shelter protected everyone.");
+        public static readonly Txt FalsoComAbrigo = T("O alerta não se confirmou. As {0} célula(s) do abrigo não fizeram falta hoje, mas custaram.", "The alert did not come true. The {0} shelter cell(s) were not needed today, but they had a cost.");
+        public static readonly Txt FalsoSemAbrigo = T("O alerta não se confirmou. Você arriscou e deu certo desta vez.", "The alert did not come true. You took the risk and it worked this time.");
+        public static readonly Txt CelulasPerdidas = T("{0} célula(s) ficaram sem uso e se perderam.", "{0} cell(s) were left unused and lost.");
+        public static readonly Txt MomentoO2Caiu = T("O oxigênio caiu {0} em um dia só.", "Oxygen dropped {0} in a single day.");
+        public static readonly Txt MomentoSombra = T("Dia de sombra: os painéis renderam pouco.", "Shadow day: the panels gave little.");
+
+        // ---------- O dia acontece ----------
+        public static readonly Txt AnimComeco = T("O dia começou. A energia corre para os módulos...", "The day has begun. Energy flows to the modules...");
+        public static readonly Txt AnimErupcaoExposta = T("A erupção chegou e pegou a base desprotegida!", "The flare arrived and caught the base unprotected!");
+        public static readonly Txt AnimErupcaoSegurou = T("A erupção chegou, e o abrigo segurou!", "The flare arrived, and the shelter held!");
+        public static readonly Txt AnimFalso = T("Ufa! O alerta não se confirmou.", "Phew! The alert did not come true.");
+        public static readonly Txt AnimColheita = T("Dia de colheita na estufa!", "Harvest day in the greenhouse!");
+        public static readonly Txt AnimSombra = T("Dia de sombra: a base vive do que guardou.", "Shadow day: the base lives on what it saved.");
+        public static readonly Txt AnimTranquilo = T("Dia tranquilo na base.", "A quiet day at the base.");
+
+        // ---------- Resultado ----------
+        public static readonly Txt FimDoDia = T("Fim do dia {0}", "End of day {0}");
+        public static readonly Txt Igual = T("igual", "same");
+        public static readonly Txt DeAte = T("{0} para {1}", "{0} to {1}");
+        public static readonly Txt PorQue = T("Por quê?", "Why?");
+        public static readonly Txt AconteceuDeVerdade = T("Isso aconteceu de verdade", "This really happened");
+        public static readonly Txt ErupcaoClasse = T("Erupção solar classe {0}", "Solar flare class {0}");
+        public static readonly Txt ValeComo = T("No jogo ela vale como erupção {0}.", "In the game it counts as a {0} flare.");
+        public static readonly Txt[] Intensidade = { T("fraca", "weak"), T("média", "medium"), T("forte", "strong") };
+        public static readonly Txt FonteDonki = T("Fonte: NASA DONKI (CCMC). Dado arquivado, consultado em 13/11/2026. Não é dado ao vivo.", "Source: NASA DONKI (CCMC). Archived data, retrieved on 2026-11-13. Not live data.");
+        public static readonly Txt VerRegistro = T("Ver o registro", "See the record");
+        public static readonly Txt ProximoDia = T("Próximo dia", "Next day");
+        public static readonly Txt VerRelatorio = T("Ver o relatório da missão", "See the mission report");
+
+        // ---------- Relatório (web: vEnd) ----------
+        public static readonly Txt MissaoCompleta = T("Missão completa: 10 dias na Lua!", "Mission complete: 10 days on the Moon!");
+        public static readonly Txt MissaoInterrompida = T("Missão interrompida no dia {0}", "Mission cut short on day {0}");
+        public static readonly Txt SubCompleta = T("A tripulação está bem e volta para casa.", "The crew is well and heads home.");
+        public static readonly Txt SubO2 = T("O oxigênio chegou ao limite. A tripulação voltou para casa em segurança antes da hora.", "Oxygen reached its limit. The crew went home safely ahead of time.");
+        public static readonly Txt SubRad = T("A radiação chegou ao limite seguro. A tripulação voltou para casa para se cuidar.", "Radiation reached the safe limit. The crew went home to recover.");
+        public static readonly Txt SubComida = T("A comida acabou. A tripulação voltou para casa em segurança antes da hora.", "Food ran out. The crew went home safely ahead of time.");
+        public static readonly Txt DicaFimO2 = T("E se você mantivesse 2 células no ar e água e saísse menos da base?", "What if you kept 2 cells on air & water and went outside less often?");
+        public static readonly Txt DicaFimRad = T("E se você ligasse o abrigo nos alertas fortes, mesmo perdendo ciência?", "What if you powered the shelter on strong alerts, even if it costs science?");
+        public static readonly Txt DicaFimComida = T("E se você ligasse a estufa mais cedo? Planta demora para dar comida.", "What if you powered the greenhouse earlier? Plants take time to give food.");
+        public static readonly Txt DicaFimRadAlta = T("A radiação ficou alta. E se o abrigo ficasse ligado nos alertas fortes?", "Radiation ended up high. What if the shelter stayed on during strong alerts?");
+        public static readonly Txt DicaFim3Estrelas = T("Para 3 estrelas, faça {0} de ciência com pouca radiação. Vale arriscar nos alertas fracos?", "For 3 stars, reach {0} science with low radiation. Is it worth the risk on weak alerts?");
+        public static readonly Txt DicaFimExcelente = T("Missão excelente! Será que dá certo de novo com outros eventos?", "Excellent mission! Will it work again with different events?");
+        public static readonly Txt EventosMudam = T(" Os eventos mudam a cada partida.", " Events change every game.");
+        public static readonly Txt OQueMaisPesou = T("O que mais pesou", "What mattered most");
+        public static readonly Txt ParaProxima = T("Para a próxima missão", "For the next mission");
+        public static readonly Txt DiaN = T("Dia {0}", "Day {0}");
+        public static readonly Txt EstrelasDe3 = T("Nota: {0} de 3 estrelas", "Rating: {0} of 3 stars");
+        public static readonly Txt GraficoTitulo = T("A missão dia a dia", "The mission day by day");
+
+        // ---------- Créditos (web: vCredits) ----------
+        public static readonly Txt DadosNasa = T("Dados e fatos da NASA", "NASA data and facts");
+        public static readonly Txt NumeroDeJogo = T("O que é número de jogo", "What is a game value");
+        public static readonly Txt NumeroDeJogoTexto = T("Células de energia, pontos de oxigênio, de radiação e de comida, estrelas e dias de sombra são valores de jogo, não medições. Os alertas fortes e fracos e os alarmes falsos também são regra de jogo, não previsões reais. A classe da erupção (C, M, X) é a publicada pelo DONKI; tratar C como fraca, M como média e X como forte é escolha nossa.", "Energy cells, oxygen, radiation and food points, stars and shadow days are game values, not measurements. Strong and weak alerts and false alarms are also game rules, not real forecasts. The flare class (C, M, X) is the one DONKI publishes; treating C as weak, M as medium and X as strong is our own choice.");
+        public static readonly Txt UsoDeIA = T("Uso de IA", "Use of AI");
+        public static readonly Txt UsoDeIATexto = T("O código e a arte deste jogo foram feitos com ajuda de IA. Este jogo não é um produto da NASA e não tem o endosso dela.", "The code and art of this game were made with AI assistance. This game is not a NASA product and is not endorsed by NASA.");
+
+        /// <summary>Fontes da NASA cujos fatos aparecem no jogo (nome, link, o que se usa).</summary>
+        public static readonly (string nome, string url, Txt uso)[] FontesNasa =
+        {
+            ("NASA DONKI (CCMC), Space Weather Database Of Notifications, Knowledge, Information", "https://ccmc.gsfc.nasa.gov/tools/DONKI/",
+                T("As 20 erupções solares do jogo, com data e classe reais. Dado arquivado, consultado em 13/11/2026. A classe real decide com que força a radiação atinge a base.", "The game's 20 solar flares, with real dates and classes. Archived data, retrieved on 2026-11-13. The real class decides how hard radiation hits the base.")),
+            ("NASA Science, 9 Phenomena NASA Astronauts Will Encounter at Moon's South Pole", "https://science.nasa.gov/solar-system/moon/phenomena-nasa-astronauts-will-encounter-at-moons-south-pole/",
+                T("Sol baixo andando pelo horizonte, sombras longas e céu preto de dia.", "A low Sun travelling along the horizon, long shadows and a black daytime sky.")),
+            ("NASA SVS 4944, Earth and Sun from the Moon's South Pole", "https://svs.gsfc.nasa.gov/4944",
+                T("O Sol rente ao horizonte e a Terra vista do polo sul.", "The Sun skimming the horizon and Earth seen from the south pole.")),
+            ("NASA Science, How Does Webb See Back in Time?", "https://science.nasa.gov/mission/webb/science-overview/science-explainers/how-does-webb-see-back-in-time/",
+                T("A luz leva cerca de 1,3 segundo da Lua à Terra.", "Light takes about 1.3 seconds from the Moon to Earth.")),
+            ("NASA Human Research Program, Hazard: Distance From Earth", "https://www.nasa.gov/hrp/hazard-distance-from-earth/",
+                T("Atraso de comunicação de até 20 minutos em Marte.", "A communication delay of up to 20 minutes at Mars.")),
+            ("NASA NTRS 20210022066, Long-Duration Lunar Safe Haven", "https://ntrs.nasa.gov/citations/20210022066",
+                T("Estudo de conceito: abrigo coberto de regolito contra a radiação.", "Concept study: a regolith-covered shelter against radiation.")),
+            ("NASA, Astronaut Exercise", "https://www.nasa.gov/missions/station/iss-research/astronaut-exercise/",
+                T("Astronautas fazem até 10 horas de exercício por semana na Estação Espacial.", "Astronauts exercise for up to 10 hours a week on the Space Station.")),
+            ("NASA Space Station blog, Canadarm2 captures Cygnus XL", "https://www.nasa.gov/blogs/spacestation/2026/04/13/canadarm2-reaches-out-and-captures-cygnus-xl-cargo-craft/",
+                T("Captura de naves de carga com o braço robótico e treino a cada 60 dias.", "Capturing cargo ships with the robotic arm, with practice every 60 days.")),
+        };
+
+        // ---------- Menu de minijogos ----------
+        public static readonly Txt TesteMinijogos = T("Teste de minigames", "Minigame test");
+        public static readonly Txt TesteMinijogosTexto = T("Escolha um minigame para jogar direto, sem passar pelo jogo. Cada partida começa com o oxigênio cheio.", "Pick a minigame to play it directly, without going through the game. Each run starts with full oxygen.");
+        public static readonly Txt CadeteMaisTempo = T("Cadete (mais tempo)", "Cadet (more time)");
+
+        // ---------- Tutorial do Dia 1 (web: TIPS) ----------
+        public static readonly Txt ControleDaMissao = T("Controle da missão", "Mission control");
+        public static readonly Txt DicaTutBoletim = T("Todo dia começa com o boletim. Ele mostra quanta energia a base vai ter e se o Sol está calmo. Hoje está tudo tranquilo.", "Every day starts with the briefing. It shows how much energy the base will have and whether the Sun is calm. All quiet today.");
+        public static readonly Txt DicaTutAteTarefa = T("Leve o astronauta até a estação marcada: é lá que fica a tarefa de hoje. Siga a seta amarela.", "Take the astronaut to the marked station: that is where today's task is. Follow the yellow arrow.");
+        public static readonly Txt DicaTutEscolha = T("Toda tarefa tem um custo, escrito em cada botão. Você pode sair para buscar pedras ou ficar na base: as duas escolhas custam alguma coisa.", "Every task has a cost, written on each button. You can go out for rocks or stay at base: both choices cost something.");
+        public static readonly Txt DicaTutMinijogo = T("A barra de tempo é o ar do traje. Arraste as pedras para a caixa e aperte VOLTAR antes que ela acabe.", "The time bar is the air in the suit. Drag the rocks into the box and press BACK before it runs out.");
+        public static readonly Txt DicaTutConcluida = T("Viu? Cada escolha muda os medidores lá em cima. Na Lua nada é de graça.", "See? Each choice changes the meters up top. On the Moon nothing is free.");
+        public static readonly Txt DicaTutAteHub = T("Agora volte ao console de energia, no centro do hub.", "Now head back to the energy console, in the middle of the hub.");
+        public static readonly Txt DicaTutDistribuir = T("Esta é a decisão mais importante do dia. Use + e - para mandar células a cada módulo. Ar e água com 2 células seguram o oxigênio. O resto é com você: comida, ciência ou guardar para depois?", "This is the most important decision of the day. Use + and - to send cells to each module. Air & water with 2 cells hold oxygen steady. The rest is up to you: food, science or saving for later?");
+        public static readonly Txt DicaTutResultado = T("Aqui você vê o que mudou e por quê. A partir de amanhã podem chegar alertas de erupção solar. Boa missão!", "Here you see what changed and why. From tomorrow on, solar flare alerts may arrive. Have a good mission!");
+    }
+}

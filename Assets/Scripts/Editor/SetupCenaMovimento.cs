@@ -46,7 +46,6 @@ public static class SetupCenaMovimento
         ("antena", "Antena", new Color(0.8f, 0.4f, 1f)),
         ("backup", "Backup de Dados", new Color(0.2f, 1f, 0.9f)),
         ("airlock", "Airlock", new Color(0.9f, 0.3f, 0.3f)),
-        ("cama", "Cama", new Color(0.9f, 0.9f, 1f)),
     };
 
     // Cria só as estações que ainda não existem (mantém as que você moveu).

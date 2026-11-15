@@ -1,17 +1,17 @@
 using UnityEngine;
 
 /// <summary>
-/// Uma máquina/ponto de interação no mundo 3D (Estufa, Reciclador, Cama...).
-/// Mostra marcador flutuante e nome quando a tarefa está ativa; some quando concluída.
+/// Um ponto de interação no mundo 3D (estação de uma tarefa, ou o console de energia do hub).
+/// Mostra marcador flutuante e rótulo quando está ativa; o GameManager decide qual fica ativa a cada fase.
 /// </summary>
 public class Estacao : MonoBehaviour
 {
-    public string id;               // ex.: "estufa" (liga com DayData.estacoes)
-    public string nome;             // ex.: "Estufa"
+    public string id;               // ex.: "reciclador" (liga com TarefaDef.Estacao)
+    public string nome;             // nome de reserva; o rótulo mostra o nome da tarefa no idioma ativo
     public Color cor = Color.cyan;
     public float raio = 3.2f;       // distância para poder interagir
-    public float custoEnergia = 10f;
-    public float custoTempo = 15f;  // segundos de jogo gastos
+    [Tooltip("Só marcador e rótulo, sem a base e a máquina provisórias (ex.: console sobre a mesa do hub).")]
+    public bool semMaquina;
 
     public bool Ativa { get; private set; }
     public bool Concluida { get; private set; }
@@ -24,7 +24,6 @@ public class Estacao : MonoBehaviour
     void Awake()
     {
         Montar();
-        Colorir();
         Definir(false, false);
     }
 
@@ -43,8 +42,11 @@ public class Estacao : MonoBehaviour
         var visual = new GameObject("Visual").transform;
         visual.SetParent(transform, false);
 
-        var baseGo = Prim(PrimitiveType.Cylinder, "Base", visual, new Vector3(0, 0.05f, 0), new Vector3(2.6f, 0.05f, 2.6f));
-        var coluna = Prim(PrimitiveType.Cube, "Maquina", visual, new Vector3(0, 0.9f, 0), new Vector3(0.9f, 1.7f, 0.9f));
+        if (!semMaquina)
+        {
+            Prim(PrimitiveType.Cylinder, "Base", visual, new Vector3(0, 0.05f, 0), new Vector3(2.6f, 0.05f, 2.6f));
+            Prim(PrimitiveType.Cube, "Maquina", visual, new Vector3(0, 0.9f, 0), new Vector3(0.9f, 1.7f, 0.9f));
+        }
         var marc = Prim(PrimitiveType.Cube, "Marcador", visual, new Vector3(0, 3.2f, 0), Vector3.one * 0.6f);
         marc.transform.localRotation = Quaternion.Euler(45, 45, 0);
 
@@ -61,26 +63,30 @@ public class Estacao : MonoBehaviour
         if (!Achar()) Debug.LogError("[Estacao] não consegui montar o visual de " + name);
     }
 
-    /// <summary>Liga as referências às partes do visual. Devolve false se alguma parte estiver faltando.</summary>
+    /// <summary>Liga as referências às partes do visual. Devolve false se alguma parte obrigatória estiver faltando.</summary>
     bool Achar()
     {
         var v = transform.Find("Visual");
         if (v == null) return false;
         _marcador = v.Find("Marcador");
         var r = v.Find("Rotulo");
-        var baseT = v.Find("Base"); var maquinaT = v.Find("Maquina");
-        if (_marcador == null || r == null || baseT == null || maquinaT == null) return false;
+        if (_marcador == null || r == null) return false;
         _rotulo = r.GetComponent<TextMesh>();
-        var rBase = baseT.GetComponent<Renderer>(); var rMaq = maquinaT.GetComponent<Renderer>(); var rMarc = _marcador.GetComponent<Renderer>();
-        if (_rotulo == null || r.GetComponent<MeshRenderer>() == null || rBase == null || rMaq == null || rMarc == null) return false;
+        var rMarc = _marcador.GetComponent<Renderer>();
+        if (_rotulo == null || r.GetComponent<MeshRenderer>() == null || rMarc == null) return false;
+        var baseT = v.Find("Base"); var maquinaT = v.Find("Maquina");
+        if (!semMaquina && (baseT == null || maquinaT == null)) return false;
         var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         if (font != null)
         {
             _rotulo.font = font;
             r.GetComponent<MeshRenderer>().sharedMaterial = font.material;
         }
-        _rotulo.text = nome;
-        _corpos = new[] { rBase, rMaq, rMarc };
+        if (string.IsNullOrEmpty(_rotulo.text)) _rotulo.text = nome;
+        var corpos = new System.Collections.Generic.List<Renderer> { rMarc };
+        if (baseT && baseT.GetComponent<Renderer>()) corpos.Add(baseT.GetComponent<Renderer>());
+        if (maquinaT && maquinaT.GetComponent<Renderer>()) corpos.Add(maquinaT.GetComponent<Renderer>());
+        _corpos = corpos.ToArray();
         return true;
     }
 
@@ -95,12 +101,12 @@ public class Estacao : MonoBehaviour
         return go;
     }
 
-    void Colorir() => Pintar(Concluida ? new Color(0.3f, 0.8f, 0.4f) : cor);
-
     void Pintar(Color c)
     {
+        if (_corpos == null) return;
         foreach (var r in _corpos)
         {
+            if (r == null) continue;
             var m = new Material(r.sharedMaterial);
             if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", c);
             if (m.HasProperty("_Color")) m.SetColor("_Color", c);
@@ -108,14 +114,21 @@ public class Estacao : MonoBehaviour
         }
     }
 
+    /// <summary>Ativa = é o destino da fase atual (mostra marcador e rótulo e aceita interação).</summary>
     public void Definir(bool ativa, bool concluida)
     {
         Ativa = ativa;
         Concluida = concluida;
-        if (_corpos == null) return;
+        if (_marcador == null) return;
         Pintar(concluida ? new Color(0.3f, 0.8f, 0.4f) : (ativa ? cor : new Color(0.35f, 0.35f, 0.4f)));
         _marcador.gameObject.SetActive(ativa && !concluida);
         _rotulo.gameObject.SetActive(ativa);
+    }
+
+    /// <summary>Troca o texto do rótulo flutuante (o nome da tarefa no idioma ativo).</summary>
+    public void DefinirRotulo(string texto)
+    {
+        if (_rotulo != null) _rotulo.text = texto;
     }
 
     void Update()
@@ -130,34 +143,6 @@ public class Estacao : MonoBehaviour
         var cam = Camera.main;
         if (cam && _rotulo.gameObject.activeSelf)
             _rotulo.transform.rotation = Quaternion.LookRotation(_rotulo.transform.position - cam.transform.position);
-    }
-
-    /// <summary>Regras da noite para esta estação: (comida se feita, oxigênio perdido se ignorada, motivo).</summary>
-    public static (float comidaSeFeita, float o2SeIgnorada, string motivo) Regras(string id)
-    {
-        switch (id)
-        {
-            case "estufa": return (6f, 0f, "Estufa desligada: sem comida nova");
-            case "filtro": return (0f, 8f, "Filtros entupidos: oxigênio caiu");
-            case "lixo": return (0f, 5f, "Lixo acumulado: saúde da base caiu");
-            case "esteira": return (0f, 3f, "Sem exercício: saúde caiu");
-            case "reciclador": return (0f, 4f, "Água sem reciclar: saúde caiu");
-            default: return (0f, 0f, "");
-        }
-    }
-
-    /// <summary>Custo (energia, oxigênio) ao concluir a estação, e um aviso curto para o botão.</summary>
-    public static (float energia, float oxigenio, string aviso) Custos(string id)
-    {
-        switch (id)
-        {
-            case "painel": return (15f, 40f, "Fora da base: -40% O2");
-            case "antena": return (60f, 0f, "Gasta muita energia");
-            case "disjuntores": return (20f, 0f, "");
-            case "vazamento": return (5f, 0f, "");
-            case "airlock": return (0f, 0f, "");
-            default: return (10f, 0f, "");
-        }
     }
 
     public float DistanciaAte(Vector3 p)

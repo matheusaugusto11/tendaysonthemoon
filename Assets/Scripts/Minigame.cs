@@ -1,15 +1,18 @@
 using System;
+using DezDias;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Base de todo minigame 2D. Regras comuns: limite de 15 s; ao falhar ou estourar o tempo
-/// o minigame recomeça do início. Cada minigame só preenche a "Area" em Construir().
+/// Base de todo minigame 2D. Regras comuns (spec tarefas-e-minijogos):
+/// limite de tempo; termina sempre com nota de 0 a 1, sem recomeçar ao falhar;
+/// no fim do tempo a nota é o progresso alcançado; SAIR termina com o progresso atual.
+/// Cada minigame só preenche a "Area" em Construir().
 /// </summary>
 public abstract class Minigame
 {
-    public string titulo = "Minigame";
-    public string instrucao = "";
+    public Txt titulo = new Txt("Minijogo", "Minigame");
+    public Txt instrucao = Txt.Nada;
     public float duracao = 15f;
 
     protected UIJogo UI { get; private set; }
@@ -18,30 +21,33 @@ public abstract class Minigame
     /// <summary>Botão que recebe a seleção inicial do controle (opcional).</summary>
     public Button PrimeiroBotao { get; protected set; }
 
-    Action<bool> _aoTerminar;
-    float _restante, _pausaMsg, _fechaEm = -1f;
+    Action<ResultadoMinijogo> _aoTerminar;
+    float _t, _fechaEm = -1f;
     bool _terminou;
-    bool _recomecar;
+    ResultadoMinijogo _res;
 
-    public void Abrir(UIJogo ui, RectTransform area, Action<bool> aoTerminar)
+    /// <summary>Segundos desde o início do minigame.</summary>
+    public float Tempo => _t;
+
+    public void Abrir(UIJogo ui, RectTransform area, Action<ResultadoMinijogo> aoTerminar)
     {
         UI = ui; Area = area; _aoTerminar = aoTerminar;
-        _terminou = false; _fechaEm = -1f; _recomecar = false;
+        _terminou = false; _fechaEm = -1f; _t = 0f;
         Ponteiro.Iniciar();
-        Comecar();
-    }
-
-    void Comecar()
-    {
         UI.LimparArea();
         UI.Mensagem("");
-        _restante = duracao;
         Construir();
         UI.Tempo(1f, duracao);
     }
 
     protected abstract void Construir();
     protected virtual void Atualizar() { }
+
+    /// <summary>Progresso de 0 a 1 do objetivo, usado quando o tempo acaba ou o jogador sai.</summary>
+    protected abstract float Progresso();
+
+    /// <summary>Sair conta como objetivo concluído? (só a coleta de pedras: sair = voltar para a porta)</summary>
+    protected virtual bool SairConclui => false;
 
     /// <summary>Chamado pelo GameManager todo frame (fora da pausa).</summary>
     public void Tick()
@@ -54,48 +60,37 @@ public abstract class Minigame
         if (_fechaEm >= 0f)
         {
             _fechaEm -= dt;
-            if (_fechaEm <= 0f) { _terminou = true; _aoTerminar?.Invoke(true); }
-            return;
-        }
-        if (_recomecar)
-        {
-            _pausaMsg -= dt;
-            if (_pausaMsg <= 0f) { _recomecar = false; Comecar(); }
+            if (_fechaEm <= 0f) { _terminou = true; _aoTerminar?.Invoke(_res); }
             return;
         }
 
-        _restante -= dt;
-        UI.Tempo(Mathf.Clamp01(_restante / duracao), Mathf.Max(0f, _restante));
-        if (_restante <= 0f) { Falhar("Tempo esgotado! Tente de novo."); return; }
+        _t += dt;
+        UI.Tempo(Mathf.Clamp01(1f - _t / duracao), Mathf.Max(0f, duracao - _t));
+        if (_t >= duracao) { Encerrar(Progresso(), false, Textos.TempoEsgotado); return; }
         Atualizar();
     }
 
-    /// <summary>Falhou: mostra a mensagem e recomeça do início.</summary>
-    protected void Falhar(string msg)
+    /// <summary>Objetivo cumprido, com a nota calculada pelo minigame.</summary>
+    protected void Terminar(float nota) => Encerrar(nota, true, Textos.Concluido);
+
+    /// <summary>Objetivo cumprido com nota máxima.</summary>
+    protected void Vencer() => Terminar(1f);
+
+    void Encerrar(float nota, bool concluiu, Txt msg)
     {
-        if (_terminou || _recomecar || _fechaEm >= 0f) return;
-        UI.Mensagem(msg);
-        _recomecar = true;
-        _pausaMsg = 1.4f;
+        if (_terminou || _fechaEm >= 0f) return;
+        _res = new ResultadoMinijogo(Mathf.Clamp01(nota), Mathf.Min(_t, duracao), concluiu);
+        UI.Mensagem(msg.ToString() + "  " + Textos.Nota.F(Mathf.RoundToInt(_res.Nota * 100f)));
+        _fechaEm = 1.1f;
     }
 
-    /// <summary>Concluiu com sucesso: mostra "Concluído!" por um instante e fecha.</summary>
-    protected void Vencer()
-    {
-        if (_terminou || _recomecar || _fechaEm >= 0f) return;
-        UI.Mensagem("Concluído!");
-        _fechaEm = 0.8f;
-    }
-
-    /// <summary>Atalho para minigames com botões de UI (provisório).</summary>
-    protected void Terminar(bool sucesso) { if (sucesso) Vencer(); }
-
-    /// <summary>Cancelar (botão SAIR / B): fecha sem concluir.</summary>
+    /// <summary>SAIR (botão ou B): termina na hora com o progresso atual. Nunca é desistência grátis.</summary>
     public void Cancelar()
     {
-        if (_terminou) return;
+        if (_terminou || _fechaEm >= 0f) return;
+        _res = new ResultadoMinijogo(Mathf.Clamp01(Progresso()), _t, SairConclui);
         _terminou = true;
-        _aoTerminar?.Invoke(false);
+        _aoTerminar?.Invoke(_res);
     }
 
     // ---------- Ajudas de desenho/entrada ----------
