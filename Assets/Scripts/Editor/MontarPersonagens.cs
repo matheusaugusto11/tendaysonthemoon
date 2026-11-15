@@ -64,6 +64,8 @@ public static class MontarPersonagens
         }
         if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling || EditorApplication.isUpdating) return;
         if (File.Exists("Temp/pedido_personagens.txt")) { File.Delete("Temp/pedido_personagens.txt"); Montar(); }
+        if (!EditorApplication.isPlayingOrWillChangePlaymode && File.Exists("Temp/pedido_seta_cena.txt")) { File.Delete("Temp/pedido_seta_cena.txt"); ColocarSetaNaCena(); }
+        if (!EditorApplication.isPlayingOrWillChangePlaymode && File.Exists("Temp/pedido_cap_seta.txt")) { File.Delete("Temp/pedido_cap_seta.txt"); CapturarSeta(); }
         if (File.Exists("Temp/pedido_diag_personagens.txt")) { File.Delete("Temp/pedido_diag_personagens.txt"); DiagnosticoClipes(); }
         if (File.Exists("Temp/pedido_cap_personagens.txt")) { File.Delete("Temp/pedido_cap_personagens.txt"); CapturarPersonagens(); }
     }
@@ -301,6 +303,76 @@ public static class MontarPersonagens
         EditorSceneManager.MarkSceneDirty(cena);
         EditorSceneManager.SaveScene(cena);
         rel.Add($"Jogo: astronauta de Engenharia colocado no _Player (pés em y={baseY:0.00} do CharacterController); cápsula de teste desligada. Velocidades do Movimento: andar 2,0 e correr 4,5 m/s.");
+    }
+
+    /// <summary>Põe o componente SetaGuia3D direto no _Player (campos editáveis no Inspector dele) e monta o desenho num filho.</summary>
+    [MenuItem("Tools/Personagens/Colocar seta guia no jogador")]
+    public static void ColocarSetaNaCena()
+    {
+        var jog = UnityEngine.Object.FindObjectOfType<Movimento>();
+        if (jog == null) { Debug.LogError("[ColocarSeta] jogador (Movimento) não encontrado na cena ativa."); return; }
+
+        // remove versões antigas: componente solto em outros objetos (inclusive o filho "SetaGuia3D" da versão anterior)
+        foreach (var velha in UnityEngine.Object.FindObjectsOfType<SetaGuia3D>(true))
+            if (velha.gameObject != jog.gameObject) UnityEngine.Object.DestroyImmediate(velha.gameObject);
+
+        var seta = jog.GetComponent<SetaGuia3D>();
+        if (seta == null) seta = Undo.AddComponent<SetaGuia3D>(jog.gameObject);
+        seta.Montar(); // refaz o desenho com o raio atual (filho "SetaGuia3D" do _Player)
+        EditorUtility.SetDirty(seta);
+        EditorSceneManager.MarkSceneDirty(jog.gameObject.scene);
+        EditorSceneManager.SaveScene(jog.gameObject.scene);
+        Debug.Log("[ColocarSeta] Componente SetaGuia3D no objeto " + jog.name + " (alturaDosPes e raio no Inspector do " + jog.name + ").");
+    }
+
+    /// <summary>Renderiza a seta guia 3D em volta do jogador (sem precisar do Play) em Docs/capturas-seta.</summary>
+    static void CapturarSeta()
+    {
+        string pasta = "Docs/capturas-seta"; Directory.CreateDirectory(pasta);
+        var jog = UnityEngine.Object.FindObjectOfType<Movimento>();
+        if (jog == null) { Debug.LogError("[CapturarSeta] jogador não achado"); return; }
+        // seta TEMPORÁRIA: a da cena (filha do jogador) não é tocada
+        var goSeta = new GameObject("SetaGuia3D_captura");
+        var seta = goSeta.AddComponent<SetaGuia3D>();
+        seta.Montar(); seta.PrepararParaCaptura();
+        bool jaExistia = false;
+        var go = new GameObject("CapCamSeta"); var cam = go.AddComponent<Camera>();
+        cam.clearFlags = CameraClearFlags.Skybox; cam.nearClipPlane = 0.05f; cam.farClipPlane = 500f; cam.fieldOfView = 55f;
+        var rt = new RenderTexture(1280, 720, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+        cam.targetTexture = rt;
+        try
+        {
+            var p = jog.transform.position;
+            var destino = new Vector3(p.x + 6f, 0, p.z + 12f);
+            foreach (var (nome, cor) in new[] { ("padrao", new Color(1f, 0.82f, 0.2f)), ("ajustada", new Color(0.3f, 0.9f, 1f)) })
+            {
+                if (nome == "ajustada")
+                {   // valores bem diferentes, só para provar que os ajustes do Inspector valem ao vivo
+                    seta.tamanhoSeta = 1.9f; seta.espessuraSeta = 2.5f; seta.raio = 2.3f;
+                    seta.raioAro = 2.3f; seta.quantidadeMarcas = 44; seta.larguraMarca = 0.2f; seta.comprimentoMarca = 0.22f;
+                    seta.brilhoAro = 3f; seta.alturaDosPes = 0.25f;
+                }
+                seta.Atualizar(jog.transform, destino, cor);
+                var dirD = new Vector3(destino.x - p.x, 0, destino.z - p.z).normalized;
+                var lado = new Vector3(dirD.z, 0, -dirD.x);
+                foreach (var (vista, pos) in new[] { ("de-frente", p + dirD * 3.8f + Vector3.up * 2.3f), ("de-lado", p + lado * 3.4f - dirD * 0.8f + Vector3.up * 2.2f) })
+                {
+                    cam.transform.position = pos; cam.transform.LookAt(p + Vector3.down * 0.5f);
+                    cam.Render();
+                    var tex = new Texture2D(1280, 720, TextureFormat.RGB24, false);
+                    RenderTexture.active = rt; tex.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0); tex.Apply(); RenderTexture.active = null;
+                    File.WriteAllBytes($"{pasta}/seta_{nome}_{vista}.png", tex.EncodeToPNG());
+                    UnityEngine.Object.DestroyImmediate(tex);
+                }
+            }
+        }
+        finally
+        {
+            cam.targetTexture = null;
+            UnityEngine.Object.DestroyImmediate(rt); UnityEngine.Object.DestroyImmediate(go);
+            if (seta != null && !jaExistia) UnityEngine.Object.DestroyImmediate(seta.gameObject);
+            else if (seta != null) seta.Esconder();
+        }
     }
 
     static void DiagnosticoClipes()

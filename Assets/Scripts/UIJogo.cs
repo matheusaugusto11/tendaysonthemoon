@@ -44,6 +44,7 @@ public class UIJogo
     Color _corDestino = UiTema.Energia; // cor do módulo de destino: a da faixa e a da seta guia
     BotaoFisico _btnAcao;
     RectTransform _seta;
+    SetaGuia3D _seta3D;   // seta no chão, ao redor do corpo do personagem
     Text _setaTexto;
     Image[] _setaPartes;
     Text _avisoTexto;
@@ -194,6 +195,7 @@ public class UIJogo
         _setaTexto.gameObject.AddComponent<Shadow>().effectDistance = new Vector2(2, -2);
         _seta.gameObject.SetActive(false);
         _setaTexto.gameObject.SetActive(false);
+        _seta3D = SetaGuia3D.Criar();
     }
 
     void ConstruirTablet()
@@ -393,6 +395,7 @@ public class UIJogo
             _btnAcao.gameObject.SetActive(false);
             _seta.gameObject.SetActive(false);
             _setaTexto.gameObject.SetActive(false);
+            if (_seta3D != null) _seta3D.Esconder();
         }
         TextosFixos();
         if (!FaseSemTablet(f)) MontarTablet(f);
@@ -1121,24 +1124,19 @@ public class UIJogo
 
         var cam = Camera.main;
         bool mostrar = alvo != null && proxima == null && cam != null && _gm.jogador != null;
-        _seta.gameObject.SetActive(mostrar);
+        _seta.gameObject.SetActive(false); // a seta agora é 3D, ao redor do corpo (SetaGuia3D)
         _setaTexto.gameObject.SetActive(mostrar);
-        if (!mostrar) return;
+        if (!mostrar) { if (_seta3D != null) _seta3D.Esconder(); return; }
 
-        Vector3 origem = cam.WorldToScreenPoint(_gm.jogador.transform.position + Vector3.up * 1.5f);
-        Vector3 destino = cam.WorldToScreenPoint(alvo.transform.position + Vector3.up * 1f);
-        Vector2 dir = (Vector2)(destino - origem);
-        if (destino.z < 0) dir = -dir;
-        if (dir.sqrMagnitude < 1f) dir = Vector2.up;
-        dir.Normalize();
-        float raio = Screen.height * 0.2f;
-        Vector2 pos = (Vector2)origem + dir * raio;
-        pos.x = Mathf.Clamp(pos.x, 80, Screen.width - 80);
+        // seta no chão: aponta para o destino, na cor do módulo de destino
+        _seta3D.Atualizar(_gm.jogador.transform, alvo.transform.position, _corDestino);
+
+        // o texto (nome + distância) fica logo abaixo da seta 3D, na tela
+        Vector3 sp = cam.WorldToScreenPoint(_seta3D.Posicao);
+        Vector2 pos = sp.z > 0f ? new Vector2(sp.x, sp.y) : new Vector2(Screen.width * 0.5f, Screen.height * 0.3f);
+        pos.x = Mathf.Clamp(pos.x, 160, Screen.width - 160);
         pos.y = Mathf.Clamp(pos.y, 80, Screen.height * (1f - 300f / 1080f)); // abaixo do HUD e da faixa
-        _seta.position = pos;
-        _seta.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
-        _setaTexto.transform.position = pos + Vector2.down * 64f;
-        foreach (var im in _setaPartes) im.color = _corDestino; // a seta e o destino usam a cor do módulo de destino
+        _setaTexto.transform.position = pos + Vector2.down * 44f;
         _setaTexto.color = _corDestino;
         _setaTexto.text = $"{(_gm.Fase == Fase.AteHub ? Textos.Console : Tarefas.Def(_gm.Missao.Hoje.Tarefa).Nome)}  {alvo.DistanciaAte(_gm.jogador.transform.position):0} m";
     }
