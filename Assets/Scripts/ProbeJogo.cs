@@ -98,7 +98,7 @@ public class ProbeJogo : MonoBehaviour
             case Fase.Inicio: modo = "coluna"; break;
             case Fase.Relatorio: case Fase.Creditos: case Fase.ComoJogar: case Fase.MenuMinijogos: modo = "pagina"; break;
             case Fase.Boletim: case Fase.Escolha: case Fase.MinijogoInfo: case Fase.DecisaoVazamento: case Fase.TarefaConcluida:
-            case Fase.Distribuir: case Fase.DiaAcontece: case Fase.Resultado: modo = "lateral"; break;
+            case Fase.Distribuir: case Fase.DiaAcontece: case Fase.Resultado: case Fase.Evento: modo = "lateral"; break;
             default: return;
         }
         var go = GameObject.Find("Tablet"); var tela = GameObject.Find("Tela");
@@ -733,6 +733,8 @@ public class ProbeJogo : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         _gm = GameManager.Instancia;
         if (_gm == null) { Log("GameManager.Instancia é NULL: o jogo não inicia."); Terminar(); yield break; }
+        // O fluxo antigo da sonda não conhece o evento do dia: ele roda sem eventos, e TestarEventos cobre os eventos.
+        _gm.semEventos = true;
         Idioma.Definir(Lingua.Pt);
         yield return null;
 
@@ -1047,7 +1049,315 @@ public class ProbeJogo : MonoBehaviour
         _gm.JogarDeNovo();
         yield return null;
         yield return Extras();
+        yield return TestarEventos();
         Terminar();
+    }
+
+    // =====================================================================
+    // Eventos do dia (mudança eventos-diarios-com-decisao, tarefas 4.1 a 5.3)
+    // =====================================================================
+
+    static Erupcao ErupcaoXComSep() => new Erupcao
+    {
+        Id = "probe-X-sep", Data = "2017-09-06", Classe = "X9.3", Intensidade = 2, Url = "https://ccmc.gsfc.nasa.gov/DONKI/view/FLR/13010/-1",
+        SepId = "2017-09-06T23:30:00-SEP-001", SepHora = "2017-09-06 23:30", SepUrl = "https://ccmc.gsfc.nasa.gov/DONKI/view/SEP/13081/-1", SepConsulta = "2026-11-15",
+    };
+
+    static Cme CmeDeTeste() => new Cme
+    {
+        Id = "2024-05-14T17:00:00-CME-001", Data = "2024-05-14", Velocidade = 2119, Url = "https://ccmc.gsfc.nasa.gov/DONKI/view/CME/30867/-1",
+        FlrLigado = "probe-X-sep", Consulta = "2026-11-15",
+    };
+
+    /// <summary>Partida nova, no Boletim do Dia 1, com o evento e a tarefa escolhidos.</summary>
+    IEnumerator DiaComEvento(Modo modo, string evento, bool naIda, float gatilho, string tarefa = Tarefas.Agua)
+    {
+        _gm.JogarDeNovo();
+        yield return null;
+        _gm.Comecar(modo);
+        yield return null;
+        if (_gm.Fase == Fase.ComoJogar) { _gm.PularSlides(); yield return null; }
+        var T = _gm.Missao.Hoje;
+        T.Tarefa = tarefa;
+        T.Evento = evento; T.EventoNaIda = naIda; T.GatilhoSeg = gatilho; T.EventoResolvido = false;
+    }
+
+    /// <summary>Do deslocamento ao resultado do dia, ficando na base na tarefa.</summary>
+    IEnumerator AteOResultado()
+    {
+        if (_gm.Fase == Fase.AteTarefa)
+        {
+            yield return Teleportar(_gm.Alvo);
+            yield return new WaitForSeconds(0.15f);
+            _gm.Interagir();
+            yield return null;
+        }
+        if (_gm.Fase == Fase.Escolha) { _gm.EscolherFicar(); yield return null; }
+        if (_gm.Fase == Fase.TarefaConcluida) { _gm.VoltarAoHub(); yield return null; }
+        if (_gm.Fase == Fase.AteHub)
+        {
+            yield return Teleportar(_gm.Alvo);
+            yield return new WaitForSeconds(0.15f);
+            _gm.Interagir();
+            yield return null;
+        }
+        Checar(_gm.Fase == Fase.Distribuir, "até o resultado: distribuição aberta (fase " + _gm.Fase + ")");
+        _gm.ComecarODia();
+        _gm.PularAnim();
+        yield return null;
+    }
+
+    bool SoEstacaoAtiva(string id)
+    {
+        int ativas = 0; string quais = "";
+        foreach (var e in FindObjectsOfType<Estacao>()) if (e.Ativa) { ativas++; quais += e.id + " "; }
+        return ativas == 1 && quais.Trim() == id;
+    }
+
+    IEnumerator TestarEventos()
+    {
+        Idioma.Definir(Lingua.Pt);
+        _gm.semEventos = false;
+        Log("---------- Eventos do dia ----------");
+
+        // ----- Evento na ida, cartão, custo visível, fonte, relógio parado (4.1, 5.1) -----
+        yield return DiaComEvento(Modo.Cadete, Eventos.Gelo, true, 4f);
+        var gelo = Eventos.Def(Eventos.Gelo);
+        _gm.SairDoBoletim();
+        yield return new WaitForSeconds(3f);
+        Checar(_gm.Fase == Fase.AteTarefa && !Congelado(), "Evento na ida: antes do gatilho o astronauta ainda anda");
+        yield return new WaitForSeconds(1.6f);
+        Checar(_gm.Fase == Fase.Evento && Congelado(), "Evento na ida: depois de 4 s o movimento para e abre o cartão do evento");
+        float t0 = _gm.TempoRestante;
+        yield return new WaitForSeconds(0.6f);
+        Checar(Mathf.Approximately(t0, _gm.TempoRestante), "Cartão do evento não consome o relógio");
+        Checar(AchaTexto(gelo.Titulo.Pt) != null, "cartão mostra o título do evento");
+        Checar(AchaTexto(gelo.Fonte.Pt) != null, "Fonte no cartão: " + gelo.Fonte.Pt);
+        Checar(AchaTextoContendo("\u22122 hoje") != null && AchaTextoContendo("+3") != null && AchaTextoContendo("+0") != null,
+            "Custo visível em cada escolha: chips de energia e ciência nas duas escolhas");
+        Checar(AchaTextoContendo(Textos.Pular.Pt) == null && AchaTextoContendo(Textos.Voltar.Pt) == null, "cartão sem botão de fechar nem de pular");
+        yield return Foto("30_evento_gelo_pt");
+        Idioma.Alternar();
+        yield return null;
+        Checar(AchaTexto(gelo.Titulo.En) != null, "cartão do evento em inglês");
+        yield return Foto("31_evento_gelo_en");
+        Idioma.Alternar();
+        yield return null;
+        _gm.EscolherEvento("rover");
+        yield return null;
+        Checar(_gm.Fase == Fase.AteTarefa && !Congelado() && _gm.Missao.Hoje.CustoEvento == 2, "depois da escolha o astronauta volta a andar, e o rover custou 2 células");
+        yield return AteOResultado();
+        Checar(_gm.Fase == Fase.Resultado && AchaTextoContendo("O rover trouxe gelo") != null, "Linha do evento no resultado (gelo)");
+
+        // ----- Chegar à estação antes do gatilho (4.1) -----
+        yield return DiaComEvento(Modo.Cadete, Eventos.Tremor, true, 12f);
+        _gm.SairDoBoletim();
+        yield return null;
+        yield return Teleportar(_gm.Alvo);
+        yield return new WaitForSeconds(0.2f);
+        _gm.Interagir();
+        yield return null;
+        Checar(_gm.Fase == Fase.Evento, "Chegar à estação antes do gatilho: o cartão do evento abre primeiro");
+        t0 = _gm.TempoRestante;
+        _gm.EscolherEvento("checar");
+        yield return null;
+        Checar(_gm.Fase == Fase.Escolha, "Chegar à estação antes do gatilho: a escolha da tarefa vem depois do evento");
+        Checar(Mathf.Abs(t0 - _gm.TempoRestante - 40f) < 1f, $"Parar e checar as juntas tira 40 s do relógio ({t0 - _gm.TempoRestante:0.0} s)");
+
+        // ----- Tempo do dia acaba antes do evento; custo em tempo vira célula (4.1) -----
+        yield return DiaComEvento(Modo.Comandante, Eventos.Poeira, false, 5f);
+        _gm.SairDoBoletim();
+        yield return null;
+        _gm.DepurarTempo(0.2f);
+        yield return new WaitForSeconds(0.5f);
+        Checar(_gm.Fase == Fase.Evento && _gm.RelogioZerado, "Tempo do dia acaba antes do evento: o cartão abre antes da distribuição");
+        Checar(AchaTexto(Eventos.SemTempoNota.Pt) != null, "com o relógio zerado, o cartão avisa que tempo vira célula");
+        yield return Foto("32_evento_sem_tempo");
+        _gm.EscolherEvento("aspirar");
+        yield return null;
+        Checar(_gm.Fase == Fase.Distribuir && _gm.Missao.Hoje.CustoEvento == 1, "Esperar no abrigo depois do tempo: a escolha de 40 s custou 1 célula e a distribuição abriu");
+
+        // ----- Evento na volta (4.1) -----
+        yield return DiaComEvento(Modo.Cadete, Eventos.Saudade, false, 5f);
+        _gm.SairDoBoletim();
+        yield return null;
+        yield return Teleportar(_gm.Alvo);
+        yield return new WaitForSeconds(0.15f);
+        _gm.Interagir();
+        yield return null;
+        Checar(_gm.Fase == Fase.Escolha, "evento da volta não abre na ida");
+        _gm.EscolherFicar();
+        yield return null;
+        _gm.VoltarAoHub();
+        yield return null;
+        Checar(_gm.Fase == Fase.Evento, "evento da volta abre ao fechar a tarefa concluída");
+        _gm.EscolherEvento("seguir");
+        yield return null;
+        Checar(_gm.Fase == Fase.AteHub && _gm.Missao.AjusteDe(2) == -1, "depois do evento da volta, a seta vai ao console, e amanhã terá 1 célula a menos");
+
+        // ----- Partículas: alarme, corrida a tempo, pausa, luz (4.2, 4.3, 5.2) -----
+        yield return DiaComEvento(Modo.Comandante, Eventos.Particulas, true, 4f);
+        var m = _gm.Missao;
+        m.Alertas[m.Dia] = new Alerta { Erupcao = ErupcaoXComSep(), Forte = false };
+        int tocadosAntes = SonsUI.Tocados;
+        _gm.SairDoBoletim();
+        yield return new WaitForSeconds(4.6f);
+        Checar(_gm.Fase == Fase.Evento, "alarme de partículas abre na ida");
+        var luz = Luz();
+        if (luz.HasValue) Checar(luz.Value == PresetLuz.Erupcao, "Alarme de partículas: a base troca para a luz de Erupção");
+        Checar(AchaTexto(Textos.AlertaFraco.Pt.ToUpperInvariant()) != null || AchaTexto(Textos.AlertaFraco.Pt) != null, "Escolhas do alarme: mostra Alerta fraco");
+        Checar(AchaTextoContendo("pode ser alarme falso") != null, "Escolhas do alarme: avisa que pode ser alarme falso");
+        Checar(AchaTexto("Correr para o abrigo") != null && AchaTexto("Continuar o trabalho") != null, "Escolhas do alarme: correr ou continuar");
+        if (SonsUI.Ligado) Checar(SonsUI.Tocados > tocadosAntes && SonsUI.Ultimo == "alarme", "o alarme toca ao abrir o cartão de partículas");
+        yield return Foto("33_alarme_particulas");
+        _gm.EscolherEvento("abrigo");
+        yield return null;
+        Checar(_gm.Fase == Fase.CorridaAbrigo && !Congelado(), "Personagem anda na corrida");
+        yield return new WaitForSeconds(0.3f);
+        Checar(_gm.Alvo != null && _gm.Alvo.id == "cama", "Destino na corrida: a seta aponta para o Dormitório (" + (_gm.Alvo ? _gm.Alvo.id : "null") + ")");
+        Checar(SoEstacaoAtiva("cama"), "na corrida, só o Dormitório fica ativo");
+        Checar(AchaTextoContendo(Textos.CorridaTitulo.Pt) != null, "faixa da corrida com a contagem");
+        Checar(AchaTextoContendo(Textos.Abrigo.Pt + "  ") != null, "seta da corrida com 'Abrigo', a distância e a contagem");
+        if (luz.HasValue) Checar(Luz() == PresetLuz.Erupcao, "luz de Erupção durante a corrida");
+        yield return Foto("34_corrida_abrigo");
+        _gm.Pausar();
+        float c0 = _gm.ContagemCorrida, r0 = _gm.TempoRestante;
+        yield return new WaitForSecondsRealtime(0.6f);
+        Checar(_gm.Pausado && Mathf.Approximately(c0, _gm.ContagemCorrida) && Mathf.Approximately(r0, _gm.TempoRestante), "Pausar na corrida: contagem e relógio parados");
+        _gm.Retomar();
+        yield return null;
+        float antes = _gm.TempoRestante;
+        yield return Teleportar(_gm.Alvo);
+        yield return new WaitForSeconds(0.2f);
+        Checar(_gm.Fase == Fase.AteTarefa && m.Hoje.Alarme == Alarme.Abrigo, "Chega a tempo: o jogo volta à fase em que estava");
+        Checar(antes - _gm.TempoRestante > 44f, $"Chega a tempo: o relógio perde 45 s ({antes - _gm.TempoRestante:0.0} s)");
+        Checar(AchaTextoContendo("Vocês chegaram ao abrigo") != null, "Chega a tempo: aviso de que a tripulação espera a tempestade passar");
+        if (luz.HasValue) Checar(Luz() == PresetLuz.Dia, "a luz volta para Dia quando a corrida termina");
+        Checar(_gm.Alvo != null && _gm.Alvo.id == Tarefas.Def(m.Hoje.Tarefa).Estacao, "Volta ao destino de antes: a seta aponta de novo para a tarefa");
+        yield return AteOResultado();
+        Checar(_gm.Fase == Fase.Resultado, "resultado do dia de partículas");
+        Checar(AchaTextoContendo("Vocês esperaram no abrigo") != null, "linha do alarme no resultado");
+        Checar(AchaTextoContendo("as partículas chegaram e foram medidas") != null, "Cartão com partículas medidas");
+        bool linkSep = false;
+        foreach (var b in FindObjectsOfType<BotaoLink>()) if (b.url == ErupcaoXComSep().SepUrl) linkSep = true;
+        Checar(linkSep, "cartão tem o link do registro SEP");
+        Checar(AchaTextoContendo("Não é dado ao vivo") != null, "cartão diz que não é dado ao vivo");
+        yield return Foto("35_resultado_sep");
+
+        // ----- Contagem acaba (4.2) -----
+        yield return DiaComEvento(Modo.Comandante, Eventos.Particulas, true, 0.3f);
+        m = _gm.Missao;
+        m.Alertas[m.Dia] = new Alerta { Erupcao = ErupcaoX(), Forte = true };
+        _gm.SairDoBoletim();
+        yield return new WaitForSeconds(0.8f);
+        _gm.EscolherEvento("abrigo");
+        yield return new WaitForSeconds(Eventos.ContagemReal(m) + 0.8f);
+        Checar(_gm.Fase == Fase.AteTarefa && m.Hoje.Alarme == Alarme.Atrasado, "Contagem acaba: meia exposição e o jogador volta a andar");
+        Checar(AchaTextoContendo("As partículas chegaram antes de vocês") != null, "Contagem acaba: aviso de atraso");
+
+        // ----- Espera no abrigo custa a tarefa (4.2) -----
+        yield return DiaComEvento(Modo.Cadete, Eventos.Particulas, true, 0.3f);
+        m = _gm.Missao;
+        m.Alertas[m.Dia] = new Alerta { Erupcao = ErupcaoX(), Forte = true };
+        _gm.SairDoBoletim();
+        yield return new WaitForSeconds(0.8f);
+        _gm.EscolherEvento("abrigo");
+        yield return null;
+        _gm.DepurarTempo(30f);
+        yield return Teleportar(_gm.Alvo);
+        yield return new WaitForSeconds(0.4f);
+        Checar(_gm.Fase == Fase.Distribuir && m.Hoje.TempoEsgotou && m.Hoje.Alarme == Alarme.Abrigo, "Espera no abrigo custa a tarefa: o relógio zera e a tarefa vale 'ficar'");
+
+        // ----- Minijogo com sono (4.3) -----
+        yield return DiaComEvento(Modo.Comandante, Eventos.Sono, true, 0.3f, Tarefas.Agua);
+        m = _gm.Missao;
+        float normal = Tarefas.LimiteReal(m, Tarefas.Agua);
+        _gm.SairDoBoletim();
+        yield return new WaitForSeconds(0.8f);
+        _gm.EscolherEvento("trabalhar");
+        yield return null;
+        yield return Teleportar(_gm.Alvo);
+        yield return new WaitForSeconds(0.15f);
+        _gm.Interagir();
+        yield return null;
+        _gm.EscolherFazer();
+        yield return null;
+        if (_gm.Fase == Fase.MinijogoInfo) { _gm.ComecarMinijogo(); yield return null; }
+        yield return new WaitForSeconds(0.3f);
+        var mg = _gm.MinigameAtual;
+        Checar(mg != null && Mathf.Abs(mg.duracao - normal * 0.75f) < 0.01f, $"Minijogo com sono: limite {(mg != null ? mg.duracao : -1):0.00} s = 75% de {normal:0.00} s");
+        yield return SairDoMinijogo();
+
+        // ----- Aviso de CME, cartão da CME e Boletim do dia seguinte (5.3) -----
+        yield return DiaComEvento(Modo.Cadete, Eventos.CmeId, true, 0.3f);
+        m = _gm.Missao;
+        m.CmeRegistro = CmeDeTeste(); m.CmeLigada = true; m.CmeDia = 1; m.CmeChegada = 3;
+        m.Alertas[3] = new Alerta { Erupcao = ErupcaoXComSep(), Forte = true };
+        _gm.SairDoBoletim();
+        yield return new WaitForSeconds(0.8f);
+        Checar(_gm.Fase == Fase.Evento && AchaTextoContendo("2119 km/s") != null && AchaTextoContendo("Dia 3") != null, "aviso da CME mostra a velocidade real e o dia da chegada");
+        yield return Foto("36_evento_cme");
+        _gm.EscolherEvento("preparar");
+        yield return null;
+        yield return AteOResultado();
+        Checar(AchaTextoContendo("Nuvem de plasma do Sol (CME)") != null && AchaTextoContendo("2119 km/s") != null, "cartão da CME no resultado");
+        bool linkCme = false;
+        foreach (var b in FindObjectsOfType<BotaoLink>()) if (b.url == CmeDeTeste().Url) linkCme = true;
+        Checar(linkCme, "cartão da CME tem o link do registro");
+        Checar(AchaTextoContendo("Vocês prepararam o abrigo para a nuvem do Dia 3") != null, "linha da CME no resultado");
+        yield return Foto("37_resultado_cme");
+        _gm.Proximo();
+        yield return null;
+        Checar(_gm.Fase == Fase.Boletim && AchaTextoContendo("chega no Dia 3") != null && AchaTextoContendo("já está preparado") != null, "CME a caminho: o Boletim do Dia 2 diz que a nuvem chega no Dia 3 e que o abrigo está preparado");
+        yield return Foto("38_boletim_cme_a_caminho");
+
+        // ----- Consequência de dia anterior no Boletim (5.3) -----
+        yield return DiaComEvento(Modo.Cadete, Eventos.Micrometeorito, true, 0.3f);
+        _gm.SairDoBoletim();
+        yield return new WaitForSeconds(0.8f);
+        _gm.EscolherEvento("deixar");
+        yield return null;
+        yield return AteOResultado();
+        _gm.Proximo();
+        yield return null;
+        Checar(_gm.Fase == Fase.Boletim && AchaTextoContendo("Painel riscado pelo micrometeorito") != null, "Boletim com consequência de dia anterior: 1 célula a menos pelo painel riscado");
+        yield return Foto("39_boletim_painel_riscado");
+
+        // ----- Créditos com as fontes novas (5.3) -----
+        _gm.JogarDeNovo();
+        yield return null;
+        _gm.AbrirCreditos();
+        yield return null;
+        Checar(AchaTextoContendo("LCROSS") != null && AchaTextoContendo("OSD-268") != null && AchaTextoContendo("Moon Dust") != null, "Fontes listadas: créditos com as fontes dos eventos");
+        yield return Foto("40_creditos_eventos");
+        _gm.FecharCreditos();
+        yield return null;
+
+        // ----- forcarEvento abre cada um dos 11 eventos (4.5) -----
+        foreach (var d in Eventos.Defs)
+        {
+            _gm.forcarEvento = d.Id;
+            _gm.JogarDeNovo();
+            yield return null;
+            _gm.Comecar(Modo.Comandante);
+            yield return null;
+            if (_gm.Fase == Fase.ComoJogar) { _gm.PularSlides(); yield return null; }
+            m = _gm.Missao;
+            if (d.Id == Eventos.Particulas) m.Alertas[m.Dia] = new Alerta { Erupcao = ErupcaoX(), Forte = true };
+            if (d.Id == Eventos.Frio) m.Sombra = new[] { m.Dia, -1 };
+            m.Hoje.EventoNaIda = true; m.Hoje.GatilhoSeg = 0.2f;
+            _gm.SairDoBoletim();
+            yield return new WaitForSeconds(0.6f);
+            Checar(_gm.Fase == Fase.Evento && m.Hoje.Evento == d.Id, "forcarEvento abre o evento " + d.Id);
+            yield return Foto("41_evento_" + d.Id, 0.5f);
+            var e = d.Escolhas.Find(x => x.Id != "abrigo" && Eventos.Disponivel(m, x));
+            _gm.EscolherEvento(e.Id);
+            yield return null;
+            Checar(_gm.Fase != Fase.Evento, "escolha resolve o evento " + d.Id);
+        }
+        _gm.forcarEvento = "";
+        _gm.JogarDeNovo();
+        yield return null;
     }
 
     // =====================================================================
@@ -1214,6 +1524,7 @@ public class ProbeJogo : MonoBehaviour
         _gm.Reiniciar();
         yield return new WaitForSeconds(1.5f);
         _gm = GameManager.Instancia;
+        if (_gm != null) _gm.semEventos = true; // instância nova da cena recarregada
         Checar(_gm != null && _gm.MinijogoVisto(Tarefas.Amostra), "minijogo visto continua salvo depois de recarregar");
         _gm.Comecar(Modo.Comandante);
         yield return null;

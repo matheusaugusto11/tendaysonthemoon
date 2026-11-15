@@ -30,7 +30,20 @@ namespace DezDias
         public string Id, Data, Classe, Url;
         /// <summary>0 fraca (classe C), 1 média (M), 2 forte (X). Mapeamento nosso.</summary>
         public int Intensidade;
+        /// <summary>SEP medido ligado à erupção no DONKI (vazio se não há). Data e hora UTC, link e data da consulta.</summary>
+        public string SepId, SepHora, SepUrl, SepConsulta;
+        public bool TemSep => !string.IsNullOrEmpty(SepId);
     }
+
+    /// <summary>Uma ejeção de massa coronal real do catálogo CME do NASA DONKI (dado arquivado).</summary>
+    public sealed class Cme
+    {
+        public string Id, Data, Url, FlrLigado, Consulta;
+        public int Velocidade;
+    }
+
+    /// <summary>Onde a tripulação estava quando tocou o alarme de partículas (spec eventos-do-dia).</summary>
+    public enum Alarme { Nenhum, Abrigo, Atrasado, Continuou }
 
     public sealed class Alerta
     {
@@ -86,6 +99,25 @@ namespace DezDias
         public Txt MsgTarefa, MsgVazamento;
         /// <summary>Cartão "Você sabia?" depois da tarefa (vazio = sem cartão).</summary>
         public Txt Extra, ExtraFonte;
+
+        // ---------- Evento do dia (spec eventos-do-dia, design D2) ----------
+        /// <summary>Id do evento de hoje (ver <see cref="Eventos"/>).</summary>
+        public string Evento;
+        /// <summary>true: abre na ida até a tarefa; false: na volta, depois da tarefa.</summary>
+        public bool EventoNaIda;
+        /// <summary>Segundos de deslocamento até o evento da ida abrir (4 a 12).</summary>
+        public float GatilhoSeg;
+        public bool EventoResolvido;
+        /// <summary>Id da escolha feita no cartão.</summary>
+        public string Escolha;
+        /// <summary>Células de hoje gastas pelo evento. Fica separado de <see cref="Custo"/>, que as tarefas sobrescrevem.</summary>
+        public int CustoEvento;
+        public Alarme Alarme;
+        public bool SemContatoHoje;
+        /// <summary>Multiplica o limite do minijogo de hoje (sono).</summary>
+        public float FatorTempoHoje = 1f;
+        /// <summary>O risco sorteado na escolha (tremor, fungo) aconteceu. Só aparece no resultado.</summary>
+        public bool Risco;
     }
 
     /// <summary>Estado da partida inteira (web: G).</summary>
@@ -108,6 +140,28 @@ namespace DezDias
         public readonly List<RegistroDia> Hist = new List<RegistroDia>();
         public DiaMissao Hoje;
         public Fim Fim = Fim.Nenhum;
+
+        // ---------- Eventos do dia (design D2, D3, D5) ----------
+        /// <summary>Sorteios da partida depois do início (evento do dia, momento, riscos).</summary>
+        public System.Random Rng;
+        public readonly List<string> EventosUsados = new List<string>();
+        /// <summary>Células de luz a mais ou a menos num dia futuro, deixadas por um evento, com o motivo para o Boletim.</summary>
+        public readonly Dictionary<int, int> AjusteLuz = new Dictionary<int, int>();
+        public readonly Dictionary<int, Txt> MotivoAjuste = new Dictionary<int, Txt>();
+        /// <summary>Dia do aviso da CME e dia da chegada (0 = sem CME na partida).</summary>
+        public int CmeDia, CmeChegada;
+        public Cme CmeRegistro;
+        /// <summary>O registro da CME é o ligado à erupção da chegada no DONKI.</summary>
+        public bool CmeLigada;
+        public bool AbrigoPreparado;
+
+        public int AjusteDe(int d) => AjusteLuz.TryGetValue(d, out var v) ? v : 0;
+
+        public void Ajustar(int d, int delta, Txt motivo)
+        {
+            AjusteLuz[d] = AjusteDe(d) + delta;
+            MotivoAjuste[d] = MotivoAjuste.TryGetValue(d, out var t) && !t.Vazio ? t + new Txt(" ", " ") + motivo : motivo;
+        }
 
         public bool EhSombra(int d) => Sombra[0] == d || Sombra[1] == d;
         public Alerta AlertaDe(int d) => Alertas.TryGetValue(d, out var a) ? a : null;

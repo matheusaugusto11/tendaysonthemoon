@@ -26,11 +26,20 @@ namespace DezDias.Testes
             var m = RegrasMissao.NovaPartida(modo, Vinte(), new Random(1), false);
             m.Sombra = new[] { -1, -1 };
             m.Alertas.Clear();
+            m.CmeDia = 0; m.CmeChegada = 0; m.CmeRegistro = null;
             m.Tarefas.Clear();
             for (int i = 0; i < Missao.Dias; i++) m.Tarefas.Add(tarefa);
             m.Dia = dia - 1;
             RegrasMissao.IniciarDia(m);
             return m;
+        }
+
+        /// <summary>Troca o evento de hoje (sem sorteio) e zera a escolha.</summary>
+        public static void ComEvento(Missao m, string evento)
+        {
+            m.Hoje.Evento = evento;
+            m.Hoje.EventoResolvido = false;
+            m.Hoje.Escolha = null;
         }
 
         public static void Alocar(Missao m, int ar = 0, int estufa = 0, int abrigo = 0, int lab = 0, int bat = 0, int conserto = 0)

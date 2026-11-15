@@ -222,7 +222,7 @@ namespace DezDias
         }
 
         /// <summary>Limite real do minijogo (segundos), com o fator do modo.</summary>
-        public static float LimiteReal(Missao m, string id) => (Def(id)?.Limite ?? 15f) * m.M.FatorTempo;
+        public static float LimiteReal(Missao m, string id) => (Def(id)?.Limite ?? 15f) * m.M.FatorTempo * (m.Hoje?.FatorTempoHoje ?? 1f);
 
         static void Concluir(Missao m, Txt msg)
         {
