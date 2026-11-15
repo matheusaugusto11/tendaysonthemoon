@@ -6,6 +6,11 @@ public class TouchLook : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
 {
     int _pointerId = int.MinValue;
     Vector2 _acumulado;
+    float _ultimoToque = -9f;
+    bool _duploToque;
+
+    /// <summary>Toque duplo na metade direita da tela (recentrar a câmera). Zera ao ler.</summary>
+    public bool ConsumirDuploToque() { bool d = _duploToque; _duploToque = false; return d; }
 
     /// <summary>Devolve o arrasto (em pixels) desde a última chamada e zera.</summary>
     public Vector2 ConsumirDelta()
@@ -17,6 +22,8 @@ public class TouchLook : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
 
     public void OnPointerDown(PointerEventData e)
     {
+        if (Time.unscaledTime - _ultimoToque < 0.3f) _duploToque = true;
+        _ultimoToque = Time.unscaledTime;
         if (_pointerId == int.MinValue) _pointerId = e.pointerId;
     }
 
