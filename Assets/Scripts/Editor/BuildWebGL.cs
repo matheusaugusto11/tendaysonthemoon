@@ -30,8 +30,7 @@ public static class BuildWebGL
         var p = Saida + "/index.html";
         var s = System.IO.File.ReadAllText(p);
         if (s.Contains("#unity-footer{display:none}")) return;
-        const string css = "<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#unity-container,#unity-container.unity-desktop{position:absolute;left:0;top:0;width:100%;height:100%;transform:none}#unity-canvas{width:100%!important;height:100%!important;background:#000}#unity-footer{display:none}</style>
-  </head>";
+        const string css = "<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#unity-container,#unity-container.unity-desktop{position:absolute;left:0;top:0;width:100%;height:100%;transform:none}#unity-canvas{width:100%!important;height:100%!important;background:#000}#unity-footer{display:none}</style>\n  </head>";
         System.IO.File.WriteAllText(p, s.Replace("</head>", css));
     }
 }

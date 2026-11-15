@@ -1472,6 +1472,15 @@ public class UIJogo
     /// <summary>Cor do nome de quem fala: Lia no ciano do ar, Bip no amarelo da luz da antena.</summary>
     static Color CorDe(bool robo) => robo ? UiTema.Energia : UiTema.Ar;
 
+    /// <summary>Dica do Controle da Missão no topo do painel, só no tutorial (usada no cartão do evento).</summary>
+    void DicaTutorial(Txt t)
+    {
+        if (!_gm.TutorialAtivo) return;
+        var caixa = Vertical(_conteudo, 0, 16, null);
+        Fundo(caixa, UiTema.AcoClaro, UiTema.ChanfroBotao, "SE ID", false);
+        Linha(caixa, "ajuda", Textos.ControleDaMissao.ToString(), t.ToString(), Papel.Rotulo); // menor: o painel lateral é estreito
+    }
+
     // =====================================================================
     // Atualização por frame
     // =====================================================================
