@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ten Days on the Moon · Demo deck</title>
+<meta name="description" content="Seven-slide demo deck for the NASA Space Apps Challenge 2026, team Houston, We have a Game!">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Direção aprovada (etapa 4) em variáveis ===== */
+:root{
+  /* cores */
+  --casco:#E6E4DF; --junta:#BFC0C4; --tinta:#14161C; --apoio-casco:#4A4E58; --apoio:var(--apoio-casco);
+  --aco:#2E323B; --aco-claro:#3A3F4A; --sombra:#1A1C22; --ceu:#05060C; --apoio-escuro:#B9BCC5; --junta-aco:#474C57; --junta-ceu:#22252E; --mesa:#C9C7C2;
+  --o2:#4DD0E1; --estufa:#6BD425; --rad:#C77DFF; --lab:#FF9F43; --energia:#FFD23F; --terra:#52638A;
+  /* famílias */
+  --f-titulo:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --f-texto:"Nunito","Segoe UI",Arial,sans-serif;
+  /* unidade: 1 px do slide de 1920 */
+  --u:calc(100cqw / 1920);
+  /* escala tipográfica: 5 papéis */
+  --t-gigante:144; --t-titulo:72; --t-abertura:44; --t-corpo:28; --t-rotulo:18;
+  /* escala de espaço (px de 1920) */
+  --e1:8; --e2:12; --e3:16; --e4:24; --e5:32; --e6:48; --e7:64; --e8:96;
+  --chanfro:calc(24 * var(--u));
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--mesa);font-family:var(--f-texto);color:var(--tinta);padding:32px 16px;-webkit-font-smoothing:antialiased}
+.deck{display:grid;gap:32px;max-width:1600px;margin:0 auto}
+.nota-producao{max-width:1600px;margin:0 auto 24px;font:16px/1.5 var(--f-texto);color:var(--aco)}
+
+/* ===== Placa do casco ===== */
+.slide{container-type:inline-size;aspect-ratio:16/9;background:var(--casco);position:relative;overflow:hidden;color:var(--tinta)}
+.slide.aco{background:var(--aco);color:var(--casco);--apoio:var(--apoio-escuro);--junta:var(--junta-aco)}
+.slide.ceu{background:var(--ceu);color:var(--casco);--apoio:var(--apoio-escuro);--junta:var(--junta-ceu)}
+.slide::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(var(--junta),var(--junta)) calc(1870 * var(--u)) 0/1px calc(1032 * var(--u)) no-repeat,
+             linear-gradient(var(--junta),var(--junta)) 0 calc(1032 * var(--u))/100% 1px no-repeat}
+.a{position:absolute;left:calc(var(--x) * var(--u));top:calc(var(--y) * var(--u));width:calc(var(--w) * var(--u))}
+.h{height:calc(var(--h) * var(--u))}
+
+.tira{position:absolute;left:calc(96 * var(--u));top:calc(48 * var(--u));width:calc(160 * var(--u));height:calc(var(--e1) * var(--u));background:var(--c)}
+.cod,.rotulo,.rod{font-family:var(--f-titulo);font-weight:600;font-size:calc(var(--t-rotulo) * var(--u));letter-spacing:.12em;text-transform:uppercase;line-height:1.3}
+.cod{position:absolute;left:calc(96 * var(--u));top:calc(72 * var(--u));color:var(--apoio)}
+.cod b{color:var(--tinta);font-weight:600}
+.aco .cod b,.ceu .cod b{color:var(--casco)}
+.rod{position:absolute;left:calc(96 * var(--u));right:calc(96 * var(--u));top:calc(1044 * var(--u));display:flex;justify-content:space-between;color:var(--apoio)}
+.rotulo{color:var(--apoio)}
+
+h1,h2,.titulo{font-family:var(--f-titulo);font-weight:700;line-height:1;letter-spacing:-.01em}
+h1{font-size:calc(var(--t-gigante) * var(--u));line-height:.96}
+h2{font-size:calc(var(--t-titulo) * var(--u))}
+.abertura{font-family:var(--f-titulo);font-weight:700;font-size:calc(var(--t-abertura) * var(--u));line-height:1.08}
+.corpo{font-size:calc(var(--t-corpo) * var(--u));line-height:1.5}
+.forte{font-family:var(--f-titulo);font-weight:700;font-size:calc(var(--t-corpo) * var(--u));line-height:1.2}
+.apoio{color:var(--apoio)}
+.chanfro{clip-path:polygon(var(--chanfro) 0,100% 0,100% calc(100% - var(--chanfro)),calc(100% - var(--chanfro)) 100%,0 100%,0 var(--chanfro))}
+
+/* botão principal do jogo, num console de aço */
+.console{background:var(--aco);color:var(--casco);padding:calc(var(--e5) * var(--u));--chanfro:calc(20 * var(--u))}
+.btn{display:inline-flex;align-items:center;gap:calc(var(--e6) * var(--u));background:var(--casco);color:var(--tinta);text-decoration:none;
+  font-family:var(--f-titulo);font-weight:700;font-size:calc(var(--t-corpo) * var(--u));min-height:calc(72 * var(--u));
+  padding:0 calc(var(--e5) * var(--u));box-shadow:0 calc(6 * var(--u)) 0 var(--sombra);--chanfro:calc(14 * var(--u))}
+.btn:focus-visible{outline:calc(3 * var(--u)) dashed var(--casco);outline-offset:calc(6 * var(--u))}
+.url{display:block;margin-top:calc(var(--e5) * var(--u));font-size:calc(var(--t-corpo) * var(--u));color:var(--apoio-escuro)}
+
+/* monitor de aço com tira de luz: capturas do jogo */
+.monitor{background:var(--aco);padding:calc(var(--e3) * var(--u));--chanfro:calc(28 * var(--u))}
+.monitor .luz{height:calc(var(--e1) * var(--u));background:var(--c);margin:calc(-16 * var(--u)) calc(-16 * var(--u)) calc(var(--e3) * var(--u))}
+.monitor .bisel{display:flex;justify-content:space-between;margin-top:calc(var(--e2) * var(--u));color:var(--apoio-escuro)}
+
+/* plaqueta de inspeção */
+.etq{display:inline-flex;align-items:center;gap:calc(var(--e2) * var(--u));background:var(--tinta);color:var(--casco);padding:calc(var(--e1) * var(--u)) calc(var(--e3) * var(--u)) calc(var(--e1) * var(--u)) calc(var(--e2) * var(--u));--chanfro:calc(10 * var(--u))}
+.etq i{width:calc(12 * var(--u));height:calc(12 * var(--u));background:var(--c,var(--energia));flex:none}
+.etq.regra{background:var(--junta);color:var(--tinta)}
+
+/* reserva de imagem (só neste layout preliminar) */
+.reserva{background:repeating-linear-gradient(135deg,rgba(191,192,196,.55) 0 calc(2 * var(--u)),transparent calc(2 * var(--u)) calc(22 * var(--u))),rgba(191,192,196,.28);
+  box-shadow:inset 0 0 0 calc(2 * var(--u)) rgba(74,78,88,.45);display:flex;flex-direction:column;justify-content:flex-end;gap:calc(var(--e2) * var(--u));padding:calc(var(--e5) * var(--u))}
+.monitor .reserva{background:repeating-linear-gradient(135deg,rgba(255,255,255,.07) 0 calc(2 * var(--u)),transparent calc(2 * var(--u)) calc(22 * var(--u))),var(--aco-claro);box-shadow:none;color:var(--casco)}
+.reserva p{font-size:calc(var(--t-rotulo) * var(--u));line-height:1.45;max-width:calc(620 * var(--u))}
+.reserva .rotulo{color:inherit}
+.ia-tag{align-self:flex-start;background:rgba(5,6,12,.72);color:var(--casco)!important;padding:calc(6 * var(--u)) calc(var(--e2) * var(--u))}
+
+/* medidores do HUD */
+.hud{background:var(--aco);color:var(--casco);padding:calc(var(--e5) * var(--u));display:grid;gap:calc(var(--e4) * var(--u));--chanfro:calc(24 * var(--u))}
+.medidor{display:grid;grid-template-columns:calc(170 * var(--u)) 1fr;align-items:center;column-gap:calc(var(--e4) * var(--u))}
+.medidor .cel{display:flex;gap:calc(6 * var(--u))}
+.medidor .cel i{width:calc(22 * var(--u));height:calc(36 * var(--u));background:var(--aco-claro);--chanfro:calc(5 * var(--u))}
+.medidor .cel i.on{background:var(--c)}
+.medidor small{grid-column:2;font-size:calc(var(--t-rotulo) * var(--u));color:var(--apoio-escuro);margin-top:calc(4 * var(--u))}
+
+/* linha de missão */
+.linha{display:grid;grid-template-columns:repeat(5,1fr);column-gap:calc(var(--e4) * var(--u));position:relative;padding-top:calc(var(--e6) * var(--u))}
+.linha::before{content:"";position:absolute;left:0;right:0;top:calc(13 * var(--u));height:calc(2 * var(--u));background:var(--tinta)}
+.linha div{position:relative}
+.linha div::before{content:"";position:absolute;left:0;top:calc(-48 * var(--u));width:calc(28 * var(--u));height:calc(28 * var(--u));background:var(--c);box-shadow:0 0 0 calc(4 * var(--u)) var(--casco)}
+.linha .corpo{font-size:calc(var(--t-corpo) * var(--u));margin-top:calc(var(--e1) * var(--u))}
+
+/* painel de tarefa do jogo */
+.painel{background:var(--aco);color:var(--casco);padding:calc(var(--e5) * var(--u));--chanfro:calc(24 * var(--u))}
+.painel .luz{height:calc(var(--e1) * var(--u));background:var(--c);margin:calc(-32 * var(--u)) calc(-32 * var(--u)) calc(var(--e5) * var(--u))}
+.opcao{background:var(--aco-claro);padding:calc(var(--e4) * var(--u));margin-top:calc(var(--e3) * var(--u));--chanfro:calc(14 * var(--u))}
+.chips{display:flex;gap:calc(var(--e2) * var(--u));margin-top:calc(var(--e2) * var(--u))}
+.chip{background:var(--aco);padding:calc(6 * var(--u)) calc(var(--e2) * var(--u));display:inline-flex;align-items:center;gap:calc(var(--e1) * var(--u));color:var(--casco)}
+.chip i{width:calc(12 * var(--u));height:calc(12 * var(--u));background:var(--c)}
+
+/* cartão "It really happened" */
+.real{--apoio:var(--apoio-casco);background:var(--casco);color:var(--tinta);padding:calc(var(--e5) * var(--u)) calc(40 * var(--u));--chanfro:calc(24 * var(--u));box-shadow:0 calc(6 * var(--u)) 0 var(--sombra)}
+.real > * + *{margin-top:calc(var(--e3) * var(--u))}
+.real .etq{background:var(--tinta)}
+
+/* régua de dose */
+.regua{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--e2) * var(--u));margin-top:calc(var(--e3) * var(--u))}
+.regua div{border-top:calc(2 * var(--u)) solid var(--apoio);padding-top:calc(var(--e2) * var(--u))}
+.regua .blocos{display:flex;gap:calc(6 * var(--u));margin-bottom:calc(var(--e2) * var(--u))}
+.regua .blocos i{width:calc(28 * var(--u));height:calc(28 * var(--u));background:var(--rad)}
+.regua .blocos i.off{background:var(--junta-ceu)}
+
+/* tabela de fontes */
+.tabela{display:grid;grid-template-columns:calc(320 * var(--u)) calc(860 * var(--u)) 1fr;column-gap:calc(var(--e5) * var(--u))}
+.tabela > div{border-top:calc(2 * var(--u)) solid var(--junta);padding:calc(var(--e3) * var(--u)) 0;display:flex;align-items:flex-start;gap:calc(var(--e3) * var(--u))}
+.tabela .cab{border-top:0;padding-top:0}
+.tabela .sis i{width:calc(20 * var(--u));height:calc(20 * var(--u));background:var(--c);margin-top:calc(6 * var(--u));flex:none}
+
+/* manifesto da tripulação */
+.manifesto > div{display:grid;grid-template-columns:calc(72 * var(--u)) 1fr;align-items:baseline;border-top:calc(2 * var(--u)) solid var(--junta);padding:calc(var(--e3) * var(--u)) 0}
+
+/* próximos passos */
+.proximos > div{display:grid;grid-template-columns:calc(28 * var(--u)) 1fr;column-gap:calc(var(--e4) * var(--u));padding:calc(var(--e3) * var(--u)) 0;border-top:calc(2 * var(--u)) solid var(--junta)}
+.proximos i{width:calc(20 * var(--u));height:calc(20 * var(--u));background:var(--c);margin-top:calc(6 * var(--u))}
+
+
+/* imagens e esquema (versão 2) */
+.foto{display:block;width:100%;object-fit:cover}
+.aco .monitor{background:var(--aco-claro)}
+.esquema{display:block;width:100%;height:auto}
+.esquema text{font-family:var(--f-titulo);font-weight:600;font-size:18px;letter-spacing:.12em;fill:var(--tinta)}
+.esquema .claro{fill:var(--casco)}
+.esquema .linha-e{stroke:var(--tinta);stroke-width:2;fill:none}
+.esquema .mod{fill:var(--casco);stroke:var(--tinta);stroke-width:2}
+@page{size:1920px 1080px;margin:0}
+@media print{
+  body{background:none;padding:0}
+  .nota-producao{display:none}
+  .deck{gap:0;max-width:none}
+  .slide{width:1920px;height:1080px;aspect-ratio:auto;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<main class="deck">
+
+<!-- TDM-01 · Abertura -->
+<section class="slide" aria-label="Slide 1 of 7">
+  <span class="tira" style="--c:var(--energia)"></span>
+  <p class="cod"><b>TDM-01</b> · Overview</p>
+  <h1 class="a" style="--x:96;--y:190;--w:880">Ten Days on the Moon</h1>
+  <p class="a corpo apoio" style="--x:96;--y:500;--w:780">A strategy game for ages 7 to 12. You run a base at the Moon's south pole, and there is never enough power for everything.</p>
+  <div class="a console chanfro" style="--x:96;--y:686;--w:780">
+    <a class="btn chanfro" href="https://carambo.itch.io/ten-days-on-the-moon">Play in your browser <span aria-hidden="true">→</span></a>
+    <span class="url">carambo.itch.io/ten-days-on-the-moon</span>
+  </div>
+  <p class="a rotulo" style="--x:96;--y:952;--w:1700">Team Houston, We have a Game! · Challenge: Build a Junior Astronaut Mission Trainer · NASA Space Apps Challenge 2026</p>
+  <div class="a monitor chanfro" style="--x:1000;--y:150;--w:824;--c:var(--energia)"><div class="luz"></div><img class="foto" src="imagens/s1-base-aerea.jpg" alt="The game's lunar base seen from above: a central hub with modules, a glass greenhouse and a solar array on grey regolith" style="aspect-ratio:792/700"><div class="bisel rotulo"><span>In-game capture</span><span>AI-assisted art</span></div></div>
+  <div class="rod"><span>Houston, We have a Game!</span><span>TDM-01 / 07</span></div>
+</section>
+
+<!-- TDM-02 · Equipe -->
+<section class="slide" aria-label="Slide 2 of 7">
+  <span class="tira" style="--c:var(--o2)"></span>
+  <p class="cod"><b>TDM-02</b> · Crew</p>
+  <h2 class="a" style="--x:96;--y:150;--w:1300">Six people, one question: can a kid feel why a Moon base is hard to run?</h2>
+  <div class="a" style="--x:96;--y:470;--w:760">
+    <span class="etq chanfro rotulo" style="--c:var(--o2)"><i></i>Our challenge</span>
+    <p class="abertura" style="margin-top:calc(24 * var(--u))">Build a Junior Astronaut Mission Trainer</p>
+    <p class="corpo apoio" style="margin-top:calc(24 * var(--u));max-width:calc(700 * var(--u))">Goal: a player aged 7 to 12 leaves understanding one real constraint of surviving in space.</p>
+  </div>
+  <div class="a" style="--x:1000;--y:470;--w:824">
+    <p class="rotulo" style="margin-bottom:calc(16 * var(--u))">Crew manifest · Houston, We have a Game!</p>
+    <div class="manifesto">
+      <div><span class="rotulo">01</span><span class="abertura">Matheus Augusto</span></div>
+      <div><span class="rotulo">02</span><span class="abertura">Daniel Barreto</span></div>
+      <div><span class="rotulo">03</span><span class="abertura">Paulo Ricardo</span></div>
+      <div><span class="rotulo">04</span><span class="abertura">Rayelen Oliveira</span></div>
+      <div><span class="rotulo">05</span><span class="abertura">Pedro Lucas</span></div>
+      <div><span class="rotulo">06</span><span class="abertura">Aerton Castro</span></div>
+    </div>
+  </div>
+  <div class="rod"><span>Houston, We have a Game!</span><span>TDM-02 / 07</span></div>
+</section>
+
+<!-- TDM-03 · O dia -->
+<section class="slide" aria-label="Slide 3 of 7">
+  <span class="tira" style="--c:var(--energia)"></span>
+  <p class="cod"><b>TDM-03</b> · Day cycle</p>
+  <h2 class="a" style="--x:96;--y:150;--w:820">Every day ends with the same question: where does the power go?</h2>
+  <div class="a hud chanfro" style="--x:96;--y:410;--w:820">
+    <div class="medidor" style="--c:var(--o2)"><span class="forte">Oxygen</span><span class="cel"><i class="on chanfro"></i><i class="on chanfro"></i><i class="on chanfro"></i><i class="on chanfro"></i><i class="on chanfro"></i><i class="on chanfro"></i><i class="on chanfro"></i><i class="on chanfro"></i><i class="chanfro"></i><i class="chanfro"></i></span><small>must not run out</small></div>
+    <div class="medidor" style="--c:var(--rad)"><span class="forte">Radiation</span><span class="cel"><i class="on chanfro"></i><i class="on chanfro"></i><i class="chanfro"></i><i class="chanfro"></i><i class="chanfro"></i><i class="chanfro"></i><i class="chanfro"></i><i class="chanfro"></i><i class="chanfro"></i><i class="chanfro"></i></span><small>must not fill up</small></div>
+    <div class="medidor" style="--c:var(--estufa)"><span class="forte">Food</span><span class="cel"><i class="on chanfro"></i><i class="on chanfro"></i><i class="on chanfro"></i><i class="on chanfro"></i><i class="on chanfro"></i><i class="on chanfro"></i><i class="chanfro"></i><i class="chanfro"></i><i class="chanfro"></i><i class="chanfro"></i></span><small>must not run short</small></div>
+  </div>
+  <div class="a" style="--x:1000;--y:150;--w:824"><svg class="esquema" viewBox="0 0 824 520" role="img" aria-label="Schematic, not to scale: the solar array sends energy cells to the hub console, which shares them between five modules: air and water, greenhouse, shelter, lab and battery"><line class="linha-e" x1="150" y1="248" x2="400" y2="248"/><line class="linha-e" x1="400" y1="248" x2="560" y2="66"/><line class="linha-e" x1="400" y1="248" x2="640" y2="176"/><line class="linha-e" x1="400" y1="248" x2="640" y2="320"/><line class="linha-e" x1="400" y1="248" x2="560" y2="430"/><line class="linha-e" x1="400" y1="248" x2="400" y2="420"/><rect x="196" y="236" width="14" height="24" fill="var(--energia)" stroke="var(--tinta)" stroke-width="1.5"/><rect x="226" y="236" width="14" height="24" fill="var(--energia)" stroke="var(--tinta)" stroke-width="1.5"/><rect x="256" y="236" width="14" height="24" fill="var(--energia)" stroke="var(--tinta)" stroke-width="1.5"/><rect x="30" y="196" width="32" height="20" fill="none" stroke="var(--tinta)" stroke-width="2"/><rect x="30" y="224" width="32" height="20" fill="none" stroke="var(--tinta)" stroke-width="2"/><rect x="30" y="252" width="32" height="20" fill="none" stroke="var(--tinta)" stroke-width="2"/><rect x="30" y="280" width="32" height="20" fill="none" stroke="var(--tinta)" stroke-width="2"/><rect x="70" y="196" width="32" height="20" fill="none" stroke="var(--tinta)" stroke-width="2"/><rect x="70" y="224" width="32" height="20" fill="none" stroke="var(--tinta)" stroke-width="2"/><rect x="70" y="252" width="32" height="20" fill="none" stroke="var(--tinta)" stroke-width="2"/><rect x="70" y="280" width="32" height="20" fill="none" stroke="var(--tinta)" stroke-width="2"/><rect x="110" y="196" width="32" height="20" fill="none" stroke="var(--tinta)" stroke-width="2"/><rect x="110" y="224" width="32" height="20" fill="none" stroke="var(--tinta)" stroke-width="2"/><rect x="110" y="252" width="32" height="20" fill="none" stroke="var(--tinta)" stroke-width="2"/><rect x="110" y="280" width="32" height="20" fill="none" stroke="var(--tinta)" stroke-width="2"/><text x="30" y="336">SOLAR ARRAY</text><text x="30" y="360" fill="var(--apoio)">6 CELLS ON A CLEAR DAY</text><circle cx="400" cy="248" r="54" fill="var(--casco)" stroke="var(--tinta)" stroke-width="3"/><circle cx="400" cy="248" r="38" fill="none" stroke="var(--tinta)" stroke-width="1.5"/><text x="400" y="255" text-anchor="middle">HUB</text><polygon class="mod" points="570,40 720,40 720,82 710,92 560,92 560,50"/><rect x="570" y="41" width="149" height="6" fill="var(--o2)"/><text x="576" y="75">AIR &amp; WATER</text><polygon class="mod" points="650,150 800,150 800,192 790,202 640,202 640,160"/><rect x="650" y="151" width="149" height="6" fill="var(--estufa)"/><text x="656" y="185">GREENHOUSE</text><polygon class="mod" points="650,294 800,294 800,336 790,346 640,346 640,304"/><rect x="650" y="295" width="149" height="6" fill="var(--rad)"/><text x="656" y="329">SHELTER</text><polygon class="mod" points="570,404 720,404 720,446 710,456 560,456 560,414"/><rect x="570" y="405" width="149" height="6" fill="var(--lab)"/><text x="576" y="439">LAB</text><polygon class="mod" points="330,420 480,420 480,462 470,472 320,472 320,430"/><rect x="330" y="421" width="149" height="6" fill="var(--energia)"/><text x="336" y="455">BATTERY</text><rect x="0" y="0" width="300" height="32" fill="var(--tinta)"/><text class="claro" x="12" y="22">SCHEMATIC · NOT TO SCALE</text><rect x="0" y="488" width="280" height="32" fill="var(--tinta)"/><text class="claro" x="12" y="510">DIAGRAM · AI-ASSISTED</text></svg></div>
+  <div class="a linha" style="--x:96;--y:740;--w:1728">
+    <div style="--c:var(--o2)"><p class="forte">Morning briefing</p><p class="corpo apoio">Today's light, alerts and news</p></div>
+    <div style="--c:var(--estufa)"><p class="forte">One task</p><p class="corpo apoio">A mini-game with a cost</p></div>
+    <div style="--c:var(--energia)"><p class="forte">Share the energy</p><p class="corpo apoio">Few cells, five modules</p></div>
+    <div style="--c:var(--rad)"><p class="forte">The day plays out</p><p class="corpo apoio">Flares, harvest, battery</p></div>
+    <div style="--c:var(--lab)"><p class="forte">Results</p><p class="corpo apoio">What happened and why</p></div>
+  </div>
+  <div class="rod"><span>Houston, We have a Game!</span><span>TDM-03 / 07</span></div>
+</section>
+
+<!-- TDM-04 · A decisão -->
+<section class="slide" aria-label="Slide 4 of 7">
+  <span class="tira" style="--c:var(--lab)"></span>
+  <p class="cod"><b>TDM-04</b> · Trade-off</p>
+  <h2 class="a" style="--x:96;--y:150;--w:1000">Nothing is free</h2>
+  <div class="a monitor chanfro" style="--x:96;--y:270;--w:1000;--c:var(--energia)">
+    <div class="luz"></div>
+    <img class="foto" src="imagens/s4-share-energy.jpg" alt="In-game screen Share out the energy, in English: Mission Control's hint and the air and water module with two cells" style="aspect-ratio:16/9">
+    <div class="bisel rotulo"><span>In-game capture</span><span>AI-assisted art</span></div>
+  </div>
+  <div class="a painel chanfro" style="--x:1144;--y:270;--w:680;--c:var(--lab)">
+    <div class="luz"></div>
+    <p class="abertura">There are interesting rocks out there</p>
+    <div class="opcao chanfro">
+      <p class="forte">Go out to fetch rocks</p>
+      <div class="chips rotulo"><span class="chip" style="--c:var(--o2)"><i></i>O2 −1 to −3</span><span class="chip" style="--c:var(--energia)"><i></i>Science up to +5</span></div>
+    </div>
+    <div class="opcao chanfro">
+      <p class="forte">Stay at base</p>
+      <div class="chips rotulo"><span class="chip" style="--c:var(--o2)"><i></i>O2 0</span><span class="chip" style="--c:var(--energia)"><i></i>Science 0</span></div>
+    </div>
+  </div>
+  <p class="a corpo" style="--x:1144;--y:770;--w:680">Going out earns science and spends suit air. Staying in saves air and misses the discovery.</p>
+  <div class="rod"><span>Houston, We have a Game!</span><span>TDM-04 / 07</span></div>
+</section>
+
+<!-- TDM-05 · Erupções reais (céu) -->
+<section class="slide ceu" aria-label="Slide 5 of 7">
+  <span class="tira" style="--c:var(--rad)"></span>
+  <p class="cod"><b>TDM-05</b> · Space weather</p>
+  <h2 class="a" style="--x:96;--y:150;--w:1100">The solar flares really happened</h2>
+  <div class="a monitor chanfro" style="--x:96;--y:270;--w:860;--c:var(--rad)">
+    <div class="luz"></div>
+    <img class="foto" src="imagens/s5-erupcao.jpg" alt="The lunar base seen from above during a solar flare, tinted red" style="aspect-ratio:16/9">
+    <div class="bisel rotulo"><span>In-game capture</span><span>AI-assisted art</span></div>
+  </div>
+  <div class="a real chanfro" style="--x:540;--y:600;--w:660">
+    <p class="abertura">It really happened</p>
+    <span class="etq chanfro rotulo" style="--c:var(--rad)"><i></i>Archived data · not live</span>
+    <p class="forte">Solar flare class X9.0 · October 3, 2024</p>
+    <p class="corpo">In the game it counts as a strong flare.</p>
+    <p class="rotulo">Source: NASA DONKI (CCMC). Archived data, retrieved on 2026-11-13. Not live data.</p>
+  </div>
+  <div class="a" style="--x:1260;--y:270;--w:564">
+    <p class="titulo" style="font-size:calc(var(--t-titulo) * var(--u))">20 of 1,982</p>
+    <p class="corpo apoio" style="margin-top:calc(8 * var(--u))">real solar flares from the NASA DONKI catalog, 2017 to 2026</p>
+    <p class="rotulo" style="margin-top:calc(48 * var(--u))">The real class sets the dose</p>
+    <div class="regua">
+      <div><span class="blocos"><i></i><i class="off"></i><i class="off"></i></span><p class="forte">C · weak</p></div>
+      <div><span class="blocos"><i></i><i></i><i class="off"></i></span><p class="forte">M · medium</p></div>
+      <div><span class="blocos"><i></i><i></i><i></i></span><p class="forte">X · strong</p></div>
+    </div>
+    <p class="corpo" style="margin-top:calc(48 * var(--u))"><b>Shelter cells:</b> 2&nbsp;=&nbsp;protected, 1&nbsp;=&nbsp;half&nbsp;dose, 0&nbsp;=&nbsp;full&nbsp;dose.</p>
+    <p class="corpo apoio" style="margin-top:calc(16 * var(--u))">Some alerts are false alarms. Shielding always costs energy, so the player has to weigh the risk.</p>
+  </div>
+  <div class="rod"><span>Houston, We have a Game!</span><span>TDM-05 / 07</span></div>
+</section>
+
+<!-- TDM-06 · Fontes -->
+<section class="slide" aria-label="Slide 6 of 7">
+  <span class="tira" style="--c:var(--estufa)"></span>
+  <p class="cod"><b>TDM-06</b> · Sources</p>
+  <h2 class="a" style="--x:96;--y:150;--w:1300">Real facts are labeled real. Game rules are labeled rules.</h2>
+  <div class="a tabela" style="--x:96;--y:340;--w:1728">
+    <div class="cab rotulo">System</div><div class="cab rotulo">What the player feels</div><div class="cab rotulo">Where it comes from</div>
+    <div class="sis" style="--c:var(--energia)"><i></i><span class="forte">Power</span></div>
+    <div class="corpo">The Sun skims the horizon at the south pole. Hills cause shadow days with fewer cells.</div>
+    <div><span class="etq chanfro rotulo" style="--c:var(--energia)"><i></i>NASA Science · South Pole phenomena</span></div>
+    <div class="sis" style="--c:var(--rad)"><i></i><span class="forte">Shielding</span></div>
+    <div class="corpo">Real flare classes decide the radiation dose. The shelter blocks it.</div>
+    <div><span class="etq chanfro rotulo" style="--c:var(--rad)"><i></i>NASA DONKI (CCMC)</span></div>
+    <div class="sis" style="--c:var(--o2)"><i></i><span class="forte">Life support</span></div>
+    <div class="corpo">Air &amp; water need 2 cells to hold oxygen steady. Spacewalks spend suit air.</div>
+    <div><span class="etq regra chanfro rotulo">Game rule</span></div>
+    <div class="sis" style="--c:var(--estufa)"><i></i><span class="forte">Food</span></div>
+    <div class="corpo">The greenhouse only grows when it gets power. Food runs low if you skip it.</div>
+    <div><span class="etq regra chanfro rotulo">Game rule</span></div>
+    <div class="sis" style="--c:var(--terra)"><i></i><span class="forte">Comms delay</span></div>
+    <div class="corpo">A message takes about 1.3 s from the Moon to Earth. From Mars, up to 20 min.</div>
+    <div style="flex-direction:column;gap:calc(8 * var(--u))"><span class="etq chanfro rotulo" style="--c:var(--terra)"><i></i>NASA Science</span><span class="etq chanfro rotulo" style="--c:var(--terra)"><i></i>NASA Human Research Program</span></div>
+  </div>
+  <p class="a corpo apoio" style="--x:96;--y:960;--w:1728">Every real fact appears in the game with its NASA source, and the Credits screen lists them all.</p>
+  <div class="rod"><span>Houston, We have a Game!</span><span>TDM-06 / 07</span></div>
+</section>
+
+<!-- TDM-07 · Fechamento (aço) -->
+<section class="slide aco" aria-label="Slide 7 of 7">
+  <span class="tira" style="--c:var(--energia)"></span>
+  <p class="cod"><b>TDM-07</b> · Debrief</p>
+  <h2 class="a" style="--x:96;--y:150;--w:900">What a kid takes home</h2>
+  <p class="a abertura" style="--x:96;--y:270;--w:860;color:var(--energia)">“You can't power everything. On the Moon, every choice costs something.”</p>
+  <p class="a corpo apoio" style="--x:96;--y:430;--w:800">The one sentence a 7-to-12-year-old should be able to say after one mission.</p>
+  <p class="a corpo" style="--x:96;--y:560;--w:800">Failure teaches: the crew goes home safely and the report shows what weighed most.</p>
+  <div class="a" style="--x:96;--y:720;--w:860">
+    <a class="btn chanfro" href="https://carambo.itch.io/ten-days-on-the-moon">Play in your browser <span aria-hidden="true">→</span></a>
+    <span class="url">carambo.itch.io/ten-days-on-the-moon</span>
+  </div>
+  <p class="a rotulo" style="--x:96;--y:956;--w:1100">Not a NASA product · Art and code made with AI assistance, disclosed in the game</p>
+  <div class="a monitor chanfro" style="--x:1100;--y:150;--w:724;--c:var(--energia)"><div class="luz"></div><img class="foto" src="imagens/s7-hub.jpg" alt="Inside the base hub: the energy console under a glass dome" style="aspect-ratio:692/266"><div class="bisel rotulo"><span>In-game capture</span><span>AI-assisted art</span></div></div>
+  <div class="a" style="--x:1100;--y:520;--w:724">
+    <p class="rotulo">Where it goes next</p>
+    <div class="proximos" style="margin-top:calc(12 * var(--u))">
+      <div style="--c:var(--o2)"><i></i><div><p class="forte">In the browser</p><p class="corpo apoio">No download, no account.</p></div></div>
+      <div style="--c:var(--estufa)"><i></i><div><p class="forte">English and Portuguese</p><p class="corpo apoio">Switch at any time, more languages next.</p></div></div>
+      <div style="--c:var(--rad)"><i></i><div><p class="forte">Astronaut health</p><p class="corpo apoio">Events built on NASA OSDR research.</p></div></div>
+      <div style="--c:var(--lab)"><i></i><div><p class="forte">A Mars outpost</p><p class="corpo apoio">Same trade-offs, with a 20-minute delay.</p></div></div>
+    </div>
+  </div>
+  <div class="rod"><span>Houston, We have a Game!</span><span>TDM-07 / 07</span></div>
+</section>
+
+</main>
+</body>
+</html>

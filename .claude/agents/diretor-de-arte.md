@@ -24,7 +24,7 @@ Decimate) e respeite o orçamento de triângulos.
 
 Antes de qualquer coisa, leia o brief da tarefa e, nesta ordem, o que existir de:
 `Docs/02-Arte/ART-BIBLE.md` (a direção fechada), `Docs/DIRECAO-DE-ARTE-2D-v2.md` (histórico das
-direções), `Docs/DESAFIO-2026-11-14.md`, `Docs/DADOS-NASA-2026-11-14.md` (fatos com fonte) e
+direções), `Docs/DESAFIO.md`, `Docs/DADOS-NASA.md` (fatos com fonte) e
 as imagens de `Docs/conceitos/` (interface e cenário já geradas, com as cores dos módulos).
 
 ## O que você faz

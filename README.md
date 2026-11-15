@@ -26,7 +26,7 @@ if the greenhouse is neglected. Two difficulty modes: Cadet and Commander.
 | --- | --- |
 | [NASA DONKI](https://ccmc.gsfc.nasa.gov/tools/DONKI/) (CCMC): solar flares (FLR), solar energetic particles (SEP), coronal mass ejections (CME) | 20 real solar flares, with real date and class. The class decides how hard radiation hits the base. The CME gives a two-day warning. |
 | [NASA OSDR](https://osdr.nasa.gov/bio/repo/data/studies/OSD-268) OSD-268 | The "fungus" greenhouse event. |
-| Other NASA pages (moon dust, moonquakes, ice, Earth hiding, isolation, exercise) | Facts shown on event cards. Each card shows its source. |
+| Other NASA pages (moon dust, moonquakes, ice, Earth hiding, isolation, exercise, Canadarm2 robotic arm) | Facts shown on event and task cards. Each card shows its source. |
 
 The data is **archived, not live**, and the game labels it that way. Full list with links and
 query dates: [Docs/DADOS-NASA.md](Docs/DADOS-NASA.md) (in Portuguese) and the in-game

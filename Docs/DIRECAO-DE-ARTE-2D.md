@@ -10,7 +10,7 @@ Três direções 2D aprovadas em 14/11/2026 para *Dez Dias na Lua*. O objetivo d
 | C | Papel recortado em camadas | Colagem de papel com sombras entre camadas, céu de papel furado, livro-maquete | Eric Carle, Lois Ehlert, Tearaway, Yoshi's Crafted World |
 
 > **Importante sobre IA.** O enunciado exige marca d'água visível em imagem gerada por IA que
-> entre no projeto ([DESAFIO-2026-11-14.md](DESAFIO-2026-11-14.md), linha 294; [REGRAS-PARA-GANHAR-2026-11-14.md](REGRAS-PARA-GANHAR-2026-11-14.md),
+> entre no projeto ([DESAFIO.md](DESAFIO.md), linha 294; [REGRAS-PARA-GANHAR.md](REGRAS-PARA-GANHAR.md),
 > regra 11). Estas imagens são só referência. Se alguma entrar no jogo, marcar e registrar em
 > `USO-DE-IA.md`.
 
