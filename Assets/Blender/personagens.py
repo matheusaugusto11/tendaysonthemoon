@@ -34,13 +34,16 @@ MT = dict(
 
 # ------------------------------------------------------------ helpers
 PARTS = []     # (obj, osso)
+SMOOTH_ANGLE = math.radians(50)   # arestas acima disso continuam vivas; o resto fica arredondado
 def _fin(o, name, m, bone):
     o.name = name
     o.data.materials.clear(); o.data.materials.append(m)
+    bpy.ops.object.select_all(action='DESELECT'); o.select_set(True); bpy.context.view_layer.objects.active = o
+    bpy.ops.object.shade_smooth_by_angle(angle=SMOOTH_ANGLE)
     PARTS.append((o, bone)); return o
 
-def bevel(o, w=.012):
-    mod = o.modifiers.new("b", 'BEVEL'); mod.width = w; mod.segments = 1; mod.limit_method = 'ANGLE'
+def bevel(o, w=.012, seg=2):
+    mod = o.modifiers.new("b", 'BEVEL'); mod.width = w; mod.segments = seg; mod.limit_method = 'ANGLE'
     bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier="b")
 
 def box(name, c, size, m, bone, bev=0.0, rot=(0, 0, 0)):
@@ -50,28 +53,32 @@ def box(name, c, size, m, bone, bev=0.0, rot=(0, 0, 0)):
     return _fin(o, name, m, bone)
 
 def ico(name, c, scale, m, bone, sub=1, rot=(0, 0, 0)):
-    bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=sub, location=c, rotation=rot)
+    bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=max(sub, 2), location=c, rotation=rot)
     o = bpy.context.object; o.scale = scale
     return _fin(o, name, m, bone)
 
 def uvs(name, c, scale, m, bone, seg=12, rings=8):
+    seg, rings = max(seg, 20), max(rings, 12)
     bpy.ops.mesh.primitive_uv_sphere_add(segments=seg, ring_count=rings, location=c)
     o = bpy.context.object; o.scale = scale
     return _fin(o, name, m, bone)
 
 def cyl(name, c, r, d, m, bone, axis='Z', verts=8, scale=(1, 1, 1)):
+    verts = max(verts, 12)
     rot = {'Z': (0, 0, 0), 'X': (0, math.pi / 2, 0), 'Y': (math.pi / 2, 0, 0)}[axis]
     bpy.ops.mesh.primitive_cylinder_add(vertices=verts, radius=r, depth=d, location=c, rotation=rot)
     o = bpy.context.object; o.scale = scale
     return _fin(o, name, m, bone)
 
 def limb(name, p1, p2, r1, r2, m, bone, verts=6):
+    verts = max(verts, 10)
     p1, p2 = Vector(p1), Vector(p2); v = p2 - p1
     bpy.ops.mesh.primitive_cone_add(vertices=verts, radius1=r1, radius2=r2, depth=v.length, location=(p1 + p2) / 2)
     o = bpy.context.object; o.rotation_mode = 'QUATERNION'; o.rotation_quaternion = v.to_track_quat('Z', 'Y')
     return _fin(o, name, m, bone)
 
 def torus(name, c, R, r, m, bone, rot=(0, 0, 0), seg=10):
+    seg = max(seg, 16)
     bpy.ops.mesh.primitive_torus_add(major_radius=R, minor_radius=r, major_segments=seg, minor_segments=5, location=c, rotation=rot)
     return _fin(bpy.context.object, name, m, bone)
 
@@ -81,7 +88,6 @@ def finalize(prefix, bones, origin):
     for o, bone in PARTS:
         bpy.context.view_layer.objects.active = o
         vg = o.vertex_groups.new(name=bone); vg.add(list(range(len(o.data.vertices))), 1.0, 'REPLACE')
-        for p in o.data.polygons: p.use_smooth = False
         objs.append(o)
     bpy.ops.object.select_all(action='DESELECT')
     for o in objs: o.select_set(True)
@@ -116,41 +122,42 @@ def build_astronaut(role, ox):
     for s in (1, -1):
         sx = s; side = "L" if s > 0 else "R"
         # pernas
+        ico(f"Quadril_{side}", (sx * .10, 0, .955), (.112, .112, .112), W, f"UpperLeg_{side}", 2)
         limb(f"Coxa_{side}", (sx * .10, 0, .95), (sx * .10, 0, .53), .105, .088, W, f"UpperLeg_{side}")
         limb(f"Canela_{side}", (sx * .10, 0, .53), (sx * .10, 0, .15), .088, .066, W, f"LowerLeg_{side}")
-        box(f"Joelheira_{side}", (sx * .10, -.075, .53), (.15, .10, .15), C, f"LowerLeg_{side}", .02)
+        box(f"Joelheira_{side}", (sx * .10, -.075, .53), (.15, .10, .15), C, f"LowerLeg_{side}", .04)
         cyl(f"Tornozelo_{side}", (sx * .10, 0, .17), .082, .05, C, f"LowerLeg_{side}", verts=8)
-        box(f"Bota_{side}", (sx * .10, -.06, .06), (.15, .30, .12), W, f"Foot_{side}", .02)
-        box(f"Sola_{side}", (sx * .10, -.06, .015), (.16, .31, .03), C, f"Foot_{side}")
+        box(f"Bota_{side}", (sx * .10, -.06, .06), (.15, .30, .12), W, f"Foot_{side}", .045)
+        box(f"Sola_{side}", (sx * .10, -.06, .015), (.16, .31, .03), C, f"Foot_{side}", .012)
         # braco (pose em A)
         S = Vector((sx * .25, 0, 1.46)); d1 = Vector((sx * .259, 0, -.966)); E = S + d1 * .30
         d2 = Vector((sx * .14, 0, -.99)).normalized(); Wr = E + d2 * .27
         ico(f"Ombreira_{side}", (sx * .27, 0, 1.49), (.125, .12, .105), A, f"UpperArm_{side}", 1)
         limb(f"Braco_{side}", S, E, .075, .063, W, f"UpperArm_{side}")
-        ico(f"Cotovelo_{side}", E, (.065, .065, .065), C, f"LowerArm_{side}", 1)
+        ico(f"Cotovelo_{side}", E, (.074, .074, .074), C, f"LowerArm_{side}", 2)
         limb(f"Antebraco_{side}", E, Wr, .063, .05, W, f"LowerArm_{side}")
         cyl(f"Pulso_{side}", Wr - d2 * .03, .058, .05, C, f"LowerArm_{side}", verts=8)
-        box(f"Luva_{side}", Wr + d2 * .08, (.085, .10, .15), MT["luva"], f"Hand_{side}", .015)
+        box(f"Luva_{side}", Wr + d2 * .08, (.085, .10, .15), MT["luva"], f"Hand_{side}", .035)
     # tronco
-    box("Pelve", (0, 0, .98), (.34, .22, .20), W, "Hips", .025)
-    box("Cinto", (0, 0, 1.09), (.355, .235, .05), C, "Hips")
-    box("Torso", (0, 0, 1.31), (.40, .25, .42), W, "Chest", .03)
-    box("Peitoral", (0, -.14, 1.36), (.17, .05, .14), CL, "Chest", .008)
+    box("Pelve", (0, 0, .98), (.34, .22, .20), W, "Hips", .07)
+    box("Cinto", (0, 0, 1.09), (.375, .255, .075), C, "Hips", .025)
+    box("Torso", (0, 0, 1.31), (.40, .25, .42), W, "Chest", .09)
+    box("Peitoral", (0, -.14, 1.36), (.17, .05, .14), CL, "Chest", .02)
     for k, bx in enumerate((-.04, .04)):
         box("Botao", (bx, -.168, 1.39), (.03, .012, .03), A, "Chest")
     box("Visor info", (0, -.168, 1.33), (.10, .012, .025), MT["luva"], "Chest")
     for sx in (-1, 1):
         box("Alca", (sx * .13, -.128, 1.35), (.045, .01, .44), C, "Chest", rot=(0, math.radians(8) * sx, 0))
-    box("Gola", (0, 0, 1.55), (.20, .17, .05), C, "Neck", .01)
+    box("Gola", (0, 0, 1.55), (.20, .17, .05), C, "Neck", .022)
     # capacete
-    ico("Capacete", (0, 0, 1.69), (.205, .215, .215), W, "Head", 2)
-    ico("Visor", (0, -.115, 1.695), (.155, .105, .15), MT["visor"], "Head", 2)
-    box("Faixa capacete", (0, 0, 1.90), (.055, .26, .03), A, "Head")
+    uvs("Capacete", (0, 0, 1.69), (.205, .215, .215), W, "Head", 24, 16)
+    uvs("Visor", (0, -.115, 1.695), (.155, .105, .15), MT["visor"], "Head", 24, 16)
+    box("Faixa capacete", (0, 0, 1.90), (.055, .26, .03), A, "Head", .01)
     cyl("Colar capacete", (0, 0, 1.585), .165, .04, C, "Head", verts=10)
     # mochila (PLSS)
-    box("Mochila", (0, .20, 1.33), (.34, .16, .46), W, "Chest", .03)
-    box("Mochila acento", (.19, .20, 1.33), (.045, .17, .40), A, "Chest")
-    box("Mochila placa", (0, .285, 1.33), (.20, .015, .30), CL, "Chest")
+    box("Mochila", (0, .20, 1.33), (.34, .16, .46), W, "Chest", .07)
+    box("Mochila acento", (.19, .20, 1.33), (.045, .17, .40), A, "Chest", .015)
+    box("Mochila placa", (0, .285, 1.33), (.20, .015, .30), CL, "Chest", .006)
     box("Mochila valvula", (0, .30, 1.38), (.04, .03, .16), C, "Chest")
     # glifo na ombreira esquerda
     gp = Vector((.27, -.115, 1.49))
@@ -181,7 +188,7 @@ def build_astronaut(role, ox):
             a = k * math.pi / 2
             ico("Muda folha", hp + Vector((math.cos(a) * .03, math.sin(a) * .03, .07)), (.035, .02, .012), MT["planta"], "Hand_R", 1, (0.5 * math.sin(a), -.5 * math.cos(a), a))
     if spec.get("medkit"):
-        box("Maleta", (0, -.14, 1.13), (.20, .07, .14), A, "Chest", .012)
+        box("Maleta", (0, -.14, 1.13), (.20, .07, .14), A, "Chest", .03)
         box("Maleta cruz a", (0, -.178, 1.13), (.09, .01, .026), MT["glifo"], "Chest"); box("Maleta cruz b", (0, -.178, 1.13), (.026, .01, .09), MT["glifo"], "Chest")
         box("Maleta alca", (0, -.14, 1.215), (.07, .03, .02), C, "Chest")
     if spec.get("scanner"):
@@ -205,7 +212,7 @@ def build_robot(ox):
     B, F, D, E, Mt, T, Eye = MT["r_corpo"], MT["r_faixa"], MT["r_escuro"], MT["r_esteira"], MT["r_metal"], MT["r_esteira"], MT["r_olho"]
     for s, side in ((1, "L"), (-1, "R")):
         sx = s
-        box(f"Esteira corpo_{side}", (sx * .24, 0, .12), (.15, .36, .20), E, f"Tread_{side}", .03)
+        box(f"Esteira corpo_{side}", (sx * .24, 0, .12), (.15, .36, .20), E, f"Tread_{side}", .06)
         for yy in (-.19, .19):
             cyl(f"Esteira roda_{side}", (sx * .24, yy, .12), .12, .15, E, f"Tread_{side}", axis='X', verts=10)
             cyl(f"Esteira cubo_{side}", (sx * .24 + sx * .085, yy, .12), .065, .03, Mt, f"Tread_{side}", axis='X', verts=6)
@@ -217,22 +224,22 @@ def build_robot(ox):
         # braco
         S = Vector((sx * .30, 0, .80)); Ee = Vector((sx * .335, 0, .62)); Wr = Vector((sx * .345, -.02, .44))
         ico(f"Ombro_{side}", S, (.065, .065, .065), B, f"UpperArm_{side}", 1)
-        box(f"Braco_{side}", (S + Ee) / 2, (.06, .07, .20), B, f"UpperArm_{side}", .012, rot=(0, math.radians(-8) * sx, 0))
+        box(f"Braco_{side}", (S + Ee) / 2, (.06, .07, .20), B, f"UpperArm_{side}", .026, rot=(0, math.radians(-8) * sx, 0))
         ico(f"Cotovelo_{side}", Ee, (.05, .05, .05), Mt, f"LowerArm_{side}", 1)
-        box(f"Antebraco_{side}", (Ee + Wr) / 2, (.06, .07, .19), B, f"LowerArm_{side}", .012, rot=(0, math.radians(-2) * sx, 0))
+        box(f"Antebraco_{side}", (Ee + Wr) / 2, (.06, .07, .19), B, f"LowerArm_{side}", .026, rot=(0, math.radians(-2) * sx, 0))
         box(f"Pulso_{side}", Wr, (.055, .06, .04), Mt, f"Hand_{side}")
         for k in (-1, 1):
             box(f"Garra_{side}", Wr + Vector((0, k * .028, -.06)), (.02, .02, .08), Mt, f"Hand_{side}", rot=(math.radians(k * -12), 0, 0))
-    uvs("Corpo", (0, 0, .60), (.27, .25, .36), B, "Body", 12, 8)
-    cyl("Faixa azul", (0, 0, .60), 1.0, .085, F, "Body", verts=12, scale=(.272, .252, 1))
-    cyl("Painel linha", (0, 0, .42), 1.0, .012, D, "Body", verts=12, scale=(.258, .238, 1))
-    cyl("Painel linha", (0, 0, .78), 1.0, .012, D, "Body", verts=12, scale=(.245, .225, 1))
+    uvs("Corpo", (0, 0, .60), (.27, .25, .36), B, "Body", 28, 18)
+    cyl("Faixa azul", (0, 0, .60), 1.0, .085, F, "Body", verts=28, scale=(.284, .264, 1))
+    cyl("Painel linha", (0, 0, .42), 1.0, .012, D, "Body", verts=28, scale=(.248, .228, 1))
+    cyl("Painel linha", (0, 0, .78), 1.0, .012, D, "Body", verts=28, scale=(.240, .220, 1))
     box("Painel frente", (0, -.255, .60), (.012, .01, .34), D, "Body")
     cyl("Pescoco", (0, 0, .94), .12, .04, D, "Head", verts=10)
-    uvs("Cabeca", (0, 0, 1.04), (.20, .19, .17), B, "Head", 10, 6)
-    box("Rosto", (0, -.15, 1.03), (.25, .06, .15), D, "Head", .03)
+    uvs("Cabeca", (0, 0, 1.04), (.20, .19, .17), B, "Head", 24, 14)
+    box("Rosto", (0, -.15, 1.03), (.25, .06, .15), D, "Head", .06)
     for sx in (-1, 1):
-        box("Olho", (sx * .06, -.185, 1.04), (.045, .012, .06), Eye, "Head")
+        box("Olho", (sx * .06, -.185, 1.04), (.045, .012, .06), Eye, "Head", .008)
     cyl("Antena haste", (0, 0, 1.24), .012, .16, D, "Antenna", verts=5)
     ico("Antena ponta", (0, 0, 1.33), (.022, .022, .022), Eye, "Antenna", 1)
     bones = [("Root", (0, 0, 0), (0, 0, .15), None), ("Body", (0, 0, .30), (0, 0, .90), "Root"), ("Head", (0, 0, .90), (0, 0, 1.22), "Body"), ("Antenna", (0, 0, 1.18), (0, 0, 1.34), "Head")]
@@ -326,7 +333,7 @@ for name, ao, me in CHARS:
     bpy.ops.export_scene.fbx(filepath=os.path.join(OUTFBX, f"{name}.fbx"), use_selection=True, object_types={'ARMATURE', 'MESH'},
                              apply_scale_options='FBX_SCALE_ALL', path_mode='COPY', add_leaf_bones=False, bake_anim=True,
                              bake_anim_use_nla_strips=True, bake_anim_use_all_actions=False, bake_anim_simplify_factor=0.5,
-                             mesh_smooth_type='FACE', primary_bone_axis='Y', secondary_bone_axis='X')
+                             mesh_smooth_type='OFF', primary_bone_axis='Y', secondary_bone_axis='X')
     ao.location.x = ox
 print("OK EXPORT")
 
