@@ -11592,7 +11592,12 @@ PrefabInstance:
     - target: {fileID: 7717749393856545673, guid: 724babb35dfad4badb52a08105acaed6,
         type: 3}
       propertyPath: m_Name
-      value: Astronauta
+      value: Astronauta_anterior
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717749393856545673, guid: 724babb35dfad4badb52a08105acaed6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1773258720214583422, guid: 724babb35dfad4badb52a08105acaed6, type: 3}
@@ -37599,6 +37604,7 @@ Transform:
   - {fileID: 1748473215}
   - {fileID: 431346010}
   - {fileID: 613815051}
+  - {fileID: 2124792469}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1255920544
@@ -58786,6 +58792,80 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1001 &2124792468
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1255920543}
+    m_Modifications:
+    - target: {fileID: 536813499948138780, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 536813499948138780, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 536813499948138780, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 536813499948138780, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 536813499948138780, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 536813499948138780, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 536813499948138780, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 536813499948138780, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 536813499948138780, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 536813499948138780, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8471818309603931527, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe,
+        type: 3}
+      propertyPath: m_Name
+      value: Astronauta_Novo
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe, type: 3}
+--- !u!4 &2124792469 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 536813499948138780, guid: bd5da0c7aebd8421ab4bc1afbcf5d4fe,
+    type: 3}
+  m_PrefabInstance: {fileID: 2124792468}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2130737019
 GameObject:
   m_ObjectHideFlags: 0
