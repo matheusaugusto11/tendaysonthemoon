@@ -55,8 +55,7 @@ public class UIJogo
     // Apresentação: balão de fala sobre a Lia ou o Bip
     RectTransform _apres, _balao, _balaoRabicho, _apresBotoes;
     Text _balaoNome, _balaoTexto;
-    Txt _falaQuem;
-    Txt[] _falaFila;
+    (bool robo, Txt fala)[] _falaFila;
     int _falaI;
     float _falaT;
     // Minigame (painel lateral do molde D9)
@@ -830,7 +829,7 @@ public class UIJogo
     void TelaBoletim()
     {
         var m = _gm.Missao; var T = m.Hoje;
-        DicaTutorial(Textos.DicaTutBoletim);
+        Conversa(Momento.Boletim);
         Rot(_conteudo, Textos.Boletim.ToString(), Papel.TituloPainel);
         Rot(_conteudo, RegrasMissao.ParteDaMissao(m.Dia).ToString(), Papel.Rotulo, UiTema.Apoio, TextAnchor.UpperLeft, true);
         var luz = (m.EhSombra(m.Dia) ? Textos.LuzSombra : Textos.LuzNormal).F(T.Luz);
@@ -866,7 +865,7 @@ public class UIJogo
     void TelaEscolha()
     {
         var m = _gm.Missao; var d = Tarefas.Def(m.Hoje.Tarefa);
-        if (d.Id == Tarefas.Amostra) DicaTutorial(Textos.DicaTutEscolha);
+        Conversa(Momento.Escolha);
         Rot(_conteudo, d.Titulo.ToString(), Papel.TituloPainel);
         Rot(_conteudo, d.Texto.ToString(), Papel.Corpo, UiTema.Apoio);
         if (d.Id == Tarefas.Vazamento)
@@ -936,7 +935,7 @@ public class UIJogo
         // Cartão de primeira vez (tarefa 7.7): ícone e título da tarefa, a instrução e a ilustração do gesto, com a câmera
         // já no close da estação, à esquerda.
         var d = Tarefas.Def(_gm.Missao.Hoje.Tarefa);
-        if (d.Id == Tarefas.Amostra) DicaTutorial(Textos.DicaTutMinijogo);
+        Conversa(Momento.MinijogoInfo);
         var cab = Horizontal(_conteudo, UiTema.E16, false, 0, null, TextAnchor.MiddleLeft);
         Icone(cab, UiTema.IconeDaTarefa(d.Id), 64);
         Rot(cab, d.MiniTitulo.ToString(), Papel.TituloPainel, UiTema.Branco, TextAnchor.MiddleLeft);
@@ -969,7 +968,7 @@ public class UIJogo
     void TelaConcluida()
     {
         var T = _gm.Missao.Hoje; var d = Tarefas.Def(T.Tarefa);
-        DicaTutorial(Textos.DicaTutConcluida);
+        Conversa(Momento.Concluida);
         Rot(_conteudo, d.Titulo.ToString(), Papel.TituloPainel);
         Linha(_conteudo, "check", null, T.MsgTarefa.ToString());
         if (!T.Extra.Vazio) Linha(_conteudo, "ajuda", Textos.VoceSabia.ToString(), (T.Extra + new Txt("\n", "\n") + T.ExtraFonte).ToString());
@@ -996,7 +995,7 @@ public class UIJogo
         if (livres > 0) Rot(dica, Textos.CelulasVaoSePerder.F(livres).ToString(), Papel.Rotulo, UiTema.Energia);
 
         // Corpo: a lista vertical de módulos.
-        DicaTutorial(Textos.DicaTutDistribuir);
+        Conversa(Momento.Distribuir);
         Rot(_conteudo, (Textos.DistribuirTexto + (m.Modo == Modo.Cadete ? Textos.SugestaoCadete : Txt.Nada)).ToString(), Papel.Rotulo, UiTema.Apoio);
         if (m.Hoje.TempoEsgotou) Linha(_conteudo, "relogio", Textos.TempoAcabou.ToString(), m.Hoje.MsgTarefa.ToString());
         var al = m.AlertaDe(m.Dia);
@@ -1099,7 +1098,7 @@ public class UIJogo
         LinhaDelta(_cabecalho, "oxigenio", Textos.Oxigenio, r.O2Antes, Math.Max(0, m.O2));
         LinhaDelta(_cabecalho, "radiacao", Textos.Radiacao, r.RadAntes, m.Rad);
         LinhaDelta(_cabecalho, "mod_bateria", Textos.Bateria, r.BatAntes, m.Bateria);
-        DicaTutorial(Textos.DicaTutResultado);
+        Conversa(Momento.Resultado);
         // O cartão do dado real vem antes do "Por quê?": a fonte da NASA fica visível sem rolar.
         if (r.Erupcao != null) CartaoErupcao(r.Erupcao);
         if (m.Hoje.Evento == Eventos.CmeId && m.CmeRegistro != null) CartaoCme(m);
@@ -1403,9 +1402,7 @@ public class UIJogo
         _faixaIcone.sprite = UiTema.Icone(corrida ? "mod_abrigo" : console ? "energia" : UiTema.IconeDaTarefa(m.Hoje.Tarefa));
         _faixaIcone.enabled = _faixaIcone.sprite != null;
         _faixaTira.color = _corDestino;
-        bool tut = _gm.TutorialAtivo;
-        _faixaDica.gameObject.SetActive(tut);
-        if (tut) _faixaDica.text = (_gm.Fase == Fase.AteHub ? Textos.DicaTutAteHub : Textos.DicaTutAteTarefa).ToString();
+        _faixaDica.gameObject.SetActive(false); // as dicas do trajeto agora são faladas pela Lia e pelo Bip (legenda)
     }
 
     string TextoCorrida() => Textos.CorridaTitulo.ToString() + "  " + Textos.CorridaSegundos.F(Mathf.CeilToInt(_gm.ContagemCorrida)).ToString();
@@ -1430,10 +1427,9 @@ public class UIJogo
     }
 
     /// <summary>Mostra as frases em sequência, na legenda de baixo, só durante o deslocamento. Avança sozinha.</summary>
-    public void Falar(Txt quem, Txt[] frases)
+    public void Falar((bool robo, Txt fala)[] falas)
     {
-        _falaQuem = quem;
-        _falaFila = frases;
+        _falaFila = falas;
         _falaI = 0;
         _falaT = 0f;
     }
@@ -1449,20 +1445,32 @@ public class UIJogo
         if (_falaFila == null) return;
         if (!deslocando) { _falaFila = null; return; } // saiu do deslocamento: a conversa acaba
         if (!ativa) return;
-        string frase = _falaFila[_falaI].ToString(); // ToString a cada quadro: acompanha a troca de idioma
-        _falaNome.text = _falaQuem.ToString();
+        var (robo, fala) = _falaFila[_falaI];
+        string frase = fala.ToString(); // ToString a cada quadro: acompanha a troca de idioma
+        _falaNome.text = (robo ? Textos.NomeRobo : Textos.NomeAstronauta).ToString();
+        _falaNome.color = CorDe(robo);
         _falaTexto.text = frase;
         _falaT += Time.deltaTime;
         if (_falaT >= DuracaoFala(frase)) { _falaI++; _falaT = 0f; }
     }
 
-    void DicaTutorial(Txt t)
+    /// <summary>Lia e Bip conversam no topo do painel, em toda etapa de todos os dias (no Dia 1, com as dicas do tutorial).</summary>
+    void Conversa(Momento mo)
     {
-        if (!_gm.TutorialAtivo) return;
-        var caixa = Vertical(_conteudo, 0, 16, null);
+        var m = _gm.Missao;
+        if (m == null || _gm.Teste) return;
+        var caixa = Vertical(_conteudo, UiTema.E4, 16, null);
         Fundo(caixa, UiTema.AcoClaro, UiTema.ChanfroBotao, "SE ID", false);
-        Linha(caixa, "ajuda", Textos.ControleDaMissao.ToString(), t.ToString(), Papel.Rotulo); // menor: o painel lateral é estreito
+        foreach (var (robo, fala) in Conversas.Para(m, mo, _gm.TutorialAtivo))
+        {
+            Rot(caixa, (robo ? Textos.NomeRobo : Textos.NomeAstronauta).ToString(), Papel.Rotulo, CorDe(robo));
+            var t = Rot(caixa, fala.ToString(), Papel.Corpo, UiTema.Branco); // fonte de texto corrido (a do Rótulo é toda em maiúsculas)
+            t.fontSize = UiTema.Tamanho(Papel.Rotulo);                       // no tamanho menor: o painel lateral é estreito
+        }
     }
+
+    /// <summary>Cor do nome de quem fala: Lia no ciano do ar, Bip no amarelo da luz da antena.</summary>
+    static Color CorDe(bool robo) => robo ? UiTema.Energia : UiTema.Ar;
 
     // =====================================================================
     // Atualização por frame

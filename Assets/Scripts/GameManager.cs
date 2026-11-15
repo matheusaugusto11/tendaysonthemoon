@@ -411,8 +411,6 @@ public class GameManager : MonoBehaviour
         if (Fase != Fase.Boletim) return;
         _tempoNaIda = 0f;
         MudarFase(Fase.AteTarefa);
-        // Primeiro passo da missão: a astronauta fala enquanto a criança anda até a primeira tarefa.
-        if (Missao.Dia == 1 && !Teste) _ui.Falar(Textos.NomeAstronauta, Textos.FalasAbertura);
     }
 
     // ---------------- Evento do dia e corrida até o abrigo (design D7) ----------------
@@ -674,6 +672,7 @@ public class GameManager : MonoBehaviour
 
     void MudarFase(Fase nova)
     {
+        var anterior = Fase;
         Fase = nova;
         if (Pausado) { Pausado = false; Time.timeScale = 1f; _ui?.MostrarPausa(false); }
         // O personagem só anda nas fases de deslocamento.
@@ -683,6 +682,11 @@ public class GameManager : MonoBehaviour
         RefrescarEstacoes();
         AjustarCamera(nova);
         _ui.Render();
+        // Nos trajetos, a Lia e o Bip conversam na legenda de baixo (todo dia; no Dia 1, com as dicas do tutorial).
+        // Na volta de um evento ou da corrida até o abrigo o trajeto continua: a conversa não recomeça.
+        bool voltaDoEvento = anterior == Fase.Evento || anterior == Fase.CorridaAbrigo;
+        if (Missao != null && !Teste && !voltaDoEvento && (nova == Fase.AteTarefa || nova == Fase.AteHub))
+            _ui.Falar(Conversas.Para(Missao, nova == Fase.AteHub ? Momento.AteHub : Momento.AteTarefa, TutorialAtivo));
     }
 
     // ---------------- Câmera por fase (grupo 5 da mudança interface-e-minijogos) ----------------

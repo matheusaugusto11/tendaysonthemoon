@@ -313,13 +313,6 @@ namespace DezDias
 
         // ---------- Tutorial do Dia 1 (web: TIPS) ----------
         public static readonly Txt ControleDaMissao = T("Controle da missão", "Mission control");
-        public static readonly Txt DicaTutBoletim = T("Todo dia começa com o boletim. Ele mostra quanta energia a base vai ter e se o Sol está calmo. Hoje está tudo tranquilo.", "Every day starts with the briefing. It shows how much energy the base will have and whether the Sun is calm. All quiet today.");
-        public static readonly Txt DicaTutAteTarefa = T("Leve o astronauta até a estação marcada: é lá que fica a tarefa de hoje. Siga a seta.", "Take the astronaut to the marked station: that is where today's task is. Follow the arrow.");
-        public static readonly Txt DicaTutEscolha = T("Toda tarefa tem um custo, escrito em cada botão. Você pode sair para buscar pedras ou ficar na base: as duas escolhas custam alguma coisa.", "Every task has a cost, written on each button. You can go out for rocks or stay at base: both choices cost something.");
-        public static readonly Txt DicaTutMinijogo = T("A barra de tempo é o ar do traje. Arraste as pedras para a caixa e aperte VOLTAR antes que ela acabe.", "The time bar is the air in the suit. Drag the rocks into the box and press BACK before it runs out.");
-        public static readonly Txt DicaTutConcluida = T("Viu? Cada escolha muda os medidores lá em cima. Na Lua nada é de graça.", "See? Each choice changes the meters up top. On the Moon nothing is free.");
-        public static readonly Txt DicaTutAteHub = T("Agora volte ao console de energia, no centro do hub.", "Now head back to the energy console, in the middle of the hub.");
-        public static readonly Txt DicaTutDistribuir = T("Esta é a decisão mais importante do dia. Use + e - para mandar células a cada módulo. Ar e água com 2 células seguram o oxigênio. O resto é com você: comida, ciência ou guardar para depois?", "This is the most important decision of the day. Use + and - to send cells to each module. Air & water with 2 cells hold oxygen steady. The rest is up to you: food, science or saving for later?");
         // ---------- Apresentação (depois de escolher Cadete ou Comandante) ----------
         public static readonly Txt NomeRobo = T("Bip", "Bip");
         public static readonly Txt ApresentacaoTitulo = T("Conheça sua equipe", "Meet your team");
@@ -344,6 +337,5 @@ namespace DezDias
             T("A tarefa de hoje está marcada com a seta. Vamos lá!", "Today's task is marked with the arrow. Let's go!"),
         };
 
-        public static readonly Txt DicaTutResultado = T("Aqui você vê o que mudou e por quê. A partir de amanhã podem chegar alertas de erupção solar. Boa missão!", "Here you see what changed and why. From tomorrow on, solar flare alerts may arrive. Have a good mission!");
     }
 }
