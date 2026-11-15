@@ -22,6 +22,9 @@ namespace DezDias
         public const string Alerta = "#FF5D5D", Terra = "#52638A";
         // Tanque de água usada nos canos: mostarda apagado, porque o amarelo puro é só da energia
         public const string AguaUsada = "#D9B45A";
+        // Arte dos minijogos (design D9): painel solar, filtro, regolito e pedras, no estilo low-poly da base
+        public const string PainelSolar = "#2B5C9E", PainelSolarJunta = "#1E3F6E", Filtro = "#C9D3DC", FiltroTrama = "#A9B6C2";
+        public const string Regolito = "#8C8170", Chao = "#4A4743", ChaoClaro = "#5A5650", Pedra = "#9E9AA6", PedraClara = "#BDB9C4";
     }
 
     /// <summary>Recurso reconhecido num texto de custo (vira o ícone do chip).</summary>

@@ -23,6 +23,10 @@ public static class UiTema
     public static readonly Color Ar = C(Paleta.Ar), Estufa = C(Paleta.Estufa), Abrigo = C(Paleta.Abrigo),
         Lab = C(Paleta.Lab), Energia = C(Paleta.Energia);
     public static readonly Color Alerta = C(Paleta.Alerta), Terra = C(Paleta.Terra), AguaUsada = C(Paleta.AguaUsada);
+    // Arte dos minijogos
+    public static readonly Color PainelSolar = C(Paleta.PainelSolar), PainelSolarJunta = C(Paleta.PainelSolarJunta),
+        Filtro = C(Paleta.Filtro), FiltroTrama = C(Paleta.FiltroTrama), Regolito = C(Paleta.Regolito),
+        Chao = C(Paleta.Chao), ChaoClaro = C(Paleta.ChaoClaro), Pedra = C(Paleta.Pedra), PedraClara = C(Paleta.PedraClara);
 
     /// <summary>Acento do módulo: o mesmo da cor do módulo na cena 3D. O Conserto (só com vazamento) é neutro: não há botão vermelho.</summary>
     public static Color CorDoModulo(Modulo m) => m switch
