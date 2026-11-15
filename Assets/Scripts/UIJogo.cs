@@ -1265,6 +1265,8 @@ public class UIJogo
         Rot(_conteudo, Textos.UsoDeIATexto.ToString(), Papel.Corpo, UiTema.Apoio);
         Secao(Textos.Tipografia.ToString());
         Rot(_conteudo, Textos.TipografiaTexto.ToString(), Papel.Corpo, UiTema.Apoio);
+        Secao(Textos.OutrosRecursos.ToString());
+        Rot(_conteudo, Textos.OutrosRecursosTexto.ToString(), Papel.Corpo, UiTema.Apoio);
         Principal(Textos.Voltar.ToString(), () => _gm.FecharCreditos());
     }
 

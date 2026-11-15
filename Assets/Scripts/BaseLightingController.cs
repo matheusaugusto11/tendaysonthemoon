@@ -86,6 +86,7 @@ public class BaseLightingController : MonoBehaviour
         if (Application.isPlaying && _skyClone == null && RenderSettings.skybox != null)
         {
             _skyClone = new Material(RenderSettings.skybox);
+            CeuEstrelado.Aplicar(_skyClone);
             RenderSettings.skybox = _skyClone;
         }
     }
