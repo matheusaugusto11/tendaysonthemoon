@@ -31,6 +31,8 @@ public static class MontarBase
         if (File.Exists("Temp/pedido_montar_base.txt")) { File.Delete("Temp/pedido_montar_base.txt"); Montar(); }
         if (File.Exists("Temp/pedido_capturas.txt")) { File.Delete("Temp/pedido_capturas.txt"); Capturar(); }
         if (File.Exists("Temp/pedido_camera.txt")) { File.Delete("Temp/pedido_camera.txt"); ConfigurarCameraEZonas(); }
+        if (File.Exists("Temp/pedido_totens.txt")) { File.Delete("Temp/pedido_totens.txt"); RefazerTotens(); }
+        if (File.Exists("Temp/pedido_cap_totens.txt")) { var suf = File.ReadAllText("Temp/pedido_cap_totens.txt").Trim(); File.Delete("Temp/pedido_cap_totens.txt"); CapturarTotens(suf); }
         if (File.Exists("Temp/pedido_portas.txt")) { File.Delete("Temp/pedido_portas.txt"); FixarPosePortas(); }
         if (File.Exists("Temp/pedido_dump.txt")) { File.Delete("Temp/pedido_dump.txt"); DumpRaiz(); }
     }
@@ -284,6 +286,70 @@ public static class MontarBase
         }
         if (salvar) { EditorSceneManager.MarkSceneDirty(cena); EditorSceneManager.SaveScene(cena); }
         Debug.Log($"[Camera] CameraTerceiraPessoa na {camGo.name}; {pai.transform.childCount} zonas criadas em Base/ZonasCamera.");
+    }
+
+    // ---------------- Totens das estações (estilo da base) ----------------
+    const string MatTotemDestaque = "Assets/Materials/Estacoes/Totem destaque.mat";
+
+    [MenuItem("Tools/Base Lunar/Refazer totens das estações")]
+    public static void RefazerTotens()
+    {
+        var cena = EditorSceneManager.GetActiveScene();
+        var corpo = AssetDatabase.LoadAssetAtPath<Material>(MatDir + "/Painel branco.mat");
+        var escuro = AssetDatabase.LoadAssetAtPath<Material>(MatDir + "/Painel escuro.mat");
+        var destaque = AssetDatabase.LoadAssetAtPath<Material>(MatTotemDestaque);
+        if (destaque == null)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(MatTotemDestaque));
+            destaque = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            destaque.SetColor("_BaseColor", Color.white);
+            destaque.SetFloat("_Smoothness", 0.6f);
+            destaque.EnableKeyword("_EMISSION");
+            destaque.SetColor("_EmissionColor", Color.white);
+            destaque.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            AssetDatabase.CreateAsset(destaque, MatTotemDestaque);
+        }
+        int n = 0;
+        foreach (var e in UnityEngine.Object.FindObjectsOfType<Estacao>(true))
+        {
+            e.matCorpo = corpo; e.matEscuro = escuro; e.matDestaque = destaque;
+            var v = e.transform.Find("Visual");
+            if (v != null) UnityEngine.Object.DestroyImmediate(v.gameObject);
+            var desc = e.transform.Find("Visual_descartado");
+            if (desc != null) UnityEngine.Object.DestroyImmediate(desc.gameObject);
+            e.Montar();
+            EditorUtility.SetDirty(e);
+            n++;
+        }
+        EditorSceneManager.MarkSceneDirty(cena); EditorSceneManager.SaveScene(cena);
+        Debug.Log($"[Totens] {n} estações refeitas no estilo da base (corpo={(corpo ? corpo.name : "null")}, escuro={(escuro ? escuro.name : "null")}).");
+    }
+
+    /// <summary>Fotos de algumas estações (ativas, na cor da tarefa) em Docs/capturas-totens/&lt;id&gt;_&lt;sufixo&gt;.png.</summary>
+    static void CapturarTotens(string sufixo)
+    {
+        var pasta = "Docs/capturas-totens"; Directory.CreateDirectory(pasta);
+        var camGo = new GameObject("CamTotem"); var cam = camGo.AddComponent<Camera>();
+        cam.fieldOfView = 60f; cam.nearClipPlane = 0.05f;
+        var rt = new RenderTexture(960, 640, 24);
+        foreach (var e in UnityEngine.Object.FindObjectsOfType<Estacao>())
+        {
+            if (e.id != "backup" && e.id != "reciclador" && e.id != "vazamento") continue;
+            var v = e.transform.Find("Visual");
+            var ativa = typeof(Estacao).GetMethod("Definir");
+            ativa.Invoke(e, new object[] { true, false });
+            // câmera como a de 3ª pessoa: atrás de um personagem a ~2 m do totem, vindo do hub
+            Vector3 p = e.transform.position, paraHub = -p; paraHub.y = 0; paraHub = paraHub.sqrMagnitude > 0.25f ? paraHub.normalized : Vector3.forward;
+            Vector3 olho = p + paraHub * 5.5f + Vector3.up * 2.6f;
+            cam.transform.position = olho; cam.transform.LookAt(p + Vector3.up * 1.1f);
+            cam.targetTexture = rt; cam.Render(); cam.targetTexture = null;
+            var tex = new Texture2D(960, 640, TextureFormat.RGB24, false);
+            RenderTexture.active = rt; tex.ReadPixels(new Rect(0, 0, 960, 640), 0, 0); tex.Apply(); RenderTexture.active = null;
+            File.WriteAllBytes($"{pasta}/{e.id}_{sufixo}.png", tex.EncodeToPNG());
+            UnityEngine.Object.DestroyImmediate(tex);
+        }
+        UnityEngine.Object.DestroyImmediate(rt); UnityEngine.Object.DestroyImmediate(camGo);
+        Debug.Log("[Totens] capturas em " + pasta);
     }
 
     static GameObject RaizBase(UnityEngine.SceneManagement.Scene cena)

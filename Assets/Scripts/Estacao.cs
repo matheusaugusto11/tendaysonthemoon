@@ -42,6 +42,17 @@ public class Estacao : MonoBehaviour
         Definir(false, false);
     }
 
+    // ---------- visual: totem low-poly no estilo da base (painel branco/escuro, faixa e tela acesas na cor da tarefa) ----------
+    const string Versao = "Totem_v2";
+    const float AlturaMarcador = 2.05f, AlturaRotulo = 1.6f;
+
+    [Header("Materiais do totem (preenchidos pelo editor ao montar)")]
+    public Material matCorpo;      // Painel branco
+    public Material matEscuro;     // Painel escuro
+    public Material matDestaque;   // emissivo, recebe a cor da tarefa
+
+    MaterialPropertyBlock _mpb;
+
     /// <summary>Cria a parte visual (idempotente). Também chamado pelo editor para ficar salvo na cena.</summary>
     public void Montar()
     {
@@ -49,40 +60,51 @@ public class Estacao : MonoBehaviour
         if (existente != null)
         {
             if (Achar()) return;
-            // Visual incompleto (parte faltando): descarta e refaz.
+            // Visual antigo ou incompleto: descarta e refaz.
             existente.name = "Visual_descartado";
             existente.gameObject.SetActive(false);
             if (Application.isPlaying) Destroy(existente.gameObject); else DestroyImmediate(existente.gameObject);
         }
         var visual = new GameObject("Visual").transform;
         visual.SetParent(transform, false);
+        new GameObject(Versao).transform.SetParent(visual, false); // marca da versão do visual
+        // a tela fica virada para o hub (de onde o jogador costuma chegar)
+        Vector3 paraHub = -transform.position; paraHub.y = 0;
+        if (paraHub.sqrMagnitude > 0.25f) visual.rotation = Quaternion.LookRotation(paraHub.normalized, Vector3.up);
 
         if (!semMaquina)
         {
-            Prim(PrimitiveType.Cylinder, "Base", visual, new Vector3(0, 0.05f, 0), new Vector3(2.6f, 0.05f, 2.6f));
-            Prim(PrimitiveType.Cube, "Maquina", visual, new Vector3(0, 0.9f, 0), new Vector3(0.9f, 1.7f, 0.9f));
+            // pedestal octogonal baixo
+            Peca("Base", visual, MalhaPrisma(8, 0.55f, 0.5f, 0.08f), Vector3.zero, Quaternion.identity, matEscuro);
+            // coluna afunilada
+            Peca("Maquina", visual, MalhaPrisma(8, 0.24f, 0.19f, 0.92f), new Vector3(0, 0.08f, 0), Quaternion.identity, matCorpo);
+            // faixa acesa na cor da tarefa
+            Peca("Faixa", visual, MalhaPrisma(8, 0.255f, 0.245f, 0.07f), new Vector3(0, 0.34f, 0), Quaternion.identity, matDestaque);
+            // console inclinado no topo, com a tela acesa
+            var console = Peca("Console", visual, MalhaPrisma(4, 0.36f, 0.32f, 0.07f), new Vector3(0, 1.0f, 0),
+                                Quaternion.Euler(22f, 0, 0), matEscuro); // tela inclinada para a frente do Visual
+            Peca("Tela", console.transform, MalhaPrisma(4, 0.27f, 0.27f, 0.012f), new Vector3(0, 0.07f, 0), Quaternion.identity, matDestaque);
         }
-        var marc = Prim(PrimitiveType.Cube, "Marcador", visual, new Vector3(0, 3.2f, 0), Vector3.one * 0.6f);
-        marc.transform.localRotation = Quaternion.Euler(45, 45, 0);
+        var marc = Peca("Marcador", visual, MalhaOctaedro(0.16f, 0.24f), new Vector3(0, AlturaMarcador, 0), Quaternion.identity, matDestaque);
 
         var rot = new GameObject("Rotulo");
         rot.transform.SetParent(visual, false);
-        rot.transform.localPosition = new Vector3(0, 2.4f, 0);
+        rot.transform.localPosition = new Vector3(0, AlturaRotulo, 0);
         var tm = rot.AddComponent<TextMesh>();
         tm.text = nome;
         tm.anchor = TextAnchor.MiddleCenter;
         tm.alignment = TextAlignment.Center;
         tm.fontSize = 64;
-        tm.characterSize = 0.08f;
+        tm.characterSize = 0.05f;
         tm.color = Color.white;
         if (!Achar()) Debug.LogError("[Estacao] não consegui montar o visual de " + name);
     }
 
-    /// <summary>Liga as referências às partes do visual. Devolve false se alguma parte obrigatória estiver faltando.</summary>
+    /// <summary>Liga as referências às partes do visual. Devolve false se alguma parte obrigatória estiver faltando (ou se o visual for da versão antiga).</summary>
     bool Achar()
     {
         var v = transform.Find("Visual");
-        if (v == null) return false;
+        if (v == null || v.Find(Versao) == null) return false;
         _visual = v;
         _marcador = v.Find("Marcador");
         var r = v.Find("Rotulo");
@@ -99,34 +121,100 @@ public class Estacao : MonoBehaviour
             r.GetComponent<MeshRenderer>().sharedMaterial = font.material;
         }
         if (string.IsNullOrEmpty(_rotulo.text)) _rotulo.text = nome;
+        // só as partes acesas recebem a cor da tarefa; corpo e console mantêm o material da base
         var corpos = new System.Collections.Generic.List<Renderer> { rMarc };
-        if (baseT && baseT.GetComponent<Renderer>()) corpos.Add(baseT.GetComponent<Renderer>());
-        if (maquinaT && maquinaT.GetComponent<Renderer>()) corpos.Add(maquinaT.GetComponent<Renderer>());
+        foreach (var n in new[] { "Faixa", "Console/Tela" })
+        {
+            var t = v.Find(n);
+            if (t && t.GetComponent<Renderer>()) corpos.Add(t.GetComponent<Renderer>());
+        }
         _corpos = corpos.ToArray();
         return true;
     }
 
-    static GameObject Prim(PrimitiveType t, string n, Transform pai, Vector3 pos, Vector3 escala)
+    static GameObject Peca(string n, Transform pai, Mesh malha, Vector3 pos, Quaternion rot, Material mat)
     {
-        var go = GameObject.CreatePrimitive(t);
-        go.name = n;
-        Object.DestroyImmediate(go.GetComponent<Collider>()); // não bloqueia o personagem
+        var go = new GameObject(n);
         go.transform.SetParent(pai, false);
         go.transform.localPosition = pos;
-        go.transform.localScale = escala;
+        go.transform.localRotation = rot;
+        go.AddComponent<MeshFilter>().sharedMesh = malha;
+        var mr = go.AddComponent<MeshRenderer>();
+        mr.sharedMaterial = mat != null ? mat : PadraoLit();
+        mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; // barato no celular
         return go;
+    }
+
+    static Material _padrao;
+    static Material PadraoLit()
+    {
+        if (_padrao == null)
+        {
+            var sh = Shader.Find("Universal Render Pipeline/Lit");
+            _padrao = new Material(sh != null ? sh : Shader.Find("Standard")) { name = "Totem (reserva)" };
+        }
+        return _padrao;
+    }
+
+    /// <summary>Prisma de N lados com faces chapadas (visual facetado), base em y=0. Raios de baixo e de cima podem diferir.</summary>
+    static Mesh MalhaPrisma(int lados, float rBaixo, float rTopo, float altura)
+    {
+        var v = new System.Collections.Generic.List<Vector3>();
+        var t = new System.Collections.Generic.List<int>();
+        float a0 = Mathf.PI / lados; // aresta virada para a frente
+        Vector3 P(int i, float r, float y) { float a = a0 + i * 2f * Mathf.PI / lados; return new Vector3(Mathf.Sin(a) * r, y, Mathf.Cos(a) * r); }
+        for (int i = 0; i < lados; i++)
+        {
+            Vector3 b0 = P(i, rBaixo, 0), b1 = P(i + 1, rBaixo, 0), c0 = P(i, rTopo, altura), c1 = P(i + 1, rTopo, altura);
+            int k = v.Count; v.AddRange(new[] { b0, c0, c1, b1 }); t.AddRange(new[] { k, k + 1, k + 2, k, k + 2, k + 3 });
+        }
+        int topo = v.Count; v.Add(new Vector3(0, altura, 0));
+        for (int i = 0; i <= lados; i++) v.Add(P(i, rTopo, altura));
+        for (int i = 0; i < lados; i++) t.AddRange(new[] { topo, topo + 1 + i, topo + 2 + i });
+        int fundo = v.Count; v.Add(Vector3.zero);
+        for (int i = 0; i <= lados; i++) v.Add(P(i, rBaixo, 0));
+        for (int i = 0; i < lados; i++) t.AddRange(new[] { fundo, fundo + 2 + i, fundo + 1 + i });
+        return Chapada(v, t, "Prisma" + lados);
+    }
+
+    /// <summary>Losango de 4 lados (octaedro alongado), centrado na origem.</summary>
+    static Mesh MalhaOctaedro(float raio, float meiaAltura)
+    {
+        var v = new System.Collections.Generic.List<Vector3>();
+        var t = new System.Collections.Generic.List<int>();
+        Vector3 cima = Vector3.up * meiaAltura, baixo = Vector3.down * meiaAltura;
+        for (int i = 0; i < 4; i++)
+        {
+            float a = i * Mathf.PI / 2f, b = (i + 1) * Mathf.PI / 2f;
+            Vector3 p0 = new Vector3(Mathf.Sin(a), 0, Mathf.Cos(a)) * raio, p1 = new Vector3(Mathf.Sin(b), 0, Mathf.Cos(b)) * raio;
+            int k = v.Count; v.AddRange(new[] { cima, p0, p1 }); t.AddRange(new[] { k, k + 1, k + 2 });
+            k = v.Count; v.AddRange(new[] { baixo, p1, p0 }); t.AddRange(new[] { k, k + 1, k + 2 });
+        }
+        return Chapada(v, t, "Losango");
+    }
+
+    /// <summary>Desfaz o compartilhamento de vértices para cada triângulo ter normal própria (sombreado facetado).</summary>
+    static Mesh Chapada(System.Collections.Generic.List<Vector3> v, System.Collections.Generic.List<int> t, string nome)
+    {
+        var vv = new Vector3[t.Count]; var tt = new int[t.Count];
+        for (int i = 0; i < t.Count; i++) { vv[i] = v[t[i]]; tt[i] = i; }
+        var m = new Mesh { name = nome, vertices = vv, triangles = tt };
+        m.RecalculateNormals(); m.RecalculateBounds();
+        return m;
     }
 
     void Pintar(Color c)
     {
         if (_corpos == null) return;
+        if (_mpb == null) _mpb = new MaterialPropertyBlock();
         foreach (var r in _corpos)
         {
             if (r == null) continue;
-            var m = new Material(r.sharedMaterial);
-            if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", c);
-            if (m.HasProperty("_Color")) m.SetColor("_Color", c);
-            r.material = m;
+            r.GetPropertyBlock(_mpb);
+            _mpb.SetColor("_BaseColor", c);
+            _mpb.SetColor("_Color", c);
+            _mpb.SetColor("_EmissionColor", c * 1.6f); // acende na cor da tarefa
+            r.SetPropertyBlock(_mpb);
         }
     }
 
@@ -153,7 +241,7 @@ public class Estacao : MonoBehaviour
         _fase += Time.deltaTime;
         if (_marcador.gameObject.activeSelf)
         {
-            _marcador.localPosition = new Vector3(0, 3.2f + Mathf.Sin(_fase * 3f) * 0.25f, 0);
+            _marcador.localPosition = new Vector3(0, AlturaMarcador + Mathf.Sin(_fase * 3f) * 0.12f, 0);
             _marcador.Rotate(0, 90f * Time.deltaTime, 0, Space.World);
         }
         var cam = Camera.main;

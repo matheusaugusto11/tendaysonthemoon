@@ -35,6 +35,8 @@ public class Movimento : MonoBehaviour
     [Range(60f, 180f)] public float anguloMaxSeguir = 100f;
     [Tooltip("Enquanto o analógico/teclas estão pressionados, o 'para cima' fica travado na direção em que a câmera estava ao começar a andar. Evita andar em círculos quando a câmera gira sozinha.")]
     public bool travarDirecaoAoAndar = true;
+    [Tooltip("Se a direção apertada mudar mais que isso (graus), a referência é retravada na câmera atual. Ex.: soltar o D e ficar só no W volta a ser 'para cima da tela'.")]
+    [Range(5f, 90f)] public float anguloRetravar = 20f;
 
     [Header("Controles de toque (criados automaticamente se vazios)")]
     public VirtualJoystick joystick;        // analógico esquerdo: andar
@@ -48,6 +50,7 @@ public class Movimento : MonoBehaviour
     /// <summary>Só para testes automáticos: somada à entrada do jogador (zero por padrão).</summary>
     [System.NonSerialized] public Vector2 entradaDepuracao;
     float _yawTravado, _ultimaCameraManual = -99f;
+    Vector2 _inputTravado, _inputAtual;
     bool _recentrando;
     const float PitchInicial = 20f;
 
@@ -146,7 +149,11 @@ public class Movimento : MonoBehaviour
         float alvo = transform.eulerAngles.y; // a direção para onde o personagem está olhando
         // andando em direção à câmera (recuando): não dá meia volta
         if (Mathf.Abs(Mathf.DeltaAngle(_yaw, alvo)) > anguloMaxSeguir) return;
-        _yaw = Mathf.LerpAngle(_yaw, alvo, 1f - Mathf.Exp(-suavizacaoSeguir * Time.deltaTime));
+        // só segue quando o jogador anda PARA A FRENTE: de lado (A/D) ou para trás (S) a câmera fica parada
+        float frente = Mathf.Clamp01(_inputAtual.y / Mathf.Max(0.001f, _inputAtual.magnitude));
+        frente *= frente;
+        if (frente < 0.01f) return;
+        _yaw = Mathf.LerpAngle(_yaw, alvo, 1f - Mathf.Exp(-suavizacaoSeguir * frente * Time.deltaTime));
     }
 
     void Mover()
@@ -159,8 +166,14 @@ public class Movimento : MonoBehaviour
         // "para cima" é relativo à câmera. Com a câmera seguindo por trás, trava a referência enquanto o jogador segura o
         // analógico, para a câmera girar sem mudar a direção do movimento (senão o personagem andaria em círculos).
         bool temInput = input.sqrMagnitude > 0.0025f;
-        if (temInput && !_andando) _yawTravado = _yaw;
+        // trava ao começar a andar e RETRAVA quando a direção apertada muda (ex.: W+D → só W), senão o W sairia torto
+        if (temInput && (!_andando || Vector2.Angle(input, _inputTravado) > anguloRetravar))
+        {
+            _yawTravado = _yaw;
+            _inputTravado = input;
+        }
         _andando = temInput;
+        _inputAtual = temInput ? input : Vector2.zero;
         float yawMov = (cameraSegueAtras && travarDirecaoAoAndar) ? _yawTravado : _yaw;
         Quaternion yawRot = Quaternion.Euler(0, yawMov, 0);
         Vector3 dir = yawRot * new Vector3(input.x, 0, input.y);
