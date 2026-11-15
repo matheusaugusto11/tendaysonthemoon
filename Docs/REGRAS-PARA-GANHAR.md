@@ -115,13 +115,13 @@ O guia pede atenção igual ao critério Presentation: o vídeo de 30 s pesa tan
 
 **Jogo**
 
-- [ ] Abre por um link público, no navegador, sem conta
+- [x] Abre por um link público, no navegador, sem conta (https://carambo.itch.io/ten-days-on-the-moon, 15/11)
 - [ ] Dá para jogar uma missão do começo ao fim
 - [ ] Toda decisão mostra o custo
 - [ ] Fonte da NASA visível em cada dado real, rotulado como arquivado ou ao vivo
-- [ ] Tela de créditos com todas as fontes e assets
+- [ ] Tela de créditos com todas as fontes e assets (falta o autor e o link de cada som do Pixabay)
 - [ ] Sem logotipo, bandeira ou identificador de missão da NASA
-- [ ] Texto em inglês disponível
+- [x] Texto em inglês disponível (botão English; o jogo abre em português por padrão)
 - [ ] Marca d'água em toda imagem gerada por IA
 
 **Submissão**
@@ -133,6 +133,6 @@ O guia pede atenção igual ao critério Presentation: o vídeo de 30 s pesa tan
 - [ ] Use of Super Intelligence (SI)
 - [ ] NASA Data
 - [ ] Space Agency Partner Data and Other References
-- [ ] Licença open source no repositório
+- [x] Licença open source no repositório (`LICENSE` Apache 2.0, falta o push)
 - [ ] Caixas de termos e de trabalho original marcadas
 - [ ] "Submit for Judging" clicado antes de 15/11, 23h59

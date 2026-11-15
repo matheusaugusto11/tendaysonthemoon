@@ -98,10 +98,53 @@ Estado atual do repositório, conferido em 15/11/2026:
 | --- | --- |
 | Remoto | `https://github.com/matheusaugusto11/tendaysonthemoon` (branches `main` e `teste`) |
 | Visibilidade do repositório | [ ] **conferir se está público** (abrir em janela anônima) |
-| Versão jogável publicada | [ ] **falta**: build WebGL ou `web/index.html` hospedado (GitHub Pages, itch.io etc.) |
-| `LICENSE` na raiz | [ ] **falta**. A regra de termos pede licença open source reconhecida pela OSI (Apache 2.0 vale) |
-| `README` na raiz | [ ] **falta**. Explicar o jogo, como rodar, créditos e fontes |
+| Versão jogável publicada | [x] build WebGL no itch.io: https://carambo.itch.io/ten-days-on-the-moon (público, roda no navegador, conferido em 15/11). Ajustes da página: seção 4.1 |
+| `LICENSE` na raiz | [x] Apache 2.0, criado em 15/11 (falta commit e push) |
+| `README` na raiz | [x] criado em 15/11, em inglês (falta commit e push). Pendente nele: autor e link de cada som do Pixabay |
 | Trabalho em `main` | [ ] hoje o trabalho está na branch `teste`; decidir qual branch o link mostra |
+
+### 4.1 Página do itch.io: estado em 15/11/2026
+
+Conta **Carambo Studio**, projeto `https://carambo.itch.io/ten-days-on-the-moon` (id de edição 5373321).
+Está **pública**, com o zip WebGL (`Builds/tendays-webgl.zip`, 18 MB, marcado para rodar no navegador),
+capa e 3 capturas (`Builds/itch/`, pasta ignorada pelo git). Declaração de IA e fórum já salvos.
+
+Falta, tomando como modelo a página do outro projeto da conta, **Chapéu de Papel**
+(`https://itch.io/game/edit/5182324`):
+
+| Item | Modelo (Chapéu de Papel) | Ten Days hoje | Fazer |
+| --- | --- | --- | --- |
+| Descrição | Dois idiomas (começa com "English below"), seções, controles, aviso, créditos | Um parágrafo em inglês | Reescrever em inglês com versão em português abaixo |
+| Frase curta | Duas frases com gancho | "Run a lunar outpost for ten days. Every energy cell has a cost." | Trocar |
+| Tags (10) | alzheimers, brazil, emotional... | Nenhuma | `space, nasa, education, kids, moon, resource-management, strategy, science, short, 3d` |
+| Tamanho do embed | 960x540, paisagem | 1280x720, sem orientação | **Feito (15/11)**: 960x540, Landscape |
+| Status | Em desenvolvimento | Released | Mantido "Released" (jogo completo) |
+| Descrição / frase curta | ver acima | um parágrafo | **Feito (15/11)**: bilíngue (EN, "Português abaixo ↓", PT) e frase nova |
+| Tema visual (Edit theme) | Fonte Lora, fundo de imagem, tons de papel | Tema claro padrão | **Feito (15/11), sem conferência visual**: ver abaixo |
+
+Tema visual aplicado (botão "Edit theme" na página pública, só para o dono): banner 960x250 (céu, horizonte,
+base estilizada e título), fundo de estrelas 1024x1024 que repete, embed BG 960x540, cores BG `#181e34`,
+painel `#232841`, texto `#e6e4df`, link `#4dd0e1`, botão `#ffd23f`. As imagens foram desenhadas em canvas
+no navegador (a captura do jogo não pôde ser lida pela página). **Conferir na página pública** banner, fundo,
+embed e contraste do botão amarelo. Ainda faltam as 10 tags, o campo Genre, o vídeo e os nomes da equipe.
+
+Armadilhas já vividas:
+- **Digitar na caixa de tags trava a aba** (diálogo do navegador que a automação não fecha). Digitar as tags à mão.
+- Valores colocados por script nos campos **não são salvos**. Usar a interface.
+- O botão de upload abre o seletor do Windows. Dá para contornar na aba: trocar `HTMLInputElement.prototype.click` para não abrir o seletor e enviar o arquivo ao campo `input[type=file]` criado.
+- O tipo de projeto, o status e a visibilidade são menus personalizados (clicar, não selecionar por valor).
+- Imagens do tema (Banner, Background, Embed BG): o botão "Upload" abre o seletor do Windows. Contornar trocando `HTMLInputElement.prototype.click` para não abrir o seletor, guardar o `input[type=file]` criado, montar o `File` na página (canvas, `toBlob`), pôr em `input.files` via `DataTransfer` e disparar `change`. Servidor local (127.0.0.1) não responde à página.
+- No editor de tema, o seletor "Repeat" do fundo não guarda valor mudado por script (volta a "repeat"), e o fundo "Fixed" faz as capturas de tela travarem. Por isso o fundo é uma imagem que repete sem emenda.
+- Capturas de tela da página pública do jogo costumam dar timeout (renderer travado); conferir pelo HTML ou a olho.
+- O jogo abre em português mesmo com o navegador em inglês: conferir `Navegador.LinguaInicial` (o campo de idioma é lido do navegador).
+
+### 4.2 Build WebGL
+
+- Gerar: fechar o Editor do Unity e rodar `Unity.exe -batchmode -nographics -quit -projectPath <pasta> -executeMethod BuildWebGL.Executar -logFile Logs/build-webgl.log` (menu "Dez Dias > Build WebGL" no Editor). Saída em `Builds/WebGL` (ignorada pelo git). Leva uns 4 minutos.
+- O script ajusta o `index.html` para o canvas ocupar o iframe todo (o modelo padrão cortava a HUD em 960x600).
+- Zip para o itch.io: precisa ter `index.html` na raiz do zip e barras normais nos caminhos (usar Python `zipfile`, não o `Compress-Archive` do PowerShell 5.1).
+- Testado: menu, troca de idioma, créditos, início da missão Cadete e dentro da página do itch.io. **Não testado**: missão completa até o dia 10, som e toque no celular.
+- O batchmode alterou arquivos de configuração do Unity (`ProjectSettings`, `Assets/Settings/URP-*.asset`, `Piso.mat`): revisar o `git diff` antes de commitar.
 
 Se o jogo for hospedado em site novo, a NASA **recomenda** pedir a classificação do site no
 **FortiGuard Web Filter** para evitar bloqueio no acesso dos juízes (opcional):
@@ -166,8 +209,8 @@ Só quem está em time que enviou no prazo recebe.
 ## 8. Pendências, em ordem de prioridade
 
 1. [ ] Confirmar que todo o time está no **mesmo Local Event** e aceito
-2. [ ] Publicar versão jogável com link público (build web)
-3. [ ] Tornar o repositório público e adicionar `LICENSE` (Apache 2.0) e `README`
+2. [x] Publicar versão jogável com link público (build web): feito no itch.io, ajustes na seção 4.1
+3. [ ] Tornar o repositório público e fazer commit e push de `LICENSE`, `README`, `USO-DE-IA.md`, céu estrelado e `BuildWebGL.cs` (arquivos já criados)
 4. [ ] Produzir a **demo** (vídeo ≤ 30 s ou ≤ 7 slides), em inglês, e hospedar publicamente
 5. [ ] Redigir em inglês: nome, resumo, descrição detalhada
 6. [ ] Preencher **NASA Data** a partir de [DADOS-NASA.md](DADOS-NASA.md)

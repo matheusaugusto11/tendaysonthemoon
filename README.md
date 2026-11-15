@@ -13,7 +13,7 @@ Languages: English and Portuguese (switch in the game). Not a NASA product and n
 
 ## How to play
 
-Play it in the browser, with no download and no account: *(add the public WebGL link here)*.
+Play it in the browser, with no download and no account: **https://carambo.itch.io/ten-days-on-the-moon**
 
 Walk the astronaut to the day's task station, do the minigame, then go back to the energy
 console and place your cells. Watch oxygen, radiation and the battery.
