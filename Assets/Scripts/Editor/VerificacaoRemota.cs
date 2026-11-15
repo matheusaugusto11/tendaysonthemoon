@@ -19,6 +19,12 @@ public static class VerificacaoRemota
     static VerificacaoRemota()
     {
         EditorApplication.update += Sondar;
+        // Erros e exceções do Console (editor e Play) em Temp/console_erros.txt, para conferir de fora.
+        Application.logMessageReceived += (msg, pilha, tipo) =>
+        {
+            if (tipo == LogType.Error || tipo == LogType.Exception || tipo == LogType.Assert)
+                File.AppendAllText("Temp/console_erros.txt", $"[{System.DateTime.Now:HH:mm:ss}] {tipo}: {msg}\n{pilha}\n");
+        };
         CompilationPipeline.assemblyCompilationFinished += (asm, msgs) =>
         {
             var sb = new StringBuilder();
