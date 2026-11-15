@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 037485ea16384d13b7e25707f235f0f6, type: 3}
+  m_Name: RoboPet
+  m_EditorClassIdentifier: 
+  ativo: 1
+  prefab: {fileID: 7645572321947237252, guid: 08f347f58be98453297a8997ffe5f560, type: 3}
+  somenteNaCena: Game
+  posicao: {x: 0.9, y: -1.2}
+  distanciaParar: 0.4
+  velocidade: 4.5
+  velocidadeAlcancar: 8.5
+  distanciaReaparecer: 9
+  somAtivo: 1
+  volumeSom: 0.25
+  duracaoSom: 2
+  intervaloSom: {x: 8, y: 20}
