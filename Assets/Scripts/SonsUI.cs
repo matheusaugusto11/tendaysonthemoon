@@ -13,7 +13,7 @@ public static class SonsUI
     const float Volume = 0.6f;
 
     static AudioSource _fonte;
-    static AudioClip _toque, _acerto, _concluido, _naoDeu, _painel;
+    static AudioClip _toque, _acerto, _concluido, _naoDeu, _painel, _alarme;
 
     /// <summary>Quantos sons foram pedidos com o som ligado (diagnóstico).</summary>
     public static int Tocados { get; private set; }
@@ -32,6 +32,8 @@ public static class SonsUI
     /// <summary>Fim sem sucesso: o toque de "feito", mais grave e suave. Nunca um som de erro (GDD 4.2, decisão 25).</summary>
     public static void NaoDeu() => Tocar(ref _naoDeu, "naodeu", SomSintetico.NaoDeu);
     public static void Painel() => Tocar(ref _painel, "painel", SomSintetico.Painel);
+    /// <summary>Alarme de partículas do Sol (evento do dia).</summary>
+    public static void Alarme() => Tocar(ref _alarme, "alarme", SomSintetico.Alarme);
 
     static readonly Dictionary<string, AudioClip> _arquivos = new Dictionary<string, AudioClip>();
 
@@ -67,7 +69,7 @@ public static class SonsUI
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Reiniciar()
     {
-        _fonte = null; _arquivos.Clear(); _toque = _acerto = _concluido = _naoDeu = _painel = null;
+        _fonte = null; _arquivos.Clear(); _toque = _acerto = _concluido = _naoDeu = _painel = _alarme = null;
         Tocados = 0; Ultimo = "";
     }
 }

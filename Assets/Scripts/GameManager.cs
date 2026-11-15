@@ -9,6 +9,10 @@ public enum Fase
 {
     Inicio, ComoJogar, Boletim, AteTarefa, Escolha, MinijogoInfo, Minijogo, DecisaoVazamento,
     TarefaConcluida, AteHub, Distribuir, DiaAcontece, Resultado, Relatorio, Creditos, MenuMinijogos,
+    /// <summary>Cartão do evento do dia (spec eventos-do-dia). Relógio parado.</summary>
+    Evento,
+    /// <summary>Corrida até o abrigo depois do alarme de partículas. Relógio correndo.</summary>
+    CorridaAbrigo,
 }
 
 /// <summary>
@@ -35,6 +39,10 @@ public class GameManager : MonoBehaviour
     [Header("Depuração")]
     [Tooltip("Abre o menu de teste dos minijogos, como ?minigames na build WebGL.")]
     public bool abrirMenuMinijogos;
+    [Tooltip("Id de um evento do dia (particulas, cme, tremor, micrometeorito, poeira_eclusa, frio, gelo, terra, sono, saudade, fungo) para forçar em todos os dias. Vazio = sorteio normal.")]
+    public string forcarEvento = "";
+    [Tooltip("Dias sem evento: só para a sonda e depuração do fluxo antigo.")]
+    public bool semEventos;
 
     public Fase Fase { get; private set; } = Fase.Inicio;
     public Missao Missao { get; private set; }
@@ -52,7 +60,10 @@ public class GameManager : MonoBehaviour
     /// <summary>Dicas do tutorial: só no Dia 1 da partida que começou com o tutorial ligado.</summary>
     public bool TutorialAtivo => Missao != null && Missao.Tutorial && Missao.Dia == 1 && !Teste;
 
-    static bool FaseComRelogio(Fase f) => f == Fase.AteTarefa || f == Fase.Escolha || f == Fase.DecisaoVazamento || f == Fase.TarefaConcluida || f == Fase.AteHub;
+    static bool FaseComRelogio(Fase f) => f == Fase.AteTarefa || f == Fase.Escolha || f == Fase.DecisaoVazamento || f == Fase.TarefaConcluida || f == Fase.AteHub
+        || f == Fase.CorridaAbrigo;
+    /// <summary>Fases em que o astronauta anda (deslocamento e corrida até o abrigo).</summary>
+    static bool FaseComMovimento(Fase f) => f == Fase.AteTarefa || f == Fase.AteHub || f == Fase.CorridaAbrigo;
     /// <summary>O relógio do dia anda (parado no minijogo e na pausa).</summary>
     public bool RelogioCorre => !Pausado && !Teste && Missao != null && FaseComRelogio(Fase);
 
@@ -62,6 +73,18 @@ public class GameManager : MonoBehaviour
     readonly Dictionary<string, Estacao> _estacoes = new Dictionary<string, Estacao>();
     Estacao _console;
     readonly List<Erupcao> _erupcoes = new List<Erupcao>();
+    readonly List<Cme> _cmes = new List<Cme>();
+    /// <summary>Fase para onde o jogo volta depois do evento (Distribuir = abrir a distribuição).</summary>
+    Fase _retornoEvento = Fase.AteTarefa;
+    float _tempoNaIda;
+    bool _avisouSemCama;
+
+    /// <summary>Segundos que faltam na corrida até o abrigo.</summary>
+    public float ContagemCorrida { get; private set; }
+    /// <summary>O relógio do dia já acabou (os custos em tempo viram 1 célula).</summary>
+    public bool RelogioZerado => TempoRestante <= 0f;
+    /// <summary>O evento de hoje ainda não foi resolvido.</summary>
+    public bool EventoPendente => !Teste && Missao?.Hoje != null && !string.IsNullOrEmpty(Missao.Hoje.Evento) && !Missao.Hoje.EventoResolvido;
     readonly System.Random _rng = new System.Random();
     readonly HashSet<string> _vistos = new HashSet<string>();
     Fase _retornoComoJogar = Fase.Inicio, _retornoCreditos = Fase.Inicio;
@@ -127,10 +150,23 @@ public class GameManager : MonoBehaviour
             if (TempoRestante <= 0f) { TempoRestante = 0f; TempoAcabou(); }
         }
 
+        if (Fase == Fase.AteTarefa && EventoPendente && Missao.Hoje.EventoNaIda)
+        {
+            _tempoNaIda += Time.deltaTime;
+            if (_tempoNaIda >= Missao.Hoje.GatilhoSeg) { AbrirEvento(Fase.AteTarefa); _ui.AtualizarHud(); return; }
+        }
+
         if (Fase == Fase.AteTarefa || Fase == Fase.AteHub)
         {
             AtualizarGuia();
             if (Proxima != null && Entrada.ConfirmarDown) Interagir();
+        }
+        else if (Fase == Fase.CorridaAbrigo)
+        {
+            ContagemCorrida = Mathf.Max(0f, ContagemCorrida - Time.deltaTime);
+            AtualizarGuia();
+            if (Proxima != null) FimCorrida(true);
+            else if (ContagemCorrida <= 0f) FimCorrida(false);
         }
         _ui.AtualizarHud();
     }
@@ -139,8 +175,24 @@ public class GameManager : MonoBehaviour
     // Dados e preferências
     // =====================================================================
 
-    [Serializable] class RegistroFLR { public string id, eventType, startTime, classLabel, sourceUrl, retrievedOn; public bool isTest; public int gameIntensity; }
+    [Serializable] class RegistroFLR { public string id, eventType, startTime, classLabel, sourceUrl, retrievedOn, sepId, sepTime, sepUrl, sepRetrievedOn; public bool isTest; public int gameIntensity; }
     [Serializable] class ArquivoErupcoes { public string fonte; public RegistroFLR[] records; }
+    [Serializable] class RegistroCME { public string id, startTime, sourceUrl, linkedFlr, retrievedOn; public int speed; }
+    [Serializable] class ArquivoCmes { public string fonte; public RegistroCME[] records; }
+
+    static string SoData(string iso) => string.IsNullOrEmpty(iso) || iso.Length < 10 ? iso : iso.Substring(0, 10);
+    static string SoHora(string iso) => string.IsNullOrEmpty(iso) || iso.Length < 16 ? "" : iso.Substring(11, 5);
+
+    void CarregarCmes()
+    {
+        _cmes.Clear();
+        var arq = Resources.Load<TextAsset>("CmesDONKI");
+        if (arq == null) { Debug.LogWarning("[GameManager] Resources/CmesDONKI.json não encontrado: a partida fica sem aviso de CME."); return; }
+        var dados = JsonUtility.FromJson<ArquivoCmes>(arq.text);
+        if (dados?.records == null) return;
+        foreach (var r in dados.records)
+            _cmes.Add(new Cme { Id = r.id, Data = SoData(r.startTime), Velocidade = r.speed, Url = r.sourceUrl, FlrLigado = r.linkedFlr, Consulta = r.retrievedOn });
+    }
 
     void CarregarErupcoes()
     {
@@ -155,9 +207,12 @@ public class GameManager : MonoBehaviour
             _erupcoes.Add(new Erupcao
             {
                 Id = r.id, Classe = r.classLabel, Url = r.sourceUrl, Intensidade = r.gameIntensity,
-                Data = string.IsNullOrEmpty(r.startTime) || r.startTime.Length < 10 ? r.startTime : r.startTime.Substring(0, 10),
+                Data = SoData(r.startTime),
+                SepId = r.sepId, SepUrl = r.sepUrl, SepConsulta = r.sepRetrievedOn,
+                SepHora = string.IsNullOrEmpty(r.sepTime) ? "" : SoData(r.sepTime) + " " + SoHora(r.sepTime),
             });
         }
+        CarregarCmes();
     }
 
     void CarregarPreferencias()
@@ -247,14 +302,28 @@ public class GameManager : MonoBehaviour
             _console.Definir(true, false);
             _console.DefinirRotulo(Textos.Console.ToString());
         }
+        else if (Fase == Fase.CorridaAbrigo)
+        {
+            var abrigo = EstacaoAbrigo();
+            if (abrigo != null) { abrigo.Definir(true, false); abrigo.DefinirRotulo(Textos.Abrigo.ToString()); }
+        }
+    }
+
+    /// <summary>O Dormitório (estação "cama") é o abrigo da corrida. Sem ele na cena, a corrida vai até o console do hub.</summary>
+    Estacao EstacaoAbrigo()
+    {
+        if (_estacoes.TryGetValue("cama", out var e)) return e;
+        if (!_avisouSemCama) { _avisouSemCama = true; Debug.LogWarning("[GameManager] A estação 'cama' (Dormitório) não está na cena: a corrida até o abrigo vai até o console do hub."); }
+        return _console;
     }
 
     void AtualizarGuia()
     {
-        Alvo = Fase == Fase.AteHub ? _console : EstacaoDaTarefa();
+        Alvo = Fase == Fase.CorridaAbrigo ? EstacaoAbrigo() : Fase == Fase.AteHub ? _console : EstacaoDaTarefa();
         Proxima = null;
         if (Alvo != null && jogador != null && Alvo.DistanciaAte(jogador.transform.position) <= Alvo.raio) Proxima = Alvo;
-        var rotulo = Fase == Fase.AteHub ? Textos.BotaoDistribuir : Textos.BotaoIniciar.F(Tarefas.Def(Missao.Hoje.Tarefa).Nome);
+        var rotulo = Fase == Fase.CorridaAbrigo ? Textos.Abrigo
+            : Fase == Fase.AteHub ? Textos.BotaoDistribuir : Textos.BotaoIniciar.F(Tarefas.Def(Missao.Hoje.Tarefa).Nome);
         _ui.AtualizarGuia(Alvo, Proxima, rotulo);
     }
 
@@ -264,7 +333,8 @@ public class GameManager : MonoBehaviour
         if (Pausado || Missao == null) return;
         if (Fase == Fase.AteTarefa || Fase == Fase.AteHub) AtualizarGuia();
         if (Proxima == null) return;
-        if (Fase == Fase.AteTarefa) MudarFase(Fase.Escolha);
+        if (Fase == Fase.AteTarefa && EventoPendente && Missao.Hoje.EventoNaIda) AbrirEvento(Fase.Escolha);
+        else if (Fase == Fase.AteTarefa) MudarFase(Fase.Escolha);
         else if (Fase == Fase.AteHub && Missao.Hoje.TarefaResolvida) AbrirDistribuicao();
     }
 
@@ -275,7 +345,7 @@ public class GameManager : MonoBehaviour
     public void Comecar(Modo modo)
     {
         Teste = false;
-        Missao = RegrasMissao.NovaPartida(modo, _erupcoes, _rng, TutorialLigado);
+        Missao = RegrasMissao.NovaPartida(modo, _erupcoes, _rng, TutorialLigado, _cmes);
         if (Missao.Tutorial)
         {
             IniciarDia(false);
@@ -289,12 +359,86 @@ public class GameManager : MonoBehaviour
     void IniciarDia(bool mostrar)
     {
         RegrasMissao.IniciarDia(Missao);
+        ForcarEventoDeDepuracao();
+        if (semEventos) Missao.Hoje.EventoResolvido = true;
         TempoRestante = Mathf.Max(1f, duracaoDia);
+        _tempoNaIda = 0f;
         DefinirLuz(PresetLuz.Dia);
         if (mostrar) MudarFase(Fase.Boletim);
     }
 
-    public void SairDoBoletim() { if (Fase == Fase.Boletim) MudarFase(Fase.AteTarefa); }
+    /// <summary>Campo de depuração forcarEvento (tarefa 4.5): troca o evento sorteado do dia.</summary>
+    void ForcarEventoDeDepuracao()
+    {
+        if (string.IsNullOrEmpty(forcarEvento)) return;
+        var def = Eventos.Def(forcarEvento.Trim());
+        if (def == null) { Debug.LogWarning("[GameManager] forcarEvento: evento desconhecido '" + forcarEvento + "'."); return; }
+        var T = Missao.Hoje;
+        T.Evento = def.Id;
+        T.EventoNaIda = def.Momento != MomentoEvento.Volta;
+        if (def.Id == Eventos.CmeId && Missao.CmeRegistro == null && _cmes.Count > 0)
+        {
+            Missao.CmeRegistro = _cmes[0];
+            Missao.CmeDia = Missao.Dia;
+            Missao.CmeChegada = Missao.Dia + Eventos.DiasAteChegada;
+        }
+        Debug.Log("[GameManager] forcarEvento: Dia " + Missao.Dia + " com " + def.Id + (T.EventoNaIda ? " (ida)" : " (volta)"));
+    }
+
+    public void SairDoBoletim() { if (Fase == Fase.Boletim) { _tempoNaIda = 0f; MudarFase(Fase.AteTarefa); } }
+
+    // ---------------- Evento do dia e corrida até o abrigo (design D7) ----------------
+
+    void AbrirEvento(Fase retorno)
+    {
+        _retornoEvento = retorno;
+        bool alarme = Eventos.Def(Missao.Hoje.Evento)?.Alarme == true;
+        if (alarme) { DefinirLuz(PresetLuz.Erupcao); SonsUI.Alarme(); }
+        else SonsUI.Painel();
+        MudarFase(Fase.Evento);
+    }
+
+    /// <summary>Botão de uma escolha do cartão do evento.</summary>
+    public void EscolherEvento(string escolha)
+    {
+        if (Fase != Fase.Evento) return;
+        var ctx = Eventos.Escolher(Missao, escolha, RelogioZerado);
+        if (!Missao.Hoje.EventoResolvido) return; // escolha indisponível
+        if (ctx.IniciarCorrida) { IniciarCorrida(); return; }
+        if (Eventos.Def(Missao.Hoje.Evento)?.Alarme == true) DefinirLuz(PresetLuz.Dia);
+        PerderTempo(ctx.SegundosPerdidos);
+        VoltarDoEvento();
+    }
+
+    void IniciarCorrida()
+    {
+        // Saiu do lugar: depois da corrida o jogador anda de novo até a tarefa, sem pular para a escolha.
+        if (_retornoEvento == Fase.Escolha) _retornoEvento = Fase.AteTarefa;
+        ContagemCorrida = Eventos.ContagemReal(Missao);
+        MudarFase(Fase.CorridaAbrigo);
+    }
+
+    void FimCorrida(bool aTempo)
+    {
+        if (Fase != Fase.CorridaAbrigo) return;
+        var ctx = Eventos.FimCorrida(Missao, aTempo);
+        DefinirLuz(PresetLuz.Dia);
+        PerderTempo(ctx.SegundosPerdidos);
+        VoltarDoEvento();
+        _ui.Aviso(aTempo ? Textos.ChegouAbrigo : Textos.AtrasouAbrigo);
+    }
+
+    /// <summary>Tira tempo do relógio. Se zerar, o Update aplica a regra do tempo esgotado no próximo quadro.</summary>
+    void PerderTempo(float segundos)
+    {
+        if (segundos > 0f) TempoRestante = Mathf.Max(0f, TempoRestante - segundos);
+    }
+
+    void VoltarDoEvento()
+    {
+        if (_retornoEvento == Fase.Distribuir) AbrirDistribuicao();
+        else MudarFase(_retornoEvento);
+    }
 
     public void EscolherFazer()
     {
@@ -362,11 +506,14 @@ public class GameManager : MonoBehaviour
     {
         if (Fase != Fase.TarefaConcluida || Teste) return;
         if (TempoRestante <= 0f) AbrirDistribuicao();
+        else if (EventoPendente) AbrirEvento(Fase.AteHub);
         else MudarFase(Fase.AteHub);
     }
 
     void TempoAcabou()
     {
+        // O relógio acabou no meio da corrida: a tripulação já estava a caminho e fica no abrigo, sem custo extra.
+        if (Fase == Fase.CorridaAbrigo) { Eventos.FimCorrida(Missao, true); DefinirLuz(PresetLuz.Dia); }
         bool antesDaTarefa = !Missao.Hoje.TarefaResolvida;
         if (antesDaTarefa) Tarefas.TempoEsgotado(Missao);
         AbrirDistribuicao();
@@ -375,6 +522,8 @@ public class GameManager : MonoBehaviour
 
     void AbrirDistribuicao()
     {
+        // O evento do dia sempre abre antes da distribuição (spec eventos-do-dia, "Momento da interrupção").
+        if (EventoPendente) { AbrirEvento(Fase.Distribuir); return; }
         RegrasMissao.PrepararDistribuicao(Missao);
         MudarFase(Fase.Distribuir);
     }
@@ -489,7 +638,7 @@ public class GameManager : MonoBehaviour
         if (pausar && !PodePausar) return;
         Pausado = pausar;
         Time.timeScale = pausar ? 0f : 1f;
-        if (jogador) jogador.Congelar(pausar || !(Fase == Fase.AteTarefa || Fase == Fase.AteHub));
+        if (jogador) jogador.Congelar(pausar || !FaseComMovimento(Fase));
         _ui.MostrarPausa(pausar);
     }
 
@@ -500,7 +649,7 @@ public class GameManager : MonoBehaviour
         Fase = nova;
         if (Pausado) { Pausado = false; Time.timeScale = 1f; _ui?.MostrarPausa(false); }
         // O personagem só anda nas fases de deslocamento.
-        if (jogador) jogador.Congelar(!(nova == Fase.AteTarefa || nova == Fase.AteHub));
+        if (jogador) jogador.Congelar(!FaseComMovimento(nova));
         Alvo = Proxima = null;
         RefrescarEstacoes();
         AjustarCamera(nova);

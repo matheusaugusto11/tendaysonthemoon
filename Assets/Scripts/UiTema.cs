@@ -38,7 +38,7 @@ public static class UiTema
     public static Color CorDoRecurso(Recurso r) => r switch
     {
         Recurso.Oxigenio => Ar, Recurso.Energia => Energia, Recurso.Bateria => Energia, Recurso.Estufa => Estufa,
-        Recurso.Radiacao => Abrigo, Recurso.Ciencia => Branco, Recurso.Comida => Branco, _ => Apoio,
+        Recurso.Radiacao => Abrigo, Recurso.Ciencia => Branco, Recurso.Comida => Branco, Recurso.Contato => Ar, _ => Apoio,
     };
 
     // ---------- Espaços, chanfros, alvos e tempos ----------
@@ -148,7 +148,8 @@ public static class UiTema
     public static string IconeDoRecurso(Recurso r) => r switch
     {
         Recurso.Oxigenio => "oxigenio", Recurso.Energia => "energia", Recurso.Ciencia => "estrela", Recurso.Estufa => "mod_estufa",
-        Recurso.Comida => "comida", Recurso.Radiacao => "radiacao", Recurso.Bateria => "mod_bateria", _ => null,
+        Recurso.Comida => "comida", Recurso.Radiacao => "radiacao", Recurso.Bateria => "mod_bateria",
+        Recurso.Tempo => "relogio", Recurso.Contato => "terra", _ => null,
     };
 
     /// <summary>

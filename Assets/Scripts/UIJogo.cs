@@ -507,9 +507,11 @@ public class UIJogo
 
     static bool FaseDeMissao(Fase f) => f == Fase.Boletim || f == Fase.AteTarefa || f == Fase.Escolha || f == Fase.MinijogoInfo
         || f == Fase.Minijogo || f == Fase.DecisaoVazamento || f == Fase.TarefaConcluida || f == Fase.AteHub
-        || f == Fase.Distribuir || f == Fase.DiaAcontece || f == Fase.Resultado;
+        || f == Fase.Distribuir || f == Fase.DiaAcontece || f == Fase.Resultado || f == Fase.Evento || f == Fase.CorridaAbrigo;
 
-    static bool FaseSemTablet(Fase f) => f == Fase.AteTarefa || f == Fase.AteHub || f == Fase.Minijogo;
+    static bool FaseSemTablet(Fase f) => f == Fase.AteTarefa || f == Fase.AteHub || f == Fase.Minijogo || f == Fase.CorridaAbrigo;
+    /// <summary>Fases com a faixa do deslocamento, a seta e o botão de ação.</summary>
+    static bool FaseDeDeslocamento(Fase f) => f == Fase.AteTarefa || f == Fase.AteHub || f == Fase.CorridaAbrigo;
 
     /// <summary>Cor da tira de luz de cada tela: a do sistema de que ela fala.</summary>
     Color TiraDaFase(Fase f)
@@ -521,6 +523,7 @@ public class UIJogo
                 return _gm.Missao != null && !_gm.Teste ? UiTema.CorDaTarefa(_gm.Missao.Hoje.Tarefa) : UiTema.Lab;
             case Fase.DecisaoVazamento: return UiTema.Ar;
             case Fase.MenuMinijogos: return UiTema.Lab;
+            case Fase.Evento: return CorDoEvento();
             default: return UiTema.Branco;
         }
     }
@@ -529,10 +532,10 @@ public class UIJogo
     {
         var f = _gm.Fase;
         _hud.SetActive(_gm.Missao != null && !_gm.Teste && FaseDeMissao(f));
-        _faixa.SetActive(f == Fase.AteTarefa || f == Fase.AteHub);
+        _faixa.SetActive(FaseDeDeslocamento(f));
         _painelMinigame.SetActive(f == Fase.Minijogo);
         _fundoTela.SetActive(!FaseSemTablet(f));
-        if (f != Fase.AteTarefa && f != Fase.AteHub)
+        if (!FaseDeDeslocamento(f))
         {
             _btnAcao.gameObject.SetActive(false);
             _seta.gameObject.SetActive(false);
@@ -541,7 +544,7 @@ public class UIJogo
         }
         TextosFixos();
         if (!FaseSemTablet(f)) MontarTablet(f);
-        if (f == Fase.AteTarefa || f == Fase.AteHub) MontarFaixa();
+        if (FaseDeDeslocamento(f)) MontarFaixa();
         if (f == Fase.Minijogo && _minigameAtual != null)
         {
             TextosDoMinigame();
@@ -669,6 +672,7 @@ public class UIJogo
             case Fase.Relatorio: TelaRelatorio(); break;
             case Fase.Creditos: TelaCreditos(); break;
             case Fase.MenuMinijogos: TelaMenuMinijogos(); break;
+            case Fase.Evento: TelaEvento(); break;
         }
 
         // Rodapé e cabeçalho só existem se a tela pôs algo neles (childCount ainda conta os filhos destruídos).
@@ -749,8 +753,19 @@ public class UIJogo
             Alerta(_conteudo, (al.Forte ? Textos.AlertaForte : Textos.AlertaFraco).ToString(), al.Forte);
             Rot(_conteudo, (al.Forte ? Textos.AlertaForteTexto : Textos.AlertaFracoTexto).ToString(), Papel.Corpo, UiTema.Apoio);
             Rot(_conteudo, Textos.AbrigoCusta.ToString(), Papel.Corpo, UiTema.Apoio);
+            // Dia da chegada de uma CME anunciada (spec clima-espacial-donki, "Chegada de CME anunciada").
+            if (m.CmeDia > 0 && m.CmeChegada == m.Dia)
+                Linha(_conteudo, "radiacao", Textos.CmeACaminho.ToString(),
+                    (Textos.CmeChegou.F(m.CmeDia) + (m.AbrigoPreparado ? Textos.CmePreparado : Textos.CmeNaoPreparado)).ToString());
         }
         else Linha(_conteudo, "sol", Textos.ClimaEspacial.ToString(), Textos.SolCalmo.ToString());
+        // Nuvem do Sol a caminho, entre o aviso e a chegada (spec ciclo-da-missao, "CME a caminho").
+        if (m.CmeDia > 0 && m.Dia > m.CmeDia && m.Dia < m.CmeChegada)
+            Linha(_conteudo, "radiacao", Textos.CmeACaminho.ToString(),
+                (Textos.CmeChegaNoDia.F(m.CmeChegada) + (m.AbrigoPreparado ? Textos.CmePreparado : Textos.CmeNaoPreparado)).ToString());
+        // Células a menos (ou a mais) deixadas por um evento de dia anterior.
+        if (m.AjusteDe(m.Dia) != 0 && m.MotivoAjuste.TryGetValue(m.Dia, out var motivo))
+            Linha(_conteudo, "energia", Textos.EnergiaDeHoje.ToString(), motivo.ToString());
         if (m.Vazamento) Linha(_conteudo, "tarefa_remendo", Textos.VazamentoAberto.ToString(), Textos.VazamentoAbertoTexto.ToString());
         if (T.Fit != 0) Linha(_conteudo, "check", Textos.Tripulacao.ToString(), (T.Fit > 0 ? Textos.TripulacaoForte : Textos.TripulacaoFraca).ToString());
         if (!m.Contato) Linha(_conteudo, "terra", Textos.SemContato.ToString(), Textos.SemContatoTexto.ToString());
@@ -770,7 +785,13 @@ public class UIJogo
             Principal(Tarefas.VazBotao.ToString(), () => _gm.EscolherFazer());
             return;
         }
-        if (m.AlertaDe(m.Dia) != null && d.Fora) Alerta(_conteudo, Textos.RiscoErupcao.ToString(), false);
+        if (m.AlertaDe(m.Dia) != null && d.Fora)
+        {
+            // Quem chegou ao abrigo a tempo já esperou a tempestade passar; quem continuou ou se atrasou é avisado.
+            var al = m.Hoje.Alarme;
+            if (al == Alarme.Continuou || al == Alarme.Atrasado) Alerta(_conteudo, Textos.RiscoContinuou.ToString(), false);
+            else if (al == Alarme.Nenhum) Alerta(_conteudo, Textos.RiscoErupcao.ToString(), false);
+        }
         var linha = Vertical(_conteudo, UiTema.E16, 0); // empilhados: o painel lateral é estreito
         bool pode = Tarefas.PodeFazer(m);
         var cor = UiTema.CorDaTarefa(d.Id);
@@ -779,6 +800,46 @@ public class UIJogo
         var ficar = Escolha(linha, d.FicarRuim ? UiTema.Apoio : UiTema.Branco, d.FicarTitulo.ToString(), d.FicarCusto.ToString(), d.FicarDesc.ToString(), () => _gm.EscolherFicar(), true);
         if (!pode) _primeiro = ficar;
         if (!d.Fonte.Vazio) Rot(_conteudo, d.Fonte.ToString(), Papel.Rotulo, UiTema.Apoio);
+    }
+
+    // ---------------- Evento do dia (spec eventos-do-dia, design D8) ----------------
+
+    Color CorDoEvento()
+    {
+        var d = _gm.Missao != null ? Eventos.Def(_gm.Missao.Hoje.Evento) : null;
+        return d != null && (d.Alarme || d.Id == Eventos.CmeId) ? UiTema.Abrigo : UiTema.Ar;
+    }
+
+    /// <summary>
+    /// Cartão do evento no painel lateral: título, texto, de 2 a 3 escolhas com o custo em chips e a fonte. Sem botão de
+    /// fechar nem de pular: o jogador escolhe uma opção para continuar.
+    /// </summary>
+    void TelaEvento()
+    {
+        var m = _gm.Missao; var d = Eventos.Def(m.Hoje.Evento);
+        if (d == null) return;
+        if (!d.Dica.Vazio) DicaTutorial(d.Dica);
+        Rot(_conteudo, Textos.EventoDoDia.ToString().ToUpperInvariant(), Papel.Rotulo, UiTema.Apoio, TextAnchor.UpperLeft, true);
+        Rot(_conteudo, d.Titulo.ToString(), Papel.TituloPainel);
+        if (d.Alarme)
+        {
+            bool forte = m.AlertaDe(m.Dia)?.Forte == true;
+            Alerta(_conteudo, (forte ? Textos.AlertaForte : Textos.AlertaFraco).ToString(), forte);
+        }
+        Rot(_conteudo, d.Texto(m).ToString(), Papel.Corpo, UiTema.Apoio);
+        bool zerado = _gm.RelogioZerado;
+        if (zerado && d.Escolhas.Exists(e => e.Segundos > 0)) Rot(_conteudo, Eventos.SemTempoNota.ToString(), Papel.Rotulo, UiTema.Energia);
+        var linha = Vertical(_conteudo, UiTema.E16, 0); // empilhados: o painel lateral é estreito
+        for (int i = 0; i < d.Escolhas.Count; i++)
+        {
+            var e = d.Escolhas[i];
+            bool pode = Eventos.Disponivel(m, e);
+            var cor = i == 0 ? CorDoEvento() : UiTema.Branco;
+            var desc = pode ? e.Desc : e.MotivoIndisponivel;
+            var b = Escolha(linha, cor, e.Titulo.ToString(), Eventos.CustoVisivel(m, e, zerado).ToString(), desc.ToString(), () => _gm.EscolherEvento(e.Id), pode);
+            if (_primeiro == null && pode) _primeiro = b;
+        }
+        Rot(_conteudo, d.Fonte.ToString(), Papel.Rotulo, UiTema.Apoio);
     }
 
     void TelaMinijogoInfo()
@@ -952,6 +1013,7 @@ public class UIJogo
         DicaTutorial(Textos.DicaTutResultado);
         // O cartão do dado real vem antes do "Por quê?": a fonte da NASA fica visível sem rolar.
         if (r.Erupcao != null) CartaoErupcao(r.Erupcao);
+        if (m.Hoje.Evento == Eventos.CmeId && m.CmeRegistro != null) CartaoCme(m);
         Secao(Textos.PorQue.ToString());
         foreach (var l in r.Linhas) Linha(_conteudo, IconeDoTom(l.Tom), null, l.Texto.ToString());
         Principal((r.Fim != Fim.Nenhum ? Textos.VerRelatorio : Textos.ProximoDia).ToString(), () => _gm.Proximo());
@@ -993,6 +1055,43 @@ public class UIJogo
     /// </summary>
     void CartaoErupcao(Erupcao e)
     {
+        var card = CartaoReal();
+        Rot(card, $"{Textos.ErupcaoClasse.F(e.Classe)} · {Idioma.Data(e.Data)}", Papel.TituloPainel, UiTema.Tinta);
+        Rot(card, Textos.ValeComo.F(Textos.Intensidade[Mathf.Clamp(e.Intensidade, 0, 2)]).ToString(), Papel.Corpo, UiTema.Tinta);
+        if (e.TemSep)
+        {
+            string data = e.SepHora.Length >= 10 ? e.SepHora.Substring(0, 10) : e.SepHora;
+            string hora = e.SepHora.Length >= 16 ? e.SepHora.Substring(11, 5) : "";
+            Rot(card, Textos.SepMedido.F(Idioma.Data(data), hora).ToString(), Papel.Corpo, UiTema.Tinta);
+        }
+        var fonte = e.TemSep
+            ? Textos.FonteDonkiData.F(Idioma.Data("2026-11-13") + new Txt(" e ", " and ") + Idioma.Data(e.SepConsulta))
+            : Textos.FonteDonki;
+        RodapeReal(card, fonte, Textos.VerRegistro, e.Url);
+        if (e.TemSep) Link(card, Textos.VerRegistroSep.ToString(), e.SepUrl, 420, UiTema.AlvoMinimo);
+    }
+
+    /// <summary>Cartão do aviso de CME: data, velocidade real e o dia da chegada no jogo.</summary>
+    void CartaoCme(Missao m)
+    {
+        var c = m.CmeRegistro;
+        var card = CartaoReal();
+        Rot(card, Textos.CmeCartao.F(Idioma.Data(c.Data)).ToString(), Papel.TituloPainel, UiTema.Tinta);
+        Rot(card, Textos.CmeCartaoTexto.F(c.Velocidade, m.CmeChegada).ToString(), Papel.Corpo, UiTema.Tinta);
+        RodapeReal(card, Textos.FonteDonkiData.F(Idioma.Data(string.IsNullOrEmpty(c.Consulta) ? "2026-11-15" : c.Consulta)), Textos.VerRegistro, c.Url);
+    }
+
+    void RodapeReal(Transform card, Txt fonteTxt, Txt rotuloLink, string url)
+    {
+        var rodape = Horizontal(card, UiTema.E16, false, 0, null, TextAnchor.MiddleLeft);
+        var fonte = Rot(rodape, fonteTxt.ToString(), Papel.Rotulo, UiTema.Tinta);
+        fonte.gameObject.AddComponent<LayoutElement>().flexibleWidth = 1;
+        Link(rodape, rotuloLink.ToString(), url, 260, UiTema.AlvoMinimo);
+    }
+
+    /// <summary>Molde do cartão "Isso aconteceu de verdade": papel branco, ícone de fonte, título fixo e etiqueta de arquivado.</summary>
+    RectTransform CartaoReal()
+    {
         var card = Vertical(_conteudo, UiTema.E8, 20, null);
         Fundo(card, UiTema.Branco, UiTema.ChanfroPainel, "SE ID", true);
         // A sombra do papel é o cinza do papel, não o aço.
@@ -1005,12 +1104,7 @@ public class UIJogo
         var et = Horizontal(linhaEtiqueta, 0, false, 12, null, TextAnchor.MiddleCenter);
         Fundo(et, UiTema.Tinta, UiTema.ChanfroCelula, "SE ID", false);
         Rot(et, Textos.EtiquetaArquivado.ToString(), Papel.Rotulo, UiTema.Branco, TextAnchor.MiddleCenter, true);
-        Rot(card, $"{Textos.ErupcaoClasse.F(e.Classe)} · {Idioma.Data(e.Data)}", Papel.TituloPainel, UiTema.Tinta);
-        Rot(card, Textos.ValeComo.F(Textos.Intensidade[Mathf.Clamp(e.Intensidade, 0, 2)]).ToString(), Papel.Corpo, UiTema.Tinta);
-        var rodape = Horizontal(card, UiTema.E16, false, 0, null, TextAnchor.MiddleLeft);
-        var fonte = Rot(rodape, Textos.FonteDonki.ToString(), Papel.Rotulo, UiTema.Tinta);
-        fonte.gameObject.AddComponent<LayoutElement>().flexibleWidth = 1;
-        Link(rodape, Textos.VerRegistro.ToString(), e.Url, 260, UiTema.AlvoMinimo);
+        return card;
     }
 
     // ---------------- Relatório ----------------
@@ -1171,6 +1265,8 @@ public class UIJogo
         Rot(_conteudo, Textos.UsoDeIATexto.ToString(), Papel.Corpo, UiTema.Apoio);
         Secao(Textos.Tipografia.ToString());
         Rot(_conteudo, Textos.TipografiaTexto.ToString(), Papel.Corpo, UiTema.Apoio);
+        Secao(Textos.OutrosRecursos.ToString());
+        Rot(_conteudo, Textos.OutrosRecursosTexto.ToString(), Papel.Corpo, UiTema.Apoio);
         Principal(Textos.Voltar.ToString(), () => _gm.FecharCreditos());
     }
 
@@ -1209,18 +1305,21 @@ public class UIJogo
     {
         var m = _gm.Missao;
         if (m == null) return;
+        bool corrida = _gm.Fase == Fase.CorridaAbrigo;
         Txt destino = _gm.Fase == Fase.AteHub ? Textos.ConsoleHub : Tarefas.Def(m.Hoje.Tarefa).Nome;
-        _faixaTexto.text = Textos.LeveAte.F(destino).ToString();
-        // Ícone e cor do destino: a tarefa do dia, ou o console de energia no hub.
+        _faixaTexto.text = corrida ? TextoCorrida() : Textos.LeveAte.F(destino).ToString();
+        // Ícone e cor do destino: a tarefa do dia, o console de energia no hub ou o abrigo na corrida.
         bool console = _gm.Fase == Fase.AteHub;
-        _corDestino = console ? UiTema.Energia : UiTema.CorDaTarefa(m.Hoje.Tarefa);
-        _faixaIcone.sprite = UiTema.Icone(console ? "energia" : UiTema.IconeDaTarefa(m.Hoje.Tarefa));
+        _corDestino = corrida ? UiTema.Abrigo : console ? UiTema.Energia : UiTema.CorDaTarefa(m.Hoje.Tarefa);
+        _faixaIcone.sprite = UiTema.Icone(corrida ? "mod_abrigo" : console ? "energia" : UiTema.IconeDaTarefa(m.Hoje.Tarefa));
         _faixaIcone.enabled = _faixaIcone.sprite != null;
         _faixaTira.color = _corDestino;
         bool tut = _gm.TutorialAtivo;
         _faixaDica.gameObject.SetActive(tut);
         if (tut) _faixaDica.text = (_gm.Fase == Fase.AteHub ? Textos.DicaTutAteHub : Textos.DicaTutAteTarefa).ToString();
     }
+
+    string TextoCorrida() => Textos.CorridaTitulo.ToString() + "  " + Textos.CorridaSegundos.F(Mathf.CeilToInt(_gm.ContagemCorrida)).ToString();
 
     void DicaTutorial(Txt t)
     {
@@ -1240,6 +1339,7 @@ public class UIJogo
         AnimarPainel();
         AnimarMinigame();
         if (_avisoTexto.text != "" && Time.time > _avisoAte) _avisoTexto.text = "";
+        if (_gm.Fase == Fase.CorridaAbrigo && _faixa.activeSelf) _faixaTexto.text = TextoCorrida(); // contagem a cada quadro
         if (!_hud.activeSelf || _gm.Missao == null) return;
         var m = _gm.Missao;
         _hudDia.text = Textos.DiaDe.F(Mathf.Max(1, m.Dia), Missao.Dias).ToString();
@@ -1295,7 +1395,10 @@ public class UIJogo
         pos.y = Mathf.Clamp(pos.y, 80, Screen.height * (1f - 300f / 1080f)); // abaixo do HUD e da faixa
         _setaTexto.transform.position = pos + Vector2.down * 44f;
         _setaTexto.color = _corDestino;
-        _setaTexto.text = $"{(_gm.Fase == Fase.AteHub ? Textos.Console : Tarefas.Def(_gm.Missao.Hoje.Tarefa).Nome)}  {alvo.DistanciaAte(_gm.jogador.transform.position):0} m";
+        float metros = alvo.DistanciaAte(_gm.jogador.transform.position);
+        _setaTexto.text = _gm.Fase == Fase.CorridaAbrigo
+            ? $"{Textos.Abrigo}  {metros:0} m · {Textos.CorridaSegundos.F(Mathf.CeilToInt(_gm.ContagemCorrida))}"
+            : $"{(_gm.Fase == Fase.AteHub ? Textos.Console : Tarefas.Def(_gm.Missao.Hoje.Tarefa).Nome)}  {metros:0} m";
     }
 
     // ---------------- Minigame ----------------

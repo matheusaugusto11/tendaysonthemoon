@@ -28,7 +28,7 @@ namespace DezDias
     }
 
     /// <summary>Recurso reconhecido num texto de custo (vira o ícone do chip).</summary>
-    public enum Recurso { Nenhum, Oxigenio, Energia, Ciencia, Estufa, Comida, Radiacao, Bateria }
+    public enum Recurso { Nenhum, Oxigenio, Energia, Ciencia, Estufa, Comida, Radiacao, Bateria, Tempo, Contato }
 
     /// <summary>Uma parte de um custo: o recurso (para o ícone) e o que sobra do texto (para o chip).</summary>
     public readonly struct ParteCusto
@@ -93,6 +93,8 @@ namespace DezDias
             ["comida"] = Recurso.Comida, ["food"] = Recurso.Comida,
             ["radiação"] = Recurso.Radiacao, ["radiacao"] = Recurso.Radiacao, ["radiation"] = Recurso.Radiacao,
             ["bateria"] = Recurso.Bateria, ["battery"] = Recurso.Bateria,
+            ["tempo"] = Recurso.Tempo, ["time"] = Recurso.Tempo,
+            ["contato"] = Recurso.Contato, ["contact"] = Recurso.Contato,
         };
 
         static readonly string[] Prefixos = { "amanhã", "tomorrow" };

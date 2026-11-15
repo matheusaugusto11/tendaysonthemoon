@@ -82,7 +82,13 @@ namespace DezDias
         public static readonly Txt AlertaForteTexto = T("É bem provável que a erupção venha hoje.", "The flare will very likely come today.");
         public static readonly Txt AlertaFraco = T("Alerta fraco de erupção solar", "Weak solar flare alert");
         public static readonly Txt AlertaFracoTexto = T("Pode ser que a erupção não venha.", "The flare may not come.");
-        public static readonly Txt AbrigoCusta = T("Ligar o abrigo protege, mas custa energia.", "Powering the shelter protects, but costs energy.");
+        public static readonly Txt AbrigoCusta = T("As partículas podem chegar durante o trabalho: aí você decide se corre para o abrigo. À noite, ligar o Abrigo protege a base, mas custa energia.", "The particles may arrive while you work: then you decide whether to run to the shelter. At night, powering the Shelter protects the base, but costs energy.");
+        public static readonly Txt CmeACaminho = T("Nuvem do Sol a caminho", "Cloud from the Sun on its way");
+        public static readonly Txt CmeChegaNoDia = T("chega no Dia {0}.", "arrives on Day {0}.");
+        public static readonly Txt CmePreparado = T(" O abrigo já está preparado: 1 célula no Abrigo vai bastar.", " The shelter is ready: 1 cell in the Shelter will be enough.");
+        public static readonly Txt CmeNaoPreparado = T(" O abrigo não foi preparado: vai precisar de 2 células.", " The shelter was not prepared: it will need 2 cells.");
+        public static readonly Txt CmeChegou = T("É a nuvem anunciada no Dia {0}.", "It is the cloud announced on Day {0}.");
+        public static readonly Txt EnergiaDeHoje = T("Energia de hoje", "Today's energy");
         public static readonly Txt ClimaEspacial = T("Clima espacial", "Space weather");
         public static readonly Txt SolCalmo = T("Sol calmo hoje.", "the Sun is calm today.");
         public static readonly Txt VazamentoAberto = T("Vazamento aberto", "Open leak");
@@ -104,6 +110,16 @@ namespace DezDias
 
         // ---------- Escolha e tarefa ----------
         public static readonly Txt RiscoErupcao = T("Hoje tem alerta de erupção. Quem sai da base fica sem a proteção do abrigo.", "There is a flare alert today. Anyone who goes outside is away from the shelter's protection.");
+        public static readonly Txt RiscoContinuou = T("Você escolheu continuar no alarme. Quem sai da base pega mais radiação se as partículas vierem.", "You chose to keep working during the alarm. Anyone who goes outside takes more radiation if the particles come.");
+
+        // ---------- Evento do dia e corrida até o abrigo ----------
+        public static readonly Txt EventoDoDia = T("Evento do dia", "Event of the day");
+        public static readonly Txt Abrigo = T("Abrigo", "Shelter");
+        public static readonly Txt CorridaTitulo = T("Corra para o abrigo!", "Run to the shelter!");
+        public static readonly Txt CorridaSegundos = T("{0} s", "{0} s");
+        public static readonly Txt ChegouAbrigo = T("Vocês chegaram ao abrigo! A tripulação espera a tempestade passar.", "You made it to the shelter! The crew waits for the storm to pass.");
+        public static readonly Txt AtrasouAbrigo = T("As partículas chegaram antes de vocês. Se vierem de verdade, metade da radiação do alarme vai contar.", "The particles got there before you. If they really come, half of the alarm's radiation will count.");
+        public static readonly Txt Indisponivel = T("Indisponível", "Unavailable");
         public static readonly Txt OxigenioBaixo = T("Oxigênio baixo demais para sair.", "Oxygen is too low to go outside.");
         public static readonly Txt VoltarAoHub = T("Voltar ao hub e distribuir energia", "Back to the hub to share out energy");
         public static readonly Txt JogarDeNovo = T("Jogar de novo", "Play again");
@@ -185,8 +201,6 @@ namespace DezDias
         public static readonly Txt ErupcaoProtegeu = T("A erupção veio e o abrigo protegeu quem estava dentro.", "The flare hit and the shelter protected everyone inside.");
         public static readonly Txt ErupcaoMeia = T("A erupção veio. O abrigo com meia energia barrou só parte: radiação +{0}.", "The flare hit. The half-powered shelter blocked only part: radiation +{0}.");
         public static readonly Txt ErupcaoSem = T("A erupção veio e o abrigo estava sem energia: radiação +{0}.", "The flare hit and the shelter had no power: radiation +{0}.");
-        public static readonly Txt AstronautaFora = T("Um astronauta tinha saído da base hoje e pegou a erupção fora do abrigo: radiação +2.", "An astronaut had gone outside today and met the flare away from the shelter: radiation +2.");
-        public static readonly Txt MomentoFora = T("Erupção solar com um astronauta fora da base. A radiação subiu {0}.", "Solar flare with an astronaut outside. Radiation rose {0}.");
         public static readonly Txt MomentoAbrigoFraco = T("Erupção solar com o abrigo fraco. A radiação subiu {0}.", "Solar flare with a weak shelter. Radiation rose {0}.");
         public static readonly Txt MomentoAbrigoLigado = T("Erupção solar, e o abrigo ligado protegeu todo mundo.", "Solar flare, and the powered shelter protected everyone.");
         public static readonly Txt FalsoComAbrigo = T("O alerta não se confirmou. As {0} célula(s) do abrigo não fizeram falta hoje, mas custaram.", "The alert did not come true. The {0} shelter cell(s) were not needed today, but they had a cost.");
@@ -214,6 +228,11 @@ namespace DezDias
         public static readonly Txt ValeComo = T("No jogo ela vale como erupção {0}.", "In the game it counts as a {0} flare.");
         public static readonly Txt[] Intensidade = { T("fraca", "weak"), T("média", "medium"), T("forte", "strong") };
         public static readonly Txt FonteDonki = T("Fonte: NASA DONKI (CCMC). Dado arquivado, consultado em 13/11/2026. Não é dado ao vivo.", "Source: NASA DONKI (CCMC). Archived data, retrieved on 2026-11-13. Not live data.");
+        public static readonly Txt FonteDonkiData = T("Fonte: NASA DONKI (CCMC). Dado arquivado, consultado em {0}. Não é dado ao vivo.", "Source: NASA DONKI (CCMC). Archived data, retrieved on {0}. Not live data.");
+        public static readonly Txt SepMedido = T("Primeiro os satélites viram o clarão da erupção. Depois as partículas chegaram e foram medidas: {0}, às {1} (UTC).", "First, satellites saw the flare's flash. Then the particles arrived and were measured: {0}, at {1} (UTC).");
+        public static readonly Txt VerRegistroSep = T("Ver o registro das partículas", "See the particle record");
+        public static readonly Txt CmeCartao = T("Nuvem de plasma do Sol (CME) de {0}", "Coronal mass ejection (CME) of {0}");
+        public static readonly Txt CmeCartaoTexto = T("Ela saiu do Sol a {0} km/s. No jogo, chega no Dia {1}.", "It left the Sun at {0} km/s. In the game, it arrives on Day {1}.");
         public static readonly Txt EtiquetaArquivado = T("Dado arquivado · não é ao vivo", "Archived data · not live");
         public static readonly Txt VerRegistro = T("Ver o registro", "See the record");
         public static readonly Txt ProximoDia = T("Próximo dia", "Next day");
@@ -242,17 +261,19 @@ namespace DezDias
         // ---------- Créditos (web: vCredits) ----------
         public static readonly Txt DadosNasa = T("Dados e fatos da NASA", "NASA data and facts");
         public static readonly Txt NumeroDeJogo = T("O que é número de jogo", "What is a game value");
-        public static readonly Txt NumeroDeJogoTexto = T("Células de energia, pontos de oxigênio, de radiação e de comida, estrelas e dias de sombra são valores de jogo, não medições. Os alertas fortes e fracos e os alarmes falsos também são regra de jogo, não previsões reais. A classe da erupção (C, M, X) é a publicada pelo DONKI; tratar C como fraca, M como média e X como forte é escolha nossa.", "Energy cells, oxygen, radiation and food points, stars and shadow days are game values, not measurements. Strong and weak alerts and false alarms are also game rules, not real forecasts. The flare class (C, M, X) is the one DONKI publishes; treating C as weak, M as medium and X as strong is our own choice.");
+        public static readonly Txt NumeroDeJogoTexto = T("Células de energia, pontos de oxigênio, de radiação e de comida, estrelas e dias de sombra são valores de jogo, não medições. Os alertas fortes e fracos e os alarmes falsos também são regra de jogo, não previsões reais. A classe da erupção (C, M, X) é a publicada pelo DONKI; tratar C como fraca, M como média e X como forte é escolha nossa. Os custos e as chances dos eventos do dia, a contagem da corrida até o abrigo e os 2 dias até a nuvem do Sol chegar também são valores de jogo.", "Energy cells, oxygen, radiation and food points, stars and shadow days are game values, not measurements. Strong and weak alerts and false alarms are also game rules, not real forecasts. The flare class (C, M, X) is the one DONKI publishes; treating C as weak, M as medium and X as strong is our own choice. The costs and chances of the daily events, the countdown to the shelter and the 2 days for the cloud from the Sun to arrive are game values too.");
         public static readonly Txt UsoDeIA = T("Uso de IA", "Use of AI");
         public static readonly Txt UsoDeIATexto = T("O código e a arte deste jogo foram feitos com ajuda de IA. Este jogo não é um produto da NASA e não tem o endosso dela.", "The code and art of this game were made with AI assistance. This game is not a NASA product and is not endorsed by NASA.");
         public static readonly Txt Tipografia = T("Fontes de texto", "Typefaces");
         public static readonly Txt TipografiaTexto = T("Barlow Semi Condensed (The Barlow Project Authors) e Nunito (The Nunito Project Authors), usadas com a licença SIL Open Font License 1.1.", "Barlow Semi Condensed (The Barlow Project Authors) and Nunito (The Nunito Project Authors), used under the SIL Open Font License 1.1.");
+        public static readonly Txt OutrosRecursos = T("Outros recursos", "Other resources");
+        public static readonly Txt OutrosRecursosTexto = T("Motor Unity 2022.3. O céu de estrelas é gerado por código da equipe. Código e conteúdo originais sob licença Apache 2.0. Lista completa de referências no arquivo README do repositório.", "Unity 2022.3 engine. The star sky is generated by the team's code. Original code and content under the Apache 2.0 license. Full list of references in the repository README.");
 
         /// <summary>Fontes da NASA cujos fatos aparecem no jogo (nome, link, o que se usa).</summary>
         public static readonly (string nome, string url, Txt uso)[] FontesNasa =
         {
             ("NASA DONKI (CCMC), Space Weather Database Of Notifications, Knowledge, Information", "https://ccmc.gsfc.nasa.gov/tools/DONKI/",
-                T("As 20 erupções solares do jogo, com data e classe reais. Dado arquivado, consultado em 13/11/2026. A classe real decide com que força a radiação atinge a base.", "The game's 20 solar flares, with real dates and classes. Archived data, retrieved on 2026-11-13. The real class decides how hard radiation hits the base.")),
+                T("As 20 erupções solares do jogo, com data e classe reais (catálogo FLR, consultado em 13/11/2026), as partículas medidas depois delas (SEP) e as nuvens de plasma (CME), consultadas em 15/11/2026. Dado arquivado. A classe real decide com que força a radiação atinge a base.", "The game's 20 solar flares, with real dates and classes (FLR catalog, retrieved on 2026-11-13), the particles measured after them (SEP) and the plasma clouds (CME), retrieved on 2026-11-15. Archived data. The real class decides how hard radiation hits the base.")),
             ("NASA Science, 9 Phenomena NASA Astronauts Will Encounter at Moon's South Pole", "https://science.nasa.gov/solar-system/moon/phenomena-nasa-astronauts-will-encounter-at-moons-south-pole/",
                 T("Sol baixo andando pelo horizonte, sombras longas e céu preto de dia.", "A low Sun travelling along the horizon, long shadows and a black daytime sky.")),
             ("NASA SVS 4944, Earth and Sun from the Moon's South Pole", "https://svs.gsfc.nasa.gov/4944",
@@ -267,6 +288,22 @@ namespace DezDias
                 T("Astronautas fazem até 10 horas de exercício por semana na Estação Espacial.", "Astronauts exercise for up to 10 hours a week on the Space Station.")),
             ("NASA Space Station blog, Canadarm2 captures Cygnus XL", "https://www.nasa.gov/blogs/spacestation/2026/04/13/canadarm2-reaches-out-and-captures-cygnus-xl-cargo-craft/",
                 T("Captura de naves de carga com o braço robótico e treino a cada 60 dias.", "Capturing cargo ships with the robotic arm, with practice every 60 days.")),
+            ("NASA, Shrinking Moon Causing Moonquakes and Faults Near Lunar South Pole", "https://www.nasa.gov/solar-system/moon/shrinking-moon-causing-moonquakes-and-faults-near-lunar-south-pole/",
+                T("Evento do tremor: o tremor raso mais forte registrado pela Apollo foi perto do polo sul.", "Quake event: the strongest shallow moonquake recorded by Apollo was near the south pole.")),
+            ("NASA Meteoroid Environment Office, Lunar Impact Monitoring", "https://www.nasa.gov/meteoroid-environment-office/lunar-impact-monitoring/",
+                T("Evento do micrometeorito: a NASA observa os clarões de impactos de meteoroides na Lua.", "Micrometeorite event: NASA watches the flashes of meteoroid impacts on the Moon.")),
+            ("NASA Science, Moon Dust", "https://science.nasa.gov/moon/moon-dust/",
+                T("Evento da poeira: a poeira lunar gruda nos trajes e irritou os astronautas da Apollo 17.", "Dust event: Moon dust sticks to suits and made the Apollo 17 astronauts sore.")),
+            ("NASA Science, 10 Cool Things NASA's Lunar Reconnaissance Orbiter is Teaching Us About the Moon", "https://science.nasa.gov/solar-system/moon/10-cool-things-nasas-lunar-reconnaissance-orbiter-is-teaching-us-about-the-moon/",
+                T("Eventos do frio e do sono: -248 °C no fundo das crateras e mais de 200 dias de luz seguida no polo sul.", "Cold and sleep events: -248 °C at crater bottoms and more than 200 days of light in a row at the south pole.")),
+            ("NASA Science, LCROSS", "https://science.nasa.gov/mission/lcross/",
+                T("Evento do gelo: a missão LCROSS achou gelo de água numa cratera do polo sul.", "Ice event: the LCROSS mission found water ice in a south pole crater.")),
+            ("NASA Human Research Program, Hazard: Isolation and Confinement", "https://www.nasa.gov/hrp/hazard-isolation-and-confinement/",
+                T("Eventos do sono e da saudade: isolamento, perda de sono e desempenho da tripulação.", "Sleep and homesickness events: isolation, sleep loss and crew performance.")),
+            ("NASA, Zinnias from Space! NASA Studies the Multiple Benefits of Gardening", "https://www.nasa.gov/humans-in-space/zinnias-from-space-nasa-studies-the-multiple-benefits-of-gardening/",
+                T("Evento do fungo: as zínias da estufa Veggie pegaram mofo na Estação Espacial.", "Fungus event: the zinnias in the Veggie greenhouse got moldy on the Space Station.")),
+            ("NASA OSDR, OSD-268, Microbiological and nutritional analysis of lettuce crops grown on the ISS", "https://osdr.nasa.gov/bio/repo/data/studies/OSD-268",
+                T("Evento do fungo: estudo dos micróbios nas alfaces da mesma estufa.", "Fungus event: a study of the microbes on lettuce from the same greenhouse.")),
         };
 
         // ---------- Menu de minijogos ----------
