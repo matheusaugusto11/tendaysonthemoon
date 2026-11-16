@@ -1,5 +1,7 @@
 # Índice das imagens de referência
 
+> **Marca d'água.** As imagens desta pasta foram geradas por IA (Gemini) e levam, no canto inferior direito, a marca visível "AI-generated image (Gemini) · Imagem gerada por IA" (aplicada em 15/11/2026, regra do Space Apps).
+
 Imagens geradas por IA a partir do kit de prompts (`Docs/02-Arte/ART-BIBLE.md` e artifact "Estação-Roda Low-Poly"). Renomeadas em 14/11/2026. Se alguma entrar no jogo, leva marca d'água visível e registro de uso de IA.
 
 ## Padrão de nome

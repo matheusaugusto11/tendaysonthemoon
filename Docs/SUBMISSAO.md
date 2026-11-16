@@ -96,11 +96,10 @@ Checagem final da demo:
 - [x] Inglês (ou legenda em inglês no vídeo)
 - [x] Sem menores de 18 anos (rosto, voz, nome, imagem)
 - [x] Sem logotipo/bandeira/identificador da NASA
-- [ ] Marca d'água visível em qualquer imagem/vídeo gerado por IA. Rótulo "AI-ASSISTED ART" nas capturas dos slides 1, 4 e 7 e "DIAGRAM · AI-ASSISTED" no 3. **No slide 5, o cartão "It really happened" cobre o rótulo**
+- [x] Marca d'água visível em qualquer imagem/vídeo gerado por IA. Rótulo "AI-ASSISTED ART" nas capturas dos slides 1, 4, 5 e 7 e "DIAGRAM · AI-ASSISTED" no 3. No slide 5 os dois rótulos ficam juntos à esquerda, fora do alcance do cartão "It really happened"
 - [ ] Link aberto em **janela anônima** sem pedir login (ainda não hospedado)
 
 Ajustes opcionais nos slides:
-- Slide 5: desencobrir o rótulo "AI-ASSISTED ART".
 - Slide 5: "catalog, 2017 to 2026" sugere período contínuo. As 1.982 erupções são de setembro de 2017 e de janeiro de 2024 a novembro de 2026.
 - Slide 6 diz que a tela de créditos lista todas as fontes. Isso só vale depois do novo build (seção 4.2).
 
@@ -119,7 +118,7 @@ Estado atual do repositório, conferido em 15/11/2026, à noite:
 | `README` na raiz | [x] em inglês, na `main` do remoto. Pendente nele: autor e link de cada som do Pixabay |
 | `USO-DE-IA.md`, `BuildWebGL.cs` | [x] na `main` do remoto |
 | Trabalho em `main` | [x] a `main` tem tudo: a `teste` não tem nenhum commit fora da `main`. O link aponta para a `main` |
-| Imagens de IA no repositório | [ ] `Docs/image-ref`, `Docs/conceitos`, `Assets/refs` e `ArtSource` têm imagens geradas por IA (Gemini) **sem marca d'água**. Se o repositório for aberto, marcar ou tirar antes |
+| Imagens de IA no repositório | [x] 15/11: as 72 referências do Gemini (`Docs/image-ref`, `ArtSource/EstacaoRoda/ref`, `Assets/refs`) receberam marca d'água visível "AI-generated image (Gemini)". O zip do WhatsApp em `Assets/refs` (cópias sem marca) ficou fora do repositório. `Docs/conceitos` já tinha a marca. **Atenção:** os commits antigos ainda guardam as versões sem marca |
 | Restos do skybox removido | `Assets/Real Stars Skybox` ficou só com 3 `.meta` órfãos (o pacote saiu no commit `0bb90f9`). Não pesa, só limpeza |
 
 ### 4.1 Página do itch.io: estado em 15/11/2026
