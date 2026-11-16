@@ -52,6 +52,15 @@ public class ProbeJogo : MonoBehaviour
         else if (msg.StartsWith("[GameManager]")) _sb.AppendLine("  >> " + msg);
     }
 
+    /// <summary>Texto da legenda de fala, se ela estiver visível (nome na 1ª linha, frase na 2ª); null se escondida.</summary>
+    static string FalaVisivel()
+    {
+        var go = GameObject.Find("Fala");
+        if (go == null || !go.activeInHierarchy) return null;
+        var textos = go.GetComponentsInChildren<UnityEngine.UI.Text>();
+        return textos.Length >= 2 ? textos[1].text : null;
+    }
+
     bool Congelado()
     {
         var mov = FindObjectOfType<Movimento>();
@@ -101,7 +110,7 @@ public class ProbeJogo : MonoBehaviour
             case Fase.Distribuir: case Fase.DiaAcontece: case Fase.Resultado: case Fase.Evento: modo = "lateral"; break;
             default: return;
         }
-        var go = GameObject.Find("Tablet"); var tela = GameObject.Find("Tela");
+        var go = GameObject.Find("Tablet"); var tela = GameObject.Find("UI_Jogo/Tela");
         if (go == null || tela == null) { Checar(false, $"{nome}: painel ou camada das telas não encontrados"); return; }
         Rect r = MundoRect((RectTransform)go.transform);
         float W = Screen.width;
@@ -188,7 +197,7 @@ public class ProbeJogo : MonoBehaviour
         _gm.AbrirComoJogar();
         float xMin = float.MaxValue, xMax = float.MinValue, aMin = 2f, aMax = -1f, aAnt = -1f;
         bool crescente = true;
-        var tela = GameObject.Find("Tela").GetComponent<CanvasGroup>();
+        var tela = GameObject.Find("UI_Jogo/Tela").GetComponent<CanvasGroup>();
         for (int i = 0; i < 12; i++)
         {
             xMin = Mathf.Min(xMin, tab.anchoredPosition.x); xMax = Mathf.Max(xMax, tab.anchoredPosition.x);
@@ -668,6 +677,7 @@ public class ProbeJogo : MonoBehaviour
             yield return null;
             _gm.Comecar(Modo.Comandante);
             yield return null;
+            _gm.PularApresentacao(); yield return null;
             if (_gm.Fase == Fase.ComoJogar) { _gm.PularSlides(); yield return null; }
             _gm.Missao.Hoje.Tarefa = Tarefas.Agua;
             _gm.SairDoBoletim();
@@ -747,6 +757,15 @@ public class ProbeJogo : MonoBehaviour
         // ---------- Dia 1 com tutorial (Cadete) ----------
         _gm.Comecar(Modo.Cadete);
         yield return null;
+        Checar(_gm.Fase == Fase.Apresentacao, "apresentação da Lia e do Bip depois de escolher o modo");
+        yield return Foto("01b_apresentacao_1");
+        _gm.ApresentacaoProxima();
+        yield return Foto("01b2_apresentacao_bip", 0.4f);
+        for (int k = 2; k < Textos.Apresentacao.Length; k++) { _gm.ApresentacaoProxima(); yield return null; }
+        Checar(_gm.Fase == Fase.Apresentacao && _gm.FalaApresentacao == Textos.Apresentacao.Length - 1, "apresentação chega à última fala");
+        yield return Foto("01c_apresentacao_fim");
+        _gm.ApresentacaoProxima();
+        yield return null;
         Checar(_gm.Fase == Fase.ComoJogar, "tutorial: slides antes do Boletim");
         Checar(_gm.Missao.O2 == 9 && _gm.Missao.Comida == 7 && _gm.Missao.Bateria == 1, "valores iniciais do Cadete");
         Checar(_gm.Missao.Hoje.Tarefa == Tarefas.Amostra, "tutorial: Dia 1 é a coleta de pedras");
@@ -764,6 +783,13 @@ public class ProbeJogo : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         Checar(_gm.TempoRestante < t0, "relógio corre no deslocamento");
         yield return Foto("04_ate_tarefa");
+        // Falas da astronauta (legenda de baixo) no primeiro deslocamento do Dia 1.
+        Checar(FalaVisivel() == Textos.FalasAbertura[0].ToString(), "fala 1 da Lia na legenda: " + FalaVisivel());
+        yield return Foto("04b_fala_1");
+        yield return new WaitForSeconds(5.2f);
+        Checar(FalaVisivel() == Textos.FalasAbertura[1].ToString(), "fala avança sozinha para a 2: " + FalaVisivel());
+        yield return Foto("04c_fala_2");
+        if (File.Exists(Path.Combine(_raiz, "Temp/probe_curta.flag"))) { Log("sonda curta: para aqui"); Terminar(); yield break; }
         var alvo = _gm.Alvo;
         Checar(alvo != null && alvo.id == "airlock", "destino da coleta de pedras é a Eclusa (airlock): " + (alvo ? alvo.id : "null"));
         yield return Teleportar(alvo);
@@ -1385,6 +1411,7 @@ public class ProbeJogo : MonoBehaviour
     {
         _gm.Comecar(Modo.Comandante);
         yield return null;
+        _gm.PularApresentacao(); yield return null;
         yield return PorTempoAteDistribuir(Tarefas.Upload);
         var m = _gm.Missao;
         m.Hoje.Aloc.Zerar();
@@ -1409,6 +1436,8 @@ public class ProbeJogo : MonoBehaviour
         // Segunda partida: sem tutorial, direto no Boletim, luz de dia.
         _gm.Comecar(Modo.Comandante);
         yield return null;
+        Checar(_gm.Fase == Fase.Apresentacao, "segunda partida também começa com a apresentação");
+        _gm.PularApresentacao(); yield return null;
         Checar(_gm.Fase == Fase.Boletim, "segunda partida começa sem os slides do tutorial");
         Checar(!_gm.TutorialAtivo, "segunda partida sem dicas do tutorial");
         var luz = Luz();
@@ -1528,6 +1557,7 @@ public class ProbeJogo : MonoBehaviour
         Checar(_gm != null && _gm.MinijogoVisto(Tarefas.Amostra), "minijogo visto continua salvo depois de recarregar");
         _gm.Comecar(Modo.Comandante);
         yield return null;
+        _gm.PularApresentacao(); yield return null;
         _gm.Missao.Hoje.Tarefa = Tarefas.Amostra;
         _gm.Missao.O2 = 8;
         _gm.SairDoBoletim();
