@@ -76,3 +76,8 @@ crashlytics-build.properties
 
 # Cubemaps > 100MB (limite do GitHub)
 *.cubemap
+
+# Zip do WhatsApp com cópias SEM marca d'água das imagens de IA de Assets/refs.
+# As imagens soltas já levam a marca "AI-generated image"; o zip fica só na máquina da equipe.
+/[Aa]ssets/refs/*.zip
+/[Aa]ssets/refs/*.zip.meta

@@ -20,7 +20,7 @@ Idea and design (human): the ten-day mission, the energy-cell trade-off (6 cells
 
 Code (Claude, by Anthropic): parts of the C# game code in Unity and the automated tests (EditMode) were written with AI assistance and reviewed and tested by the team. The Blender Python scripts used to build the 3D station and characters (ArtSource/EstacaoRoda/fonte) were also written with AI assistance.
 
-Images (Gemini, by Google): concept boards and reference images of the station, characters and UI screens were generated with AI and used only as visual references to model the final 3D assets in Blender. No AI-generated image is shown inside the game. AI-generated images in the repository and in the demo carry a visible "AI-GENERATED IMAGE" or "AI-assisted art" label. The final game art (3D models, icons, textures) was built from the team's own Blender models and Unity assets.
+Images (Gemini, by Google): concept boards and reference images of the station, characters and UI screens were generated with AI and used only as visual references to model the final 3D assets in Blender. No AI-generated image is shown inside the game. AI-generated images in the repository and in the demo carry a visible "AI-generated image (Gemini)" or "AI-assisted art" label. The final game art (3D models, icons, textures) was built from the team's own Blender models and Unity assets.
 
 Text (Claude): some in-game texts and the English/Portuguese translations were first drafted with AI and then reviewed and edited by the team.
 
@@ -43,7 +43,7 @@ Gemini" na linha "Text".
 | Local | Situação |
 | --- | --- |
 | `Docs/conceitos` (12 imagens) | Já tinham o rótulo "Imagem gerada por IA · AI-generated image" no rodapé. Nada a fazer |
-| `Docs/image-ref`, `ArtSource/EstacaoRoda/ref`, `Assets/refs` (24 imagens em cada, as mesmas 24 repetidas) | Recebem o rótulo "AI-GENERATED IMAGE" no canto inferior direito |
+| `Docs/image-ref`, `ArtSource/EstacaoRoda/ref`, `Assets/refs` (24 imagens em cada, as mesmas 24 repetidas) | Têm o rótulo "AI-generated image (Gemini) · Imagem gerada por IA" no canto inferior direito (marca aplicada na `main`; a versão com outra marca feita na `teste2` foi descartada para não duplicar) |
 | Jogo publicado | Nenhuma dessas imagens é carregada pelo jogo (nada em `Resources` nem referenciado por cena, prefab, material ou script) |
 | Slides | Outra pessoa cuida |
 

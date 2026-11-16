@@ -26,12 +26,12 @@ ser um **vídeo** no Google Drive (seção 3). Falta: **Save Progress**, conferi
 
 - [x] Todos os membros são **participantes confirmados no mesmo Local Event** (quem está em lista de espera precisa ser aceito ou trocar de evento). Confirmado pelo time em 15/11: os 6 estão no time e participaram presencialmente do mesmo evento. Não dá para conferir pelo repositório (a informação está no perfil de cada um)
 - [x] **Todos os campos obrigatórios** preenchidos (sem isso o botão não deixa enviar). Preenchidos em 15/11, à noite, na tela do formulário. **Ainda sem Save Progress**. As 2 caixas de aceite continuam desmarcadas (não contam como campo de texto)
-- [ ] Página de submissão e **todo material linkado em inglês** (vídeo pode ser em outra língua **com legenda em inglês**; slides só em inglês). Formulário, página do itch.io, jogo (botão EN) e slides: ok. **Vídeo: idioma e legenda não conferidos**
-- [ ] Demo dentro do limite: **vídeo de até 30 s OU até 7 slides** (título e introdução contam). Passou do limite = **fora do Global Judging**. A demo enviada no formulário é o **vídeo** (`TenDaysOnTheMoon-Video.mp4`, Drive): **duração não conferida**. Os 7 slides (`Docs/apresentacao/TenDaysOnTheMoon-Demo-v2.pdf`) cumprem o limite, mas não estão no formulário
+- [x] Página de submissão e **todo material linkado em inglês** (vídeo pode ser em outra língua **com legenda em inglês**; slides só em inglês). Formulário, página do itch.io, jogo (botão EN) e slides: ok. Vídeo: **confirmado pelo time como correto** em 15/11 (o arquivo não tem faixa de legenda separada; se houver texto, está na imagem)
+- [x] Demo dentro do limite: **vídeo de até 30 s OU até 7 slides** (título e introdução contam). Passou do limite = **fora do Global Judging**. A demo enviada no formulário é o **vídeo** (`TenDaysOnTheMoon-Video.mp4`, Drive). **Duração medida no arquivo do repositório: 29,7 s** (margem de 0,3 s). Não comparei byte a byte com a cópia do Drive. Os 7 slides (`Docs/apresentacao/TenDaysOnTheMoon-Demo-v2.pdf`) cumprem o limite, mas não estão no formulário
 - [x] Links de demo e projeto **públicos**, sem login, senha, permissão ou cadastro. itch.io: público. Vídeo no Drive: público (resposta 200 sem login, conferido por `curl` em 15/11). **GitHub: privado** (404 sem login), por isso não foi usado no formulário
 - [x] Pelo menos **1 dado/recurso da NASA** declarado (exigido para Global Award). DONKI no centro do jogo, mais fontes F2 a F23 em [DADOS-NASA.md](DADOS-NASA.md). **21 fontes** já digitadas no formulário (falta salvar)
-- [ ] **Nenhuma imagem, vídeo, áudio ou semelhança de menor de 18 anos**, na demo e no projeto. Conferido em 15/11 no jogo e nos slides: personagens adultos (1,9 m), slides sem foto de pessoa, sem narração. **Falta conferir o vídeo** (rosto, voz, nome)
-- [ ] **Nenhum logotipo, bandeira ou identificador de missão da NASA**, inclusive em conteúdo gerado por IA. Conferido em 15/11: slides, página do itch.io, nomes de arquivo, ícones e textura do astronauta. "NASA" aparece só como texto de fonte. **Falta conferir o vídeo**
+- [x] **Nenhuma imagem, vídeo, áudio ou semelhança de menor de 18 anos**, na demo e no projeto. Conferido em 15/11 no jogo e nos slides: personagens adultos (1,9 m), slides sem foto de pessoa, sem narração. Vídeo: **ninguém aparece** (confirmado pelo time em 15/11). O arquivo tem faixa de áudio, que eu não ouvi: se houver voz, precisa ser adulta
+- [x] **Nenhum logotipo, bandeira ou identificador de missão da NASA**, inclusive em conteúdo gerado por IA. Conferido em 15/11: slides, página do itch.io, nomes de arquivo, ícones e textura do astronauta. "NASA" aparece só como texto de fonte. Vídeo: **confirmado pelo time como correto** em 15/11
 - [ ] Clicar em **"Submit for Judging"** antes do prazo
 
 ---
@@ -108,16 +108,15 @@ voltando em segurança.
 
 Checagem final da demo (**vale para o vídeo**; entre parênteses, o que já se sabe dos slides):
 
-- [ ] Duração **≤ 30 s**, conferida (slides: 7, ok)
-- [ ] Inglês, ou legenda em inglês no vídeo (slides: ok)
-- [ ] Sem menores de 18 anos (rosto, voz, nome, imagem), inclusive na narração (slides: ok)
-- [ ] Sem logotipo/bandeira/identificador da NASA (slides: ok)
-- [ ] Marca d'água visível em qualquer imagem/vídeo gerado por IA (slides: rótulo "AI-ASSISTED ART" nas capturas dos slides 1, 4 e 7 e "DIAGRAM · AI-ASSISTED" no 3; **no slide 5, o cartão "It really happened" cobre o rótulo**, e outra pessoa cuida disso). Se o vídeo reaproveita essas imagens ou os conceitos de IA, precisam do rótulo
+- [x] Duração **≤ 30 s**: 29,7 s medidos no arquivo do repositório (slides: 7, ok)
+- [x] Inglês, ou legenda em inglês no vídeo: confirmado pelo time (slides: ok)
+- [x] Sem menores de 18 anos (rosto, voz, nome, imagem): **ninguém aparece no vídeo**, confirmado pelo time (slides: ok)
+- [x] Sem logotipo/bandeira/identificador da NASA: vídeo confirmado pelo time (slides: ok)
+- [ ] Marca d'água visível em qualquer imagem/vídeo gerado por IA (slides: rótulo "AI-ASSISTED ART" nas capturas dos slides 1, 4, 5 e 7 e "DIAGRAM · AI-ASSISTED" no 3; **no slide 5 os dois rótulos agora ficam à esquerda, fora do alcance do cartão "It really happened"**, corrigido na `main`). Se o vídeo reaproveita essas imagens ou os conceitos de IA, precisam do rótulo
 - [x] Link aberto sem pedir login: o do vídeo respondeu 200 sem login por `curl` em 15/11. Abrir também numa **janela anônima** do navegador
 - [ ] Se o vídeo ou os slides tiveram ajuda de IA (roteiro, edição, voz, música), marcar *Presentation, Video, or Audio* no campo de IA do formulário
 
 Ajustes opcionais nos slides:
-- Slide 5: desencobrir o rótulo "AI-ASSISTED ART".
 - Slide 5: "catalog, 2017 to 2026" sugere período contínuo. As 1.982 erupções são de setembro de 2017 e de janeiro de 2024 a novembro de 2026.
 - ~~Slide 6 diz que a tela de créditos lista todas as fontes.~~ Resolvido: o build publicado em 15/11 à noite já
   traz os créditos novos (seção 4.2).
@@ -136,9 +135,27 @@ Estado atual do repositório, conferido em 15/11/2026, à noite:
 | `LICENSE` na raiz | [x] Apache 2.0, na `main` do remoto |
 | `README` na raiz | [x] em inglês, na `main` do remoto. Pendente nele: autor e link de cada som do Pixabay |
 | `USO-DE-IA.md`, `BuildWebGL.cs` | [x] na `main` do remoto |
-| Trabalho em `main` | [x] a `main` tem tudo da `teste`, e o link aponta para a `main`. **A `teste2` não entrou**: tem 3 commits fora da `main` (balões de fala da Lia e do Bip, correção de compilação em `UIJogo` e `BuildWebGL`). Um merge dela foi feito e desfeito em 15/11, à noite, antes do push. O build publicado não inclui a `teste2` |
-| Imagens de IA no repositório | [x] `Docs/conceitos` (12) já tinha rótulo. As 24 imagens de referência (repetidas em `Docs/image-ref`, `Assets/refs` e `ArtSource/EstacaoRoda/ref`, 72 arquivos) receberam "AI-GENERATED IMAGE" em 15/11 (**ainda sem commit**). Ver [CAMPO-USO-DE-IA.md](CAMPO-USO-DE-IA.md). Com isso, abrir o repositório deixa de ser problema de marca d'água |
+| Trabalho em `main` | [x] a `main` tem tudo da `teste`, e o link aponta para a `main`. A `teste2` (balões de fala da Lia e do Bip, correção de compilação em `UIJogo` e `BuildWebGL`) recebeu a `main` em 15/11, à noite, num merge resolvido à mão. **O build publicado no itch.io não inclui a `teste2`** |
+| Imagens de IA no repositório | [x] 15/11: as 72 referências do Gemini (`Docs/image-ref`, `ArtSource/EstacaoRoda/ref`, `Assets/refs`) receberam marca d'água visível "AI-generated image (Gemini)". O zip do WhatsApp em `Assets/refs` (cópias **sem marca**, 2,4 MB) **estava rastreado pelo Git desde o commit `998ce4f`**: a `.gitignore` nova não basta para tirá-lo. Foi retirado do índice com `git rm --cached` neste merge (o arquivo continua na máquina), mas **os commits antigos ainda o guardam**. `Docs/conceitos` já tinha a marca. **Atenção:** os commits antigos ainda guardam as versões sem marca |
 | Restos do skybox removido | `Assets/Real Stars Skybox` ficou só com 3 `.meta` órfãos (o pacote saiu no commit `0bb90f9`). Não pesa, só limpeza |
+
+### 4.0 O que o merge `main` → `teste2` trouxe (15/11/2026, à noite)
+
+Conferido por `git diff` no merge. Ainda **não commitado** quando esta seção foi escrita.
+
+| Mudança | Detalhe |
+| --- | --- |
+| 72 imagens de referência do Gemini | Marca "AI-generated image (Gemini) · Imagem gerada por IA" no canto inferior direito (versão da `main`). A marca "AI-GENERATED IMAGE" da `teste2` foi descartada para não duplicar |
+| `Docs/apresentacao/TenDaysOnTheMoon-Video.mp4` | Novo, 12 MB, **29,7 s**, com faixa de áudio. É a demo do formulário (a cópia pública está no Drive) |
+| Slides v2 (`.pdf`, `.pptx`, `v2/index.html`) | Slide 5: os rótulos "In-game capture" e "AI-assisted art" ficam juntos à esquerda, fora do alcance do cartão "It really happened" |
+| `README.md` | Tabela dos 5 sons do Pixabay e nota sobre as imagens de IA. **Continua sem autor e link de cada som** (só a porta tem: freesound_community) |
+| `.gitignore` | Passa a ignorar o zip do WhatsApp de `Assets/refs`. **Não bastou:** o zip já estava rastreado desde `998ce4f` e foi tirado do índice neste merge |
+| `INDICE.md` (`Docs/image-ref` e `ArtSource/.../ref`) | Aviso da marca d'água |
+| `.claude/settings.json` | Permissão para o Chrome acessar `www.spaceappschallenge.org` |
+| `USO-DE-IA.md`, `Docs/SUBMISSAO.md`, `Docs/CAMPO-USO-DE-IA.md` | Conflitos resolvidos à mão, combinando os dois lados |
+
+O código do jogo **não** mudou neste merge (os conflitos foram só imagens e documentos). O build do itch.io saiu da `main`
+antes da `teste2` (balões de fala da Lia e do Bip), então não os inclui.
 
 ### 4.1 Página do itch.io: estado em 15/11/2026
 
@@ -225,7 +242,7 @@ dos elementos feitos com IA.
 
 **[N] O que isso significa para o projeto:**
 
-- [x] Concepts e imagens feitas no Gemini/IA que apareçam no jogo, na demo ou na página precisam de **marca d'água visível**. Jogo: nenhuma é carregada. Repositório: as 12 de `Docs/conceitos` já tinham rótulo, e as 24 imagens de referência (repetidas em `Docs/image-ref`, `ArtSource/EstacaoRoda/ref` e `Assets/refs`) receberam "AI-GENERATED IMAGE" em 15/11. **Slides: outra pessoa cuida** (falta no slide 5, seção 3)
+- [x] Concepts e imagens feitas no Gemini/IA que apareçam no jogo, na demo ou na página precisam de **marca d'água visível**. Jogo: nenhuma é carregada. Repositório: as 12 de `Docs/conceitos` já tinham rótulo, e as 24 imagens de referência (repetidas em `Docs/image-ref`, `ArtSource/EstacaoRoda/ref` e `Assets/refs`) receberam "AI-generated image (Gemini)" em 15/11. **Slides: outra pessoa cuida** (falta no slide 5, seção 3)
 - [x] Código escrito com ajuda de IA: declarado no [USO-DE-IA.md](../USO-DE-IA.md) (linkado do README), na tela de créditos, no rodapé do jogo e na página do itch.io. Falta só o campo de SI
 - [ ] Preencher o campo "Use of SI". **Texto em inglês pronto** em [CAMPO-USO-DE-IA.md](CAMPO-USO-DE-IA.md), escrito a partir do repositório. Ferramentas **confirmadas pelo time em 15/11: Claude e Gemini**. Falta só colar no formulário
 
@@ -272,8 +289,8 @@ Atualizado em 15/11/2026, à noite. Legenda: [x] feito, [~] feito em parte ou di
 7. [x] Preencher **NASA Data** (21 linhas). Digitado no formulário
 8. [~] Preencher **Referências**: 7 linhas digitadas. **Falta autor e link dos 5 sons do Pixabay**: perguntar ao Daniel, que adicionou os arquivos ([CREDITOS-AUDIO.md](CREDITOS-AUDIO.md)). Sem resposta a tempo, a linha do Pixabay (com o link da licença) basta
 9. [x] Campo de IA: 3 opções marcadas (Claude e Gemini confirmados). Conferir *Presentation, Video, or Audio* (seção 3)
-10. [~] Varredura: menores de 18 anos e identidade visual da NASA conferidos no itch.io, no jogo e nos slides. **Falta o vídeo**
-11. [ ] **Conferir o vídeo**: ≤ 30 s, inglês ou legenda em inglês, sem menor de 18 anos, sem marca da NASA, IA marcada (seção 3)
+10. [x] Varredura: menores de 18 anos e identidade visual da NASA conferidos no itch.io, no jogo, nos slides e no vídeo (confirmado pelo time)
+11. [x] Conferir o vídeo: 29,7 s, correto segundo o time, ninguém aparece. Resta só a marca de IA se o vídeo usar imagens geradas por IA (seção 3)
 12. [ ] **Save Progress** (o formulário está só digitado na tela; ver a nota sobre visibilidade na seção 2)
 13. [ ] Marcar as 2 caixas e **Submit for Judging**
 14. [ ] Baixar o certificado
@@ -285,7 +302,7 @@ Opcionais, se sobrar tempo depois do primeiro envio:
 - [ ] Slides (só se forem usados como demo): rótulo de IA do slide 5 e período do DONKI (seção 3)
 - [ ] Imagens opcionais do formulário (campo 9)
 - [ ] Commit e push das 72 imagens com marca de IA e dos documentos novos (`CAMPO-USO-DE-IA.md`, `TEXTOS-FORMULARIO.md`). O repositório não entra no formulário, então não bloqueia o envio
-- [ ] README: trocar "209 EditMode tests" por 216
+- [ ] README: trocar "209 EditMode tests" por 216 (continua dizendo 209 depois do merge)
 
 Outros documentos de apoio: [REGRAS-PARA-GANHAR.md](REGRAS-PARA-GANHAR.md) (critérios de
 julgamento e regras de design) e [DESAFIO.md](DESAFIO.md) (enunciado traduzido).

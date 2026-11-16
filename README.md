@@ -41,8 +41,22 @@ See [USO-DE-IA.md](USO-DE-IA.md).
 - Unity 2022.3 (engine).
 - Fonts Barlow Semi Condensed and Nunito, SIL Open Font License 1.1 (licenses in `Assets/Resources/Fontes`).
 - The star sky is generated in code (`Assets/Scripts/CeuEstrelado.cs`), with no third-party texture.
-- Sound effects in `Assets/Resources/Sons` and `Assets/Audios` (`doorOpening`, `Alarme`, `ClickUI`, `RobotSound`, `SomDePassos`): all from [Pixabay](https://pixabay.com/), under the [Pixabay Content License](https://pixabay.com/service/license-summary/). *(Add the author and page link of each file.)*
-- Menus and minigame sounds can also be generated in code (`SomSintetico`).
+- Sound effects: five files downloaded from [Pixabay](https://pixabay.com/sound-effects/), used under the
+  [Pixabay Content License](https://pixabay.com/service/license-summary/) (free use, attribution not required;
+  we credit them anyway). They are not made by the team.
+
+  | File | Where it plays | Source |
+  | --- | --- | --- |
+  | `Assets/Audios/doorOpening.mp3` | Base doors opening | Sound Effect by freesound_community from Pixabay |
+  | `Assets/Resources/Sons/Alarme.mp3` | Red lights during a solar event | Pixabay sound effect |
+  | `Assets/Resources/Sons/ClickUI.mp3` | Interface buttons | Pixabay sound effect |
+  | `Assets/Resources/Sons/RobotSound.mp3` | Pet robot | Pixabay sound effect |
+  | `Assets/Resources/Sons/SomDePassos.mp3` | Astronaut footsteps | Pixabay sound effect |
+
+- The other interface sounds (success, done, panel) are generated in code (`Assets/Scripts/Regras/SomSintetico.cs`).
+- AI-generated reference images (Gemini) used to model the station and characters are in `Docs/image-ref`,
+  `ArtSource/EstacaoRoda/ref` and `Assets/refs`. Each one carries a visible "AI-generated image" watermark.
+  See [USO-DE-IA.md](USO-DE-IA.md).
 
 ## Run and test
 
