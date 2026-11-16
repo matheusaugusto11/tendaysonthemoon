@@ -7,8 +7,13 @@ Fonte: [Project Submission Guide](https://www.spaceappschallenge.org/resources/p
 página de 13/11/2026, relida na íntegra em **15/11/2026** (último dia). Tudo que está
 nas seções 1 a 4 é regra oficial. Observações com **[N]** são nossas.
 
-Estado do projeto conferido em **15/11/2026, à noite** (depois do commit `2afe10f`, slides v2):
-repositório, página pública do itch.io, slides e código.
+Estado do projeto conferido em **15/11/2026, à noite** (depois do commit `ed7a70f`): repositório,
+página pública do itch.io, slides e código. Novo build WebGL publicado no itch.io no mesmo dia, por volta das 21h40
+(seção 4.2).
+
+**Formulário preenchido na aba Project em 15/11, à noite, mas ainda não salvo nem enviado** (seção 2). A demo passou a
+ser um **vídeo** no Google Drive (seção 3). Falta: **Save Progress**, conferir o vídeo, marcar as 2 caixas e
+**Submit for Judging**.
 
 > **PRAZO: domingo, 15/11/2026, 23h59**, no fuso do **Local Event** do time (no Universal
 > Event, vale o fuso de moradia do Team Owner). Projeto salvo ou enviado depois disso
@@ -19,14 +24,14 @@ repositório, página pública do itch.io, slides e código.
 
 ## 1. Requisitos eliminatórios (resumo)
 
-- [ ] Todos os membros são **participantes confirmados no mesmo Local Event** (quem está em lista de espera precisa ser aceito ou trocar de evento). Não dá para conferir pelo repositório: cada um olha no próprio perfil
-- [ ] **Todos os campos obrigatórios** preenchidos (sem isso o botão não deixa enviar)
-- [ ] Página de submissão e **todo material linkado em inglês** (vídeo pode ser em outra língua **com legenda em inglês**; slides só em inglês). Slides, página do itch.io e jogo (botão EN): ok. Falta o formulário
-- [x] Demo dentro do limite: **vídeo de até 30 s OU até 7 slides** (título e introdução contam). Passou do limite = **fora do Global Judging**. São **7 slides**: `Docs/apresentacao/TenDaysOnTheMoon-Demo-v2.pdf`
-- [ ] Links de demo e projeto **públicos**, sem login, senha, permissão ou cadastro. itch.io: público. **GitHub: privado** (404 sem login em 15/11, à noite). **Slides: sem link público ainda**
-- [x] Pelo menos **1 dado/recurso da NASA** declarado (exigido para Global Award). DONKI no centro do jogo, mais fontes F2 a F23 em [DADOS-NASA.md](DADOS-NASA.md). Falta copiar para o formulário
-- [x] **Nenhuma imagem, vídeo, áudio ou semelhança de menor de 18 anos**, na demo e no projeto. Conferido em 15/11: personagens adultos (1,9 m), slides sem foto de pessoa, sem narração
-- [x] **Nenhum logotipo, bandeira ou identificador de missão da NASA**, inclusive em conteúdo gerado por IA. Conferido em 15/11: slides, página do itch.io, nomes de arquivo, ícones e textura do astronauta. "NASA" aparece só como texto de fonte
+- [x] Todos os membros são **participantes confirmados no mesmo Local Event** (quem está em lista de espera precisa ser aceito ou trocar de evento). Confirmado pelo time em 15/11: os 6 estão no time e participaram presencialmente do mesmo evento. Não dá para conferir pelo repositório (a informação está no perfil de cada um)
+- [x] **Todos os campos obrigatórios** preenchidos (sem isso o botão não deixa enviar). Preenchidos em 15/11, à noite, na tela do formulário. **Ainda sem Save Progress**. As 2 caixas de aceite continuam desmarcadas (não contam como campo de texto)
+- [ ] Página de submissão e **todo material linkado em inglês** (vídeo pode ser em outra língua **com legenda em inglês**; slides só em inglês). Formulário, página do itch.io, jogo (botão EN) e slides: ok. **Vídeo: idioma e legenda não conferidos**
+- [ ] Demo dentro do limite: **vídeo de até 30 s OU até 7 slides** (título e introdução contam). Passou do limite = **fora do Global Judging**. A demo enviada no formulário é o **vídeo** (`TenDaysOnTheMoon-Video.mp4`, Drive): **duração não conferida**. Os 7 slides (`Docs/apresentacao/TenDaysOnTheMoon-Demo-v2.pdf`) cumprem o limite, mas não estão no formulário
+- [x] Links de demo e projeto **públicos**, sem login, senha, permissão ou cadastro. itch.io: público. Vídeo no Drive: público (resposta 200 sem login, conferido por `curl` em 15/11). **GitHub: privado** (404 sem login), por isso não foi usado no formulário
+- [x] Pelo menos **1 dado/recurso da NASA** declarado (exigido para Global Award). DONKI no centro do jogo, mais fontes F2 a F23 em [DADOS-NASA.md](DADOS-NASA.md). **21 fontes** já digitadas no formulário (falta salvar)
+- [ ] **Nenhuma imagem, vídeo, áudio ou semelhança de menor de 18 anos**, na demo e no projeto. Conferido em 15/11 no jogo e nos slides: personagens adultos (1,9 m), slides sem foto de pessoa, sem narração. **Falta conferir o vídeo** (rosto, voz, nome)
+- [ ] **Nenhum logotipo, bandeira ou identificador de missão da NASA**, inclusive em conteúdo gerado por IA. Conferido em 15/11: slides, página do itch.io, nomes de arquivo, ícones e textura do astronauta. "NASA" aparece só como texto de fonte. **Falta conferir o vídeo**
 - [ ] Clicar em **"Submit for Judging"** antes do prazo
 
 ---
@@ -36,22 +41,27 @@ repositório, página pública do itch.io, slides e código.
 Acesso: ícone de perfil → **My Team** → aba **Project** (aparece só após 14/11, 9h local) →
 botão azul **Edit**.
 
+Status em 15/11, à noite: **[~] digitado na tela, sem Save Progress**. Textos de apoio em
+[TEXTOS-FORMULARIO.md](TEXTOS-FORMULARIO.md) e [CAMPO-USO-DE-IA.md](CAMPO-USO-DE-IA.md).
+
 | # | Campo | O que a NASA pede | Status | Observação |
 | --- | --- | --- | --- | --- |
-| 1 | **Project Name** | Nome do projeto | [ ] | **[N]** usar **Ten Days on the Moon**: é o nome dos slides e da página do itch.io |
-| 2 | **High-Level Project Summary** | O que foi desenvolvido, como responde ao desafio, por que importa | [ ] | Em inglês. Curto e direto. O primeiro parágrafo do README serve de base |
-| 3 | **Link to Project Demo** | Vídeo ≤ 30 s ou ≤ 7 slides, hospedado fora do site, link público | [ ] | Slides prontos; **falta hospedar** (ver seção 3) |
-| 4 | **Link to Final Project** | Link público do projeto (site, repositório, nuvem) | [ ] | **[N]** o itch.io já serve (público, jogável). O GitHub só depois de aberto (ver seção 4) |
-| 5 | **Detailed Project Description** | O que faz, como funciona, benefícios, objetivo, ferramentas/linguagens/software usados | [ ] | Em inglês. Citar Unity, versão web, C#, etc. |
-| 6 | **Use of Super Intelligence (SI)** | Se usou IA (ML, chatbots, geração de imagem, LLM) e como | [ ] | Ver seção 5. Resposta **não vai para os juízes**, só coleta de dados |
-| 7 | **NASA Data** | Detalhes de quais dados/recursos da NASA foram usados | [ ] | Base pronta em [DADOS-NASA.md](DADOS-NASA.md) (fontes F1 a F23: DONKI FLR/SEP/CME, OSDR OSD-268, páginas dos eventos e das tarefas) |
-| 8 | **Space Agency Partner Data and Other References** | **Todo** dado, recurso, ferramenta, código, texto e imagem usado, mesmo livre/open source | [ ] | Incluir Unity 2022.3, Blender, fontes Barlow e Nunito (OFL), sons. **Falta autor e link dos 5 sons do Pixabay** ([CREDITOS-AUDIO.md](CREDITOS-AUDIO.md)). Agências parceiras são incentivadas (ex.: Brazilian Space Agency, ESA, JAXA...) |
-| 9 | Imagens (opcional) | Upload/colar JPG, PNG, GIF **até 10 MB** | [ ] | **[N]** colocar capturas de `Docs/capturas-base` |
+| 1 | **Project Name** | Nome do projeto | [~] | **Ten Days on the Moon** (o formulário vinha com "Project Houston, We Have a Game") |
+| 2 | **Summary** | O que foi desenvolvido, como responde ao desafio, por que importa. Limite de 1.500 caracteres | [~] | Em inglês, 594 caracteres |
+| 3 | **Project Demonstration** | Vídeo ≤ 30 s ou ≤ 7 slides, hospedado fora do site, link público | [~] | `https://drive.google.com/file/d/1Qdm1Bn3QDk1oY1It4kYZkq4SJUPxgccI/view?usp=sharing` (vídeo MP4). **Conferir duração, idioma e legenda** (seção 3) |
+| 4 | **Project** (link final) | Link público do projeto (site, repositório, nuvem) | [~] | `https://carambo.itch.io/ten-days-on-the-moon`. O GitHub é privado e não foi usado |
+| 5 | **Project Details** | O que faz, como funciona, benefícios, objetivo, ferramentas/linguagens/software usados | [~] | Editor de texto rico, em inglês, com seções (o que é, como funciona, o que a criança leva, dados da NASA, ferramentas, objetivo). Cita 216 testes EditMode |
+| 6 | **Use of Super Intelligence (SI)** | Se usou IA e como. Aqui é uma **lista de opções** para marcar, não texto livre | [~] | Marcadas: *Coding, Debugging, or Troubleshooting*; *Writing, Editing, or Translation*; *Visual Design or Image Creation*. **Não** marcadas: *Ideation or Brainstorming* (a ideia é do time), *Presentation, Video, or Audio* (**se o vídeo ou os slides tiveram ajuda de IA, marcar**), *Building SI/ML Into the Project*. Resposta **não vai para os juízes** |
+| 7 | **NASA Data** | Pares "Link Text" + "Link Url" com todo dado/recurso da NASA | [~] | **21 linhas**: DONKI (FLR, SEP, CME), OSDR OSD-268 e as páginas dos eventos e das tarefas (F2 a F23 de [DADOS-NASA.md](DADOS-NASA.md)) |
+| 8 | **Space Agency Partner & Other Data** | Pares "Link Text" + "Link Url" com **todo** dado, recurso, ferramenta, código, texto e imagem usado, mesmo livre/open source | [~] | **7 linhas**: Unity, Blender, fontes Barlow e Nunito (OFL), sons do Pixabay (uma linha só, com o link da licença), Claude e Gemini. **Falta autor e link de cada um dos 5 sons** ([CREDITOS-AUDIO.md](CREDITOS-AUDIO.md)). Nenhuma agência parceira usada |
+| 9 | Imagens (opcional) | Upload/colar JPG, PNG, GIF **até 10 MB** | [ ] | Não enviadas. **[N]** capturas em `Docs/capturas-base` |
 
 Regras do formulário:
 
 - **Não aceita upload de vídeo nem documento.** Só imagem. Vídeo e slides vão para YouTube, Google Drive, GitHub, OneDrive, Dropbox etc., com link público.
-- **Salvar sempre** com o botão azul **Save Progress** (à direita). O que está salvo só é visível ao time até o envio.
+- **Salvar sempre** com o botão azul **Save Progress** (à direita). **Atenção:** o texto do próprio formulário diz que o que é salvo fica visível a quem abrir a página do time, antes do envio (a nossa anotação anterior, "só visível ao time", estava errada). Salvar não envia.
+- **Submit for Judging** fica logo abaixo do Save Progress, no mesmo painel. Só clicar nele no envio final.
+- **Armadilha do campo de links:** em NASA Data e em Referências, cada "Add New Link" cria uma linha vazia. Linha vazia no fim pode travar o envio, então apagar com o X.
 - **Lock de edição:** ligar o "Lock" ao editar, para o time saber. Mas qualquer membro pode remover o lock e **sobrescrever** o que não foi publicado. Combinar quem edita.
 
 ---
@@ -60,11 +70,17 @@ Regras do formulário:
 
 A demo pesa na nota de **Presentation**. A maior parte da avaliação vem do projeto em si.
 
-Escolher **um** formato: [ ] vídeo  [x] slides
+Escolher **um** formato: [x] vídeo  [ ] slides
 
-**Formato escolhido: slides.** Arquivos em `Docs/apresentacao/`: `TenDaysOnTheMoon-Demo-v2.pdf` (o que vai para
-o link) e `.pptx`. A v1 (`TenDaysOnTheMoon-Demo.pdf`) ficou para trás. O roteiro de vídeo
-([apresentacao/ROTEIRO-VIDEO-30S.md](apresentacao/ROTEIRO-VIDEO-30S.md)) só vale se trocarem de formato.
+**Formato no formulário: vídeo** (decisão de 15/11, à noite): `TenDaysOnTheMoon-Video.mp4` no Google Drive,
+`https://drive.google.com/file/d/1Qdm1Bn3QDk1oY1It4kYZkq4SJUPxgccI/view?usp=sharing`. O link abre sem login.
+**Eu não assisti ao vídeo**: duração, idioma/legenda, menores de 18 anos, marca da NASA e marca de IA precisam ser
+conferidos por alguém do time (checagem abaixo).
+
+Os slides continuam prontos em `Docs/apresentacao/` (`TenDaysOnTheMoon-Demo-v2.pdf` e `.pptx`, 7 slides) e servem se
+trocarem de formato. A v1 (`TenDaysOnTheMoon-Demo.pdf`) ficou para trás. O roteiro de vídeo está em
+[apresentacao/ROTEIRO-VIDEO-30S.md](apresentacao/ROTEIRO-VIDEO-30S.md). Os itens da lista de slides e a checagem de
+marca d'água dos slides abaixo só valem se os slides forem a demo.
 
 **Vídeo (≤ 30 s)**, roteiro sugerido pela NASA:
 
@@ -90,19 +106,21 @@ Os números e as regras citados nos slides foram conferidos no código em 15/11:
 2/1/0, custos da coleta de pedras, alarmes falsos, 1,3 s e 20 min, 1.982 erupções, X9.0 de 03/10/2024 e a tripulação
 voltando em segurança.
 
-Checagem final da demo:
+Checagem final da demo (**vale para o vídeo**; entre parênteses, o que já se sabe dos slides):
 
-- [x] Duração ≤ 30 s ou ≤ 7 slides
-- [x] Inglês (ou legenda em inglês no vídeo)
-- [x] Sem menores de 18 anos (rosto, voz, nome, imagem)
-- [x] Sem logotipo/bandeira/identificador da NASA
-- [ ] Marca d'água visível em qualquer imagem/vídeo gerado por IA. Rótulo "AI-ASSISTED ART" nas capturas dos slides 1, 4 e 7 e "DIAGRAM · AI-ASSISTED" no 3. **No slide 5, o cartão "It really happened" cobre o rótulo**
-- [ ] Link aberto em **janela anônima** sem pedir login (ainda não hospedado)
+- [ ] Duração **≤ 30 s**, conferida (slides: 7, ok)
+- [ ] Inglês, ou legenda em inglês no vídeo (slides: ok)
+- [ ] Sem menores de 18 anos (rosto, voz, nome, imagem), inclusive na narração (slides: ok)
+- [ ] Sem logotipo/bandeira/identificador da NASA (slides: ok)
+- [ ] Marca d'água visível em qualquer imagem/vídeo gerado por IA (slides: rótulo "AI-ASSISTED ART" nas capturas dos slides 1, 4 e 7 e "DIAGRAM · AI-ASSISTED" no 3; **no slide 5, o cartão "It really happened" cobre o rótulo**, e outra pessoa cuida disso). Se o vídeo reaproveita essas imagens ou os conceitos de IA, precisam do rótulo
+- [x] Link aberto sem pedir login: o do vídeo respondeu 200 sem login por `curl` em 15/11. Abrir também numa **janela anônima** do navegador
+- [ ] Se o vídeo ou os slides tiveram ajuda de IA (roteiro, edição, voz, música), marcar *Presentation, Video, or Audio* no campo de IA do formulário
 
 Ajustes opcionais nos slides:
 - Slide 5: desencobrir o rótulo "AI-ASSISTED ART".
 - Slide 5: "catalog, 2017 to 2026" sugere período contínuo. As 1.982 erupções são de setembro de 2017 e de janeiro de 2024 a novembro de 2026.
-- Slide 6 diz que a tela de créditos lista todas as fontes. Isso só vale depois do novo build (seção 4.2).
+- ~~Slide 6 diz que a tela de créditos lista todas as fontes.~~ Resolvido: o build publicado em 15/11 à noite já
+  traz os créditos novos (seção 4.2).
 
 ---
 
@@ -114,18 +132,18 @@ Estado atual do repositório, conferido em 15/11/2026, à noite:
 | --- | --- |
 | Remoto | `https://github.com/matheusaugusto11/tendaysonthemoon` (branches `main` e `teste`) |
 | Visibilidade do repositório | [ ] **privado**: a página, o arquivo bruto e a API do GitHub dão 404 sem login. Abrir antes de usar como link (Settings → General → Danger Zone → Change visibility) ou usar só o itch.io como "Final Project" |
-| Versão jogável publicada | [x] build WebGL no itch.io: https://carambo.itch.io/ten-days-on-the-moon (público, roda no navegador, conferido em 15/11). Ajustes da página: seção 4.1 |
+| Versão jogável publicada | [x] build WebGL no itch.io: https://carambo.itch.io/ten-days-on-the-moon (público, roda no navegador). Build refeito e reenviado em 15/11, à noite, com os créditos novos (seção 4.2). Ajustes da página: seção 4.1 |
 | `LICENSE` na raiz | [x] Apache 2.0, na `main` do remoto |
 | `README` na raiz | [x] em inglês, na `main` do remoto. Pendente nele: autor e link de cada som do Pixabay |
 | `USO-DE-IA.md`, `BuildWebGL.cs` | [x] na `main` do remoto |
-| Trabalho em `main` | [x] a `main` tem tudo: a `teste` não tem nenhum commit fora da `main`. O link aponta para a `main` |
-| Imagens de IA no repositório | [ ] `Docs/image-ref`, `Docs/conceitos`, `Assets/refs` e `ArtSource` têm imagens geradas por IA (Gemini) **sem marca d'água**. Se o repositório for aberto, marcar ou tirar antes |
+| Trabalho em `main` | [x] a `main` tem tudo da `teste`, e o link aponta para a `main`. **A `teste2` não entrou**: tem 3 commits fora da `main` (balões de fala da Lia e do Bip, correção de compilação em `UIJogo` e `BuildWebGL`). Um merge dela foi feito e desfeito em 15/11, à noite, antes do push. O build publicado não inclui a `teste2` |
+| Imagens de IA no repositório | [x] `Docs/conceitos` (12) já tinha rótulo. As 24 imagens de referência (repetidas em `Docs/image-ref`, `Assets/refs` e `ArtSource/EstacaoRoda/ref`, 72 arquivos) receberam "AI-GENERATED IMAGE" em 15/11 (**ainda sem commit**). Ver [CAMPO-USO-DE-IA.md](CAMPO-USO-DE-IA.md). Com isso, abrir o repositório deixa de ser problema de marca d'água |
 | Restos do skybox removido | `Assets/Real Stars Skybox` ficou só com 3 `.meta` órfãos (o pacote saiu no commit `0bb90f9`). Não pesa, só limpeza |
 
 ### 4.1 Página do itch.io: estado em 15/11/2026
 
 Conta **Carambo Studio**, projeto `https://carambo.itch.io/ten-days-on-the-moon` (id de edição 5373321).
-Está **pública**, com o zip WebGL (`Builds/tendays-webgl.zip`, 18 MB, marcado para rodar no navegador),
+Está **pública**, com o zip WebGL (`Builds/tendays-webgl.zip`, 19,2 MB, marcado para rodar no navegador; reenviado em 15/11, à noite),
 capa e 3 capturas (`Builds/itch/`, pasta ignorada pelo git). Declaração de IA e fórum já salvos.
 
 Falta, tomando como modelo a página do outro projeto da conta, **Chapéu de Papel**
@@ -165,13 +183,21 @@ Armadilhas já vividas:
 - Gerar: fechar o Editor do Unity e rodar `Unity.exe -batchmode -nographics -quit -projectPath <pasta> -executeMethod BuildWebGL.Executar -logFile Logs/build-webgl.log` (menu "Dez Dias > Build WebGL" no Editor). Saída em `Builds/WebGL` (ignorada pelo git). Leva uns 4 minutos.
 - O script ajusta o `index.html` para o canvas ocupar o iframe todo (o modelo padrão cortava a HUD em 960x600).
 - Zip para o itch.io: precisa ter `index.html` na raiz do zip e barras normais nos caminhos (usar Python `zipfile`, não o `Compress-Archive` do PowerShell 5.1).
-- Testado: menu, troca de idioma, créditos, início da missão Cadete e dentro da página do itch.io. **Não testado**: missão completa até o dia 10, som e toque no celular.
-- O batchmode alterou arquivos de configuração do Unity (`ProjectSettings`, `Assets/Settings/URP-*.asset`, `Piso.mat`): revisar o `git diff` antes de commitar.
-- **Créditos mudaram depois do build publicado (15/11, à noite):** `Textos.FontesNasa` ganhou o Artemis Base Camp
-  (citado no evento "A Terra vai se esconder") e o post da NASA de 01/04/2026 que dá o treino do Canadarm2 a cada
-  60 dias (o post de 13/04, único citado antes, não fala dos 60 dias). Ver [DADOS-NASA.md](DADOS-NASA.md), seção 5.
-  Para isso aparecer no itch.io: refazer o build, rodar os testes EditMode e subir o zip de novo. Sem isso, o
-  slide 6 ("the Credits screen lists them all") fica um pouco à frente do jogo.
+- Testes EditMode por linha de comando (com o Editor fechado): `Unity.exe -batchmode -nographics -projectPath <pasta> -runTests -testPlatform EditMode -testResults Logs/editmode-results.xml -logFile Logs/editmode-tests.log` (sem `-quit`).
+- Teste local: `python -m http.server 8765 --bind 127.0.0.1` dentro de `Builds/WebGL` e abrir http://127.0.0.1:8765.
+- Testado no build anterior: menu, troca de idioma, créditos, início da missão Cadete e dentro da página do itch.io. **Não testado**: missão completa até o dia 10, som e toque no celular.
+- O batchmode já alterou arquivos de configuração do Unity (`ProjectSettings`, `Assets/Settings/URP-*.asset`, `Piso.mat`). No build de 15/11 à noite não alterou nada, mas convém revisar o `git diff` antes de commitar.
+
+**Build atual (15/11/2026, à noite)**, gerado da `main` em `ed7a70f` e enviado ao itch.io pelo time:
+
+- Inclui os créditos novos de `Textos.FontesNasa`: o Artemis Base Camp (citado no evento "A Terra vai se esconder")
+  e o post da NASA de 01/04/2026 que dá o treino do Canadarm2 a cada 60 dias. Ver [DADOS-NASA.md](DADOS-NASA.md),
+  seção 5. Os dois textos foram encontrados no arquivo de dados do build. Com isso, o slide 6 ("the Credits screen
+  lists them all") vale para o jogo publicado.
+- Testes EditMode: **216 de 216 passaram**, sem falhas nem testes pulados.
+- Conferido sem navegador: o servidor local entrega todos os arquivos e o `index.html` mantém o canvas em 100%.
+  **Este build não foi jogado no navegador** (a extensão do Chrome estava desconectada). Vale abrir a página do
+  itch.io e conferir menu, idioma e a tela de créditos.
 
 Se o jogo for hospedado em site novo, a NASA **recomenda** pedir a classificação do site no
 **FortiGuard Web Filter** para evitar bloqueio no acesso dos juízes (opcional):
@@ -199,9 +225,9 @@ dos elementos feitos com IA.
 
 **[N] O que isso significa para o projeto:**
 
-- [ ] Concepts e imagens feitas no Gemini/IA (`Docs/conceitos`, `ArtSource`, capturas de personagens) que apareçam no jogo, na demo ou na página precisam de **marca d'água visível**. Slides: rótulo em quase todas as imagens (falta no slide 5, seção 3). Repositório: ver seção 4
+- [x] Concepts e imagens feitas no Gemini/IA que apareçam no jogo, na demo ou na página precisam de **marca d'água visível**. Jogo: nenhuma é carregada. Repositório: as 12 de `Docs/conceitos` já tinham rótulo, e as 24 imagens de referência (repetidas em `Docs/image-ref`, `ArtSource/EstacaoRoda/ref` e `Assets/refs`) receberam "AI-GENERATED IMAGE" em 15/11. **Slides: outra pessoa cuida** (falta no slide 5, seção 3)
 - [x] Código escrito com ajuda de IA: declarado no [USO-DE-IA.md](../USO-DE-IA.md) (linkado do README), na tela de créditos, no rodapé do jogo e na página do itch.io. Falta só o campo de SI
-- [ ] Preencher o campo "Use of SI" descrevendo onde e como a IA entrou (ferramentas, arte, código). Base: [USO-DE-IA.md](../USO-DE-IA.md), que ainda pede para o time **confirmar quais ferramentas de IA foram usadas**
+- [ ] Preencher o campo "Use of SI". **Texto em inglês pronto** em [CAMPO-USO-DE-IA.md](CAMPO-USO-DE-IA.md), escrito a partir do repositório. Ferramentas **confirmadas pelo time em 15/11: Claude e Gemini**. Falta só colar no formulário
 
 ---
 
@@ -235,26 +261,31 @@ Só quem está em time que enviou no prazo recebe.
 
 ## 8. Pendências, em ordem de prioridade
 
-Atualizado em 15/11/2026, à noite.
+Atualizado em 15/11/2026, à noite. Legenda: [x] feito, [~] feito em parte ou digitado e ainda não salvo, [ ] a fazer.
 
-1. [ ] Confirmar que todo o time está no **mesmo Local Event** e aceito
+1. [x] Confirmar que todo o time está no **mesmo Local Event** e aceito (confirmado pelo time em 15/11: os 6 no time e presentes no evento)
 2. [x] Publicar versão jogável com link público (build web): feito no itch.io, ajustes na seção 4.1
 3. [x] Commit e push de `LICENSE`, `README`, `USO-DE-IA.md`, céu estrelado e `BuildWebGL.cs`: tudo na `main` do remoto
-4. [ ] **Hospedar os slides** (`Docs/apresentacao/TenDaysOnTheMoon-Demo-v2.pdf`) com link público (Google Drive "qualquer pessoa com o link", por exemplo) e testar em janela anônima. Os 7 slides estão prontos (seção 3)
-5. [ ] Decidir o **Link to Final Project**: itch.io (já público) ou GitHub. Para o GitHub, abrir o repositório e antes resolver as imagens de IA sem marca d'água (seção 4)
-6. [ ] Redigir em inglês: nome (Ten Days on the Moon), resumo, descrição detalhada
-7. [ ] Preencher **NASA Data** a partir de [DADOS-NASA.md](DADOS-NASA.md) (F1 a F23)
-8. [ ] Preencher **Referências**: todo código, texto, imagem, áudio, pacote e fonte, mesmo livres. **Falta autor e link dos 5 sons do Pixabay**: perguntar ao Daniel, que adicionou os arquivos ([CREDITOS-AUDIO.md](CREDITOS-AUDIO.md))
-9. [ ] Confirmar com o time as ferramentas de IA ([USO-DE-IA.md](../USO-DE-IA.md)) e preencher o campo SI
-10. [x] Varredura: menores de 18 anos e identidade visual da NASA (conferido em 15/11 nos slides, na página do itch.io e nos arquivos do jogo)
-11. [ ] Marcar as 2 caixas e **Submit for Judging**
-12. [ ] Baixar o certificado
+4. [x] Hospedar a demo com link público: **vídeo** no Drive, link público conferido (seção 3). Os slides não foram hospedados
+5. [x] **Link to Final Project**: itch.io (o GitHub é privado e ficou de fora)
+6. [x] Redigir em inglês: nome, resumo e descrição detalhada. Digitados no formulário
+7. [x] Preencher **NASA Data** (21 linhas). Digitado no formulário
+8. [~] Preencher **Referências**: 7 linhas digitadas. **Falta autor e link dos 5 sons do Pixabay**: perguntar ao Daniel, que adicionou os arquivos ([CREDITOS-AUDIO.md](CREDITOS-AUDIO.md)). Sem resposta a tempo, a linha do Pixabay (com o link da licença) basta
+9. [x] Campo de IA: 3 opções marcadas (Claude e Gemini confirmados). Conferir *Presentation, Video, or Audio* (seção 3)
+10. [~] Varredura: menores de 18 anos e identidade visual da NASA conferidos no itch.io, no jogo e nos slides. **Falta o vídeo**
+11. [ ] **Conferir o vídeo**: ≤ 30 s, inglês ou legenda em inglês, sem menor de 18 anos, sem marca da NASA, IA marcada (seção 3)
+12. [ ] **Save Progress** (o formulário está só digitado na tela; ver a nota sobre visibilidade na seção 2)
+13. [ ] Marcar as 2 caixas e **Submit for Judging**
+14. [ ] Baixar o certificado
 
 Opcionais, se sobrar tempo depois do primeiro envio:
 
 - [ ] itch.io: as 10 tags e os nomes da equipe (seção 4.1)
-- [ ] Refazer o build WebGL com os créditos novos e subir no itch.io (seção 4.2)
-- [ ] Slides: rótulo de IA do slide 5 e período do DONKI (seção 3)
+- [x] Refazer o build WebGL com os créditos novos e subir no itch.io (seção 4.2). Feito em 15/11, à noite. Falta só abrir a página e conferir os créditos
+- [ ] Slides (só se forem usados como demo): rótulo de IA do slide 5 e período do DONKI (seção 3)
+- [ ] Imagens opcionais do formulário (campo 9)
+- [ ] Commit e push das 72 imagens com marca de IA e dos documentos novos (`CAMPO-USO-DE-IA.md`, `TEXTOS-FORMULARIO.md`). O repositório não entra no formulário, então não bloqueia o envio
+- [ ] README: trocar "209 EditMode tests" por 216
 
 Outros documentos de apoio: [REGRAS-PARA-GANHAR.md](REGRAS-PARA-GANHAR.md) (critérios de
 julgamento e regras de design) e [DESAFIO.md](DESAFIO.md) (enunciado traduzido).
